@@ -9,7 +9,5 @@
 // @grant        none
 // ==/UserScript==
 
-document.addEventListener('DOMContentLoaded', function() {
     console.log("Running");
     console.log("RUNNING TWO TIMES WHAT EVEN IS THIS???");
-}, false);
