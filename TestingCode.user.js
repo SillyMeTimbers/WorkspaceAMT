@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Testing] Testing Realtime Updating code
 // @namespace    http://tampermonkey.net/
-// @version      V2
+// @version      V1
 // @description  null
 // @author       You
 // @match        https://amt.uhaul.net/*/Dashboard
@@ -9,5 +9,7 @@
 // @grant        none
 // ==/UserScript==
 
-console.log("Running")
-console.log("RUNNING TWO TIMES WHAT EVEN IS THIS???")
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Running");
+    console.log("RUNNING TWO TIMES WHAT EVEN IS THIS???");
+}, false);
