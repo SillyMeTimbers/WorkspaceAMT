@@ -10,3 +10,4 @@
 // ==/UserScript==
 
 console.log("Running")
+console.log("RUNNING TWO TIMES WHAT EVEN IS THIS???")
