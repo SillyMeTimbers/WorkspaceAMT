@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Testing] Testing Realtime Updating code
 // @namespace    http://tampermonkey.net/
-// @version      5.9.310P
+// @version      V1
 // @description  null
 // @author       You
 // @match        https://amt.uhaul.net/*/Dashboard
