@@ -60,7 +60,7 @@ const verifyUpdateButtonLabel = (overrideAmount, timeRemaining) => {
 };
 
 // Modify the getContractsInList function
-const getRawIdOfContractsWithoutNotes = () => {
+const getRawIdOfContractsWithoutVerified = () => {
     if (VerifypauseUpdating) {
         return VerifyrawContractIdList;
     }
@@ -154,7 +154,7 @@ function getDurationBetweenDates(start, end) {
 
 async function processContracts() {
     VerifyTimeButton.disabled = true;
-    const rawContractList = getRawIdOfContractsWithoutNotes();
+    const rawContractList = getRawIdOfContractsWithoutVerified();
     let startTime;
     startTime = Date.now();
     pauseUpdating = true;
@@ -242,7 +242,7 @@ function runScriptWhenVisible() {
         VerifyTimeButtonSpan.textContent = "Verify Time/Date Returns";
         verifyUpdateButtonLabel()
 
-        getRawIdOfContractsWithoutNotes();
+        getRawIdOfContractsWithoutVerified();
 
         PrintButton.parentElement.insertBefore(VerifyTimeButton, PrintButton.nextSibling);
 
@@ -257,7 +257,7 @@ function continuouslyCheckTextSubmitFormVisibility() {
     setInterval(() => {
         if (isVerifyExpectedInTableWrapperVisible()) {
             runScriptWhenVisible();
-            getRawIdOfContractsWithoutNotes();
+            getRawIdOfContractsWithoutVerified();
         } else {
             processedContracts.clear();
         }
