@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 
-let LastVisible = false;
+let DropoffLastVisible = false;
 function isTextSubmitFormVisible() {
     const textSubmitForm = document.querySelector("#SecondaryPopup");
     const TextForumHeader = document.querySelector("#SecondaryPopup > section > header > h1");
@@ -24,13 +24,13 @@ function isTextSubmitFormVisible() {
         }
     }
 
-    LastVisible = false;
+    DropoffLastVisible = false;
     return false;
 }
 
 function runWhenTextSubmitFormVisible() {
-    if (LastVisible === false) {
-        LastVisible = true;
+    if (DropoffLastVisible === false) {
+        DropoffLastVisible = true;
 
         function createButton(id, text, email, sms) {
             const button = document.createElement('button');
