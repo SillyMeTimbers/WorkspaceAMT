@@ -68,6 +68,7 @@ const getRawIdOfContractsWithoutVerified = () => {
     const tempContractIdList = []; // Clear the previous list
     let stackAmount = 0; // Reset the counter
 
+    console.log(VerifyTbody)
     VerifyTbody.querySelectorAll("tr").forEach((tr) => {
         const contractId = tr.getAttribute("data-contractid");
         const isVerified = tr.querySelector(".verified-expectedin-dropoff-default:not([checked])");
