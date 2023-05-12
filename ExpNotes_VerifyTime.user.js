@@ -177,7 +177,7 @@ function ExpectedInNotes_ContractsWithoutNotes() {
   ExpectedInNote_ContractIdList = ExpectedInNotes_TempList;
   updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)", ExpectedInNote_ContractIdList);
 
-  return ExpectedInNotes_Sorted;
+  return ExpectedInNotes_TempList;
 }
 
 function ExpectedInNotes_GetNote(contractDetails) {
