@@ -128,8 +128,8 @@ function getDurationBetweenDates(start, end) {
   return `${minutes}m ${seconds}s`;
 }
 
-function getEstimatedTimeRemaining(currentIndex, totalContracts) {
-  const elapsedTime = Date.now() - startTime;
+function getEstimatedTimeRemaining(currentIndex, totalContracts, StartTime) {
+  const elapsedTime = Date.now() - StartTime;
   const averageTimePerContract = elapsedTime / (currentIndex + 1);
   const remainingContracts = totalContracts - currentIndex - 1;
   const estimatedTimeRemaining = averageTimePerContract * remainingContracts;
@@ -233,7 +233,7 @@ async function processExpectedInNotesContracts() {
     Sorted++;
 
     // Get Time Remaining
-    const EstTimeRemaining = getEstimatedTimeRemaining(Sorted, ContractList.length);
+    const EstTimeRemaining = getEstimatedTimeRemaining(Sorted, ContractList.length, ClockTime_Start);
     timeRemainingElement.textContent = `Estimated time remaining: ${EstTimeRemaining}`;
     updateButtonLabel(ExpectedInNotes_TempList.length - Sorted, EstTimeRemaining);
 
