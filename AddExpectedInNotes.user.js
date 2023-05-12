@@ -289,16 +289,17 @@ function runScriptWhenVisible() {
   }
 }
 
-// Function to continuously check if the textSubmitForm is visible
 function continuouslyCheckTextSubmitFormVisibility() {
   setInterval(() => {
+    ExpectedInTbody = document.querySelector("#ExpectedInTable > tbody");
+
     if (isExpectedInTableWrapperVisible()) {
       runScriptWhenVisible();
       getRawIdOfContractsWithoutNotes();
     } else {
       processedContracts.clear();
     }
-  }, 1000); // Check every 100ms
+  }, 1000); // Check every 1000ms
 }
 
 // Start checking the textSubmitForm visibility
