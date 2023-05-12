@@ -25,7 +25,7 @@ document.body.appendChild(timeRemainingElementVerifyReturn);
 
 let VerifyTimeButton; // Reference to Exp-In Notes Button
 let VerifyrawContractIdList = []; // List of RawIds for Contracts to add Notes
-let maxAmount = 200; // Max amount of contracts processed at a time
+let VerifymaxAmount = 200; // Max amount of contracts processed at a time
 let tbody; // set tbody
 const processedContracts = new Set();
 let pauseUpdating = false;
@@ -73,7 +73,7 @@ const getRawIdOfContractsWithoutNotes = () => {
         const contractId = tr.getAttribute("data-contractid");
         const isVerified = tr.querySelector(".verified-expectedin-dropoff-default:not([checked])");
 
-        if (isVerified && stackAmount < maxAmount) {
+        if (isVerified && stackAmount < VerifymaxAmount) {
             tempContractIdList.push(contractId);
             stackAmount++; // increment the counter
 
