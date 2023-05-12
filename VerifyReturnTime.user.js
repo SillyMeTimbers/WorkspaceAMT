@@ -10,7 +10,7 @@
 // ==/UserScript==
 
 // Add the CSS style for hover effect
-const style = document.createElement('style');
+var style = document.createElement('style');
 style.innerHTML = ".contract-row { " + "background-color: #5e6472; " + "} " + ".contract-row.has-no-note:hover, " + ".contract-row.has-no-note:nth-child(even):hover, " + ".contract-row.has-no-note:nth-child(odd):hover { " + "background-color: #A2A7B2; " + "}";
 document.head.appendChild(style);
 
