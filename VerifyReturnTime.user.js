@@ -36,7 +36,7 @@ const isVerifyExpectedInTableWrapperVisible = () => {
 };
 
 // Update the text for the button
-const updateButtonLabel = (overrideAmount, timeRemaining) => {
+const verifyUpdateButtonLabel = (overrideAmount, timeRemaining) => {
     if (!VerifyTimeButton) {
         console.log("newButton has not been created yet!");
         return;
@@ -84,7 +84,7 @@ const getRawIdOfContractsWithoutNotes = () => {
     });
 
     VerifyrawContractIdList = tempContractIdList;
-    updateButtonLabel(); // Update the button label with the number of expected-ins without notes
+    verifyUpdateButtonLabel(); // Update the button label with the number of expected-ins without notes
     return VerifyrawContractIdList;
 };
 
@@ -193,7 +193,7 @@ async function processContracts() {
 
         const EstTimeRemaining = getEstimatedTimeRemaining(counter2, VerifyrawContractIdList.length);
         timeRemainingElement.textContent = `Estimated time remaining: ${EstTimeRemaining}`;
-        updateButtonLabel(VerifyrawContractIdList.length - counter2, EstTimeRemaining);
+        verifyUpdateButtonLabel(VerifyrawContractIdList.length - counter2, EstTimeRemaining);
 
         // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
         await waitForElementToDisappear(toastSelector, 10000);
@@ -207,7 +207,7 @@ async function processContracts() {
 
     processedContracts.clear()
     VerifyrawContractIdList = []
-    updateButtonLabel(0, "Completed - Reloading Section");
+    verifyUpdateButtonLabel(0, "Completed - Reloading Section");
 
     const finishedTime = Date.now()
     const RefreshExpectedIn = "#ExpectedIn > header > a";
@@ -240,7 +240,7 @@ function runScriptWhenVisible() {
         const VerifyTimeButtonSpan = VerifyTimeButton.querySelector("span");
         VerifyTimeButtonSpan.setAttribute("title", "0 Contracts to Verify Time/Date");
         VerifyTimeButtonSpan.textContent = "Verify Time/Date Returns";
-        updateButtonLabel()
+        verifyUpdateButtonLabel()
 
         getRawIdOfContractsWithoutNotes();
 
