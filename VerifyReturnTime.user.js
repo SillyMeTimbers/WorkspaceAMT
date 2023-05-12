@@ -224,7 +224,7 @@ async function processContracts() {
 
 // run when visible
 function runScriptWhenVisible() {
-    tbody = document.querySelector("#ExpectedInTable > tbody");
+    Verifytbody = document.querySelector("#ExpectedInTable > tbody");
     const VerifyTimeButtonId = "VerifyExpInButton";
 
     if (!document.getElementById(VerifyTimeButtonId) && isExpectedInTableWrapperVisible()) {
