@@ -26,7 +26,7 @@ document.body.appendChild(timeRemainingElementVerifyReturn);
 let VerifyTimeButton; // Reference to Exp-In Notes Button
 let VerifyrawContractIdList = []; // List of RawIds for Contracts to add Notes
 let VerifymaxAmount = 200; // Max amount of contracts processed at a time
-let Verifytbody; // set tbody
+let VerifyTbody; // set tbody
 let VerifypauseUpdating = false;
 
 // function to check if the ExpectedInTableWrapper is visible
@@ -68,7 +68,7 @@ const getRawIdOfContractsWithoutVerified = () => {
     const tempContractIdList = []; // Clear the previous list
     let stackAmount = 0; // Reset the counter
 
-    Verifytbody.querySelectorAll("tr").forEach((tr) => {
+    VerifyTbody.querySelectorAll("tr").forEach((tr) => {
         const contractId = tr.getAttribute("data-contractid");
         const isVerified = tr.querySelector(".verified-expectedin-dropoff-default:not([checked])");
 
@@ -77,7 +77,7 @@ const getRawIdOfContractsWithoutVerified = () => {
             stackAmount++; // increment the counter
 
             if (processedContracts.has(contractId)) { // return; // If the contract has already been processed, skip it
-            } else { // tbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.add('contract-row');
+            } else { // VerifyTbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.add('contract-row');
                 processedContracts.add(contractId);
             }
         }
@@ -223,7 +223,7 @@ async function processContracts() {
 
 // run when visible
 function runScriptWhenVisible() {
-    Verifytbody = document.querySelector("#ExpectedInTable > tbody");
+    VerifyTbody = document.querySelector("#ExpectedInTable > tbody");
     const VerifyTimeButtonId = "VerifyExpInButton";
 
     if (!document.getElementById(VerifyTimeButtonId) && isVerifyExpectedInTableWrapperVisible()) {
