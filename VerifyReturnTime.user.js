@@ -24,7 +24,7 @@ timeRemainingElementVerifyReturn.style.padding = "5px";
 document.body.appendChild(timeRemainingElementVerifyReturn);
 
 let VerifyTimeButton; // Reference to Exp-In Notes Button
-let rawContractIdList = []; // List of RawIds for Contracts to add Notes
+let VerifyrawContractIdList = []; // List of RawIds for Contracts to add Notes
 let maxAmount = 200; // Max amount of contracts processed at a time
 let tbody; // set tbody
 const processedContracts = new Set();
@@ -46,11 +46,11 @@ const updateButtonLabel = (overrideAmount, timeRemaining) => {
     let MessagePreview;
 
     if (timeRemaining) {
-        MessagePreview = `${overrideAmount || rawContractIdList.length
+        MessagePreview = `${overrideAmount || VerifyrawContractIdList.length
             } Unverified Return Time/Date (Estimated time remaining: ${timeRemaining || "?"
             })`
     } else {
-        MessagePreview = `${overrideAmount || rawContractIdList.length
+        MessagePreview = `${overrideAmount || VerifyrawContractIdList.length
             } Unverified Return Time/Date`
     }
 
@@ -63,7 +63,7 @@ const updateButtonLabel = (overrideAmount, timeRemaining) => {
 // Modify the getContractsInList function
 const getRawIdOfContractsWithoutNotes = () => {
     if (pauseUpdating) {
-        return rawContractIdList;
+        return VerifyrawContractIdList;
     }
 
     const tempContractIdList = []; // Clear the previous list
@@ -84,9 +84,9 @@ const getRawIdOfContractsWithoutNotes = () => {
         }
     });
 
-    rawContractIdList = tempContractIdList;
+    VerifyrawContractIdList = tempContractIdList;
     updateButtonLabel(); // Update the button label with the number of expected-ins without notes
-    return rawContractIdList;
+    return VerifyrawContractIdList;
 };
 
 function flashScreen(color = "grey", duration = 1000) {
@@ -192,9 +192,9 @@ async function processContracts() {
 
         counter2++;
 
-        const EstTimeRemaining = getEstimatedTimeRemaining(counter2, rawContractIdList.length);
+        const EstTimeRemaining = getEstimatedTimeRemaining(counter2, VerifyrawContractIdList.length);
         timeRemainingElement.textContent = `Estimated time remaining: ${EstTimeRemaining}`;
-        updateButtonLabel(rawContractIdList.length - counter2, EstTimeRemaining);
+        updateButtonLabel(VerifyrawContractIdList.length - counter2, EstTimeRemaining);
 
         // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
         await waitForElementToDisappear(toastSelector, 10000);
@@ -207,7 +207,7 @@ async function processContracts() {
     }
 
     processedContracts.clear()
-    rawContractIdList = []
+    VerifyrawContractIdList = []
     updateButtonLabel(0, "Completed - Reloading Section");
 
     const finishedTime = Date.now()
