@@ -9,4 +9,4 @@
 // @grant        none
 // ==/UserScript==
 
-GM_setValue("UpdateAmount", 1)
+GM.setValue("UpdateAmount", 1)
