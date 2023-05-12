@@ -188,9 +188,9 @@ function ExpectedInNotes_ContractsWithoutNotes() {
 
 function ExpectedInNotes_GetNote(contractDetails) {
   if (contractDetails[1] == true) {
-    return UboxNote
+    return ExpectedInNote_UBOXNote
   }
-  return DefaultNote
+  return ExpectedInNote_DefaultNote
 }
 
 async function processExpectedInNotesContracts() {
