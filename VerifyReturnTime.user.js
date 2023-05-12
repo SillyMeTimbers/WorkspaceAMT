@@ -14,14 +14,14 @@ let VerifyStyle = document.createElement('style');
 VerifyStyle.innerHTML = ".contract-row { " + "background-color: #5e6472; " + "} " + ".contract-row.has-no-note:hover, " + ".contract-row.has-no-note:nth-child(even):hover, " + ".contract-row.has-no-note:nth-child(odd):hover { " + "background-color: #A2A7B2; " + "}";
 document.head.appendChild(VerifyStyle);
 
-const timeRemainingElement = document.createElement("div");
-timeRemainingElement.style.position = "fixed";
-timeRemainingElement.style.bottom = "0";
-timeRemainingElement.style.right = "0";
-timeRemainingElement.style.background = "white";
-timeRemainingElement.style.border = "1px solid black";
-timeRemainingElement.style.padding = "5px";
-document.body.appendChild(timeRemainingElement);
+const timeRemainingElementVerifyReturn = document.createElement("div");
+timeRemainingElementVerifyReturn.style.position = "fixed";
+timeRemainingElementVerifyReturn.style.bottom = "0";
+timeRemainingElementVerifyReturn.style.right = "0";
+timeRemainingElementVerifyReturn.style.background = "white";
+timeRemainingElementVerifyReturn.style.border = "1px solid black";
+timeRemainingElementVerifyReturn.style.padding = "5px";
+document.body.appendChild(timeRemainingElementVerifyReturn);
 
 let VerifyTimeButton; // Reference to Exp-In Notes Button
 let rawContractIdList = []; // List of RawIds for Contracts to add Notes
