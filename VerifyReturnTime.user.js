@@ -228,7 +228,7 @@ function runScriptWhenVisible() {
     const VerifyTimeButtonId = "VerifyExpInButton";
 
     if (!document.getElementById(VerifyTimeButtonId) && isVerifyExpectedInTableWrapperVisible()) {
-        const PrintButton = document.querySelector("#ToolTables_ExpectedInTable_0");
+        const PrintButton = document.querySelector(".buttons-print");
 
         // clone the button
         VerifyTimeButton = PrintButton.cloneNode(true);
