@@ -9,45 +9,33 @@
 // @grant        none
 // ==/UserScript==
 
-// Add the CSS style for hover effect
-let VerifyStyle = document.createElement('style');
-VerifyStyle.innerHTML = ".contract-row { " + "background-color: #5e6472; " + "} " + ".contract-row.has-no-note:hover, " + ".contract-row.has-no-note:nth-child(even):hover, " + ".contract-row.has-no-note:nth-child(odd):hover { " + "background-color: #A2A7B2; " + "}";
-document.head.appendChild(VerifyStyle);
+// Expected-In Note Variables
+const ExpectedInNote_UBOXNote = "UBOX";
+const ExpectedInNote_DefaultNote = "Provided cx info to drop-off address";
 
-const UboxNote = "UBOX";
-const DefaultNote = "Provided cx info to drop-off address";
+const ExpectedInNote_Style = document.createElement('style');
+ExpectedInNote_Style.innerHTML = ".contract-row { " + "background-color: #5e6472; " + "} " + ".contract-row.has-no-note:hover, " + ".contract-row.has-no-note:nth-child(even):hover, " + ".contract-row.has-no-note:nth-child(odd):hover { " + "background-color: #A2A7B2; " + "}";
+document.head.appendChild(ExpectedInNote_Style);
 
-// Add the CSS style for hover effect
-const ExpectedInStyle = document.createElement('style');
-ExpectedInStyle.innerHTML = ".contract-row { " + "background-color: #5e6472; " + "} " + ".contract-row.has-no-note:hover, " + ".contract-row.has-no-note:nth-child(even):hover, " + ".contract-row.has-no-note:nth-child(odd):hover { " + "background-color: #A2A7B2; " + "}";
-document.head.appendChild(ExpectedInStyle);
+let ExpectedInNote_Button;
+let ExpectedInNote_ButtonID = "ExpInNotesButton";
+let ExpectedInNote_ContractIdList = [];
+let ExpectedInNotes_ProcessedContracts = new Set();
+let ExpectedInNotes_PauseUpdating = false;
 
-const timeRemainingElement = document.createElement("div");
-timeRemainingElement.style.position = "fixed";
-timeRemainingElement.style.bottom = "0";
-timeRemainingElement.style.right = "0";
-timeRemainingElement.style.background = "white";
-timeRemainingElement.style.border = "1px solid black";
-timeRemainingElement.style.padding = "5px";
-document.body.appendChild(timeRemainingElement);
+// Shared Variables
+let maxProcessAmount = 300;
+let ExpectedInBody;
 
-let ExpectedInButton; // Reference to Exp-In Notes Button
-let rawContractIdList = []; // List of RawIds for Contracts to add Notes
-let maxAmount = 300; // Max amount of contracts processed at a time
-let ExpectedInTbody; // set tbody
-const processedContracts = new Set();
-let pauseUpdating = false;
-
-// function to check if the ExpectedInTableWrapper is visible
+// Shared Functions
 const isExpectedInTableWrapperVisible = () => {
   const expectedInTableWrapper = document.querySelector("#ExpectedInTable_wrapper");
   return (expectedInTableWrapper && expectedInTableWrapper.offsetWidth > 0 && expectedInTableWrapper.offsetHeight > 0);
 };
 
-// Update the text for the button
-const updateButtonLabel = (overrideAmount, timeRemaining) => {
-  if (!ExpectedInButton) {
-    console.log("newButton has not been created yet!");
+const updateButtonLabel = (button, text, overrideAmount, timeRemaining) => {
+  if (!button) {
+    console.log("button has not been created yet!");
     return;
   }
 
@@ -55,65 +43,17 @@ const updateButtonLabel = (overrideAmount, timeRemaining) => {
 
   if (timeRemaining) {
     MessagePreview = `${overrideAmount || rawContractIdList.length
-      } Expected-In without note(s) (Estimated time remaining: ${timeRemaining || "?"
+      } ${text} (Estimated time remaining: ${timeRemaining || "?"
       })`
   } else {
     MessagePreview = `${overrideAmount || rawContractIdList.length
-      } Expected-In without note(s)`
+      } ${text}`
   }
 
-  ExpectedInButton.setAttribute("title", MessagePreview)
-  const ExpectedInButtonSpan = ExpectedInButton.querySelector("span");
-  ExpectedInButtonSpan.setAttribute("title", MessagePreview);
-  ExpectedInButtonSpan.textContent = MessagePreview
-};
-
-function resetBackgroundColor(contractId) {
-  ExpectedInTbody.querySelector(`tr[data-contractid="${contractId}"]`).style.backgroundColor = "";
-}
-
-async function visualizeList(contracts, hexColor) {
-  for (const contractId of contracts) {
-    await new Promise((resolve) => setTimeout(resolve, 0)); // wait for the specified delay time
-    ExpectedInTbody.querySelector(`tr[data-contractid="${contractId}"]`).style.setProperty('background-color', hexColor);
-  }
-}
-
-// Modify the getContractsInList function
-const getRawIdOfContractsWithoutNotes = () => {
-  if (pauseUpdating) {
-    return rawContractIdList;
-  }
-
-  const tempContractIdList = []; // Clear the previous list
-  let stackAmount = 0; // Reset the counter
-
-  ExpectedInTbody.querySelectorAll("tr").forEach((tr) => {
-    const contractId = tr.getAttribute("data-contractid");
-    const note = tr.querySelector("td.note.has-tip");
-
-    // Check if the contract is not a U-Box reservation
-    const contractContent = tr.textContent;
-    const isUBoxReservation = contractContent.includes("UBox") || contractContent.includes("DB") || contractContent.includes("UB");
-
-    if (!note || (note && note.textContent.trim() === "" || note.textContent.trim().length < 3) && stackAmount < maxAmount) {
-      tempContractIdList.push([contractId, isUBoxReservation]);
-      stackAmount++; // increment the counter
-      ExpectedInTbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.add("has-no-note");
-
-      if (processedContracts.has(contractId)) { // return; // If the contract has already been processed, skip it
-      } else { // ExpectedInTbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.add('contract-row');
-        processedContracts.add(contractId);
-      } visualizeList([contractId], "#ADD8E6");
-    } else {
-      resetBackgroundColor(contractId);
-      ExpectedInTbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.remove("has-no-note");
-    }
-  });
-
-  rawContractIdList = tempContractIdList;
-  updateButtonLabel(); // Update the button label with the number of expected-ins without notes
-  return rawContractIdList;
+  button.setAttribute("title", MessagePreview);
+  const buttonSpan = button.querySelector("span");
+  buttonSpan.setAttribute("title", MessagePreview);
+  buttonSpan.textContent = MessagePreview;
 };
 
 function flashScreen(color = "grey", duration = 1000) {
@@ -173,16 +113,6 @@ async function waitForElementToDisappear(selector, timeout = 30000) {
   }
 }
 
-function genNoteForContract(contractDetails) {
-  if (contractDetails[1] == true) {
-    return UboxNote
-  } else {
-    return DefaultNote
-  }
-
-  return DefaultNote
-}
-
 function getDurationBetweenDates(start, end) {
   const elapsedTime = end - start;
   const seconds = Math.round(elapsedTime / 1000) % 60;
@@ -190,68 +120,125 @@ function getDurationBetweenDates(start, end) {
   return `${minutes}m ${seconds}s`;
 }
 
-async function processContracts() {
-  ExpectedInButton.disabled = true;
-  const rawContractList = getRawIdOfContractsWithoutNotes();
-  let startTime;
-  startTime = Date.now();
-  pauseUpdating = true;
-  let counter2 = 0;
+function getEstimatedTimeRemaining(currentIndex, totalContracts) {
+  const elapsedTime = Date.now() - startTime;
+  const averageTimePerContract = elapsedTime / (currentIndex + 1);
+  const remainingContracts = totalContracts - currentIndex - 1;
+  const estimatedTimeRemaining = averageTimePerContract * remainingContracts;
+  const seconds = Math.round(estimatedTimeRemaining / 1000) % 60;
+  const minutes = Math.floor(estimatedTimeRemaining / 1000 / 60);
+  return `${minutes}m ${seconds}s`;
+}
 
-  function getEstimatedTimeRemaining(currentIndex, totalContracts) {
-    const elapsedTime = Date.now() - startTime;
-    const averageTimePerContract = elapsedTime / (currentIndex + 1);
-    const remainingContracts = totalContracts - currentIndex - 1;
-    const estimatedTimeRemaining = averageTimePerContract * remainingContracts;
-    const seconds = Math.round(estimatedTimeRemaining / 1000) % 60;
-    const minutes = Math.floor(estimatedTimeRemaining / 1000 / 60);
-    return `${minutes}m ${seconds}s`;
+// Expected-In Note Functions
+function resetBackgroundColor(contractId) {
+  ExpectedInBody.querySelector(`tr[data-contractid="${contractId}"]`).style.backgroundColor = "";
+};
+
+async function visualizeList(contracts, hexColor) {
+  for (const contractId of contracts) {
+    await new Promise((resolve) => setTimeout(resolve, 0)); // wait for the specified delay time
+    ExpectedInTbody.querySelector(`tr[data-contractid="${contractId}"]`).style.setProperty('background-color', hexColor);
+  }
+};
+
+const ExpectedInNotes_ContractsWithoutNotes = () => {
+  if (ExpectedInNotes_PauseUpdating) {
+    return ExpectedInNote_ContractIdList
   }
 
+  const ExpectedInNotes_TempList = [];
+  let ExpectedInNotes_Sorted = 0;
 
-  for (const contractId of rawContractList) {
-    BuildContractNoteView(contractId[0]); // call the BuildContractNoteView function with the contract ID
+  ExpectedInBody.querySelectorAll("tr").forEach((tr) => {
+    const ExpInContractID = tr.getAttribute("data-contractid");
+    const ExpInNote = tr.querySelector("td.note.has-tip");
+    const ExpInContent = tr.textContent;
+    const ExpInUBOX = ExpInContent.includes("UBox") || ExpInContent.includes("DB") || ExpInContent.includes("UB");
+
+    if (!ExpInNote || (ExpInNote && ExpInNote.textContent.trim() === "" || ExpInNote.textContent.trim().length < 1) && ExpectedInNotes_Sorted < maxProcessAmount) {
+      ExpectedInNotes_TempList.push([ExpInContractID, ExpInUBOX])
+      ExpectedInNotes_Sorted++;
+      ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.add("has-no-note");
+
+      if (!ExpectedInNotes_ProcessedContracts.has(ExpInContractID)) {
+        ExpectedInNotes_ProcessedContracts.add(ExpInContractID)
+      }
+
+      visualizeList([ExpInContractID], "#ADD8E6")
+    } else {
+      resetBackgroundColor(ExpInContractID)
+      ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.remove("has-no-note");
+    }
+
+    ExpectedInNote_ContractIdList = ExpectedInNotes_Sorted
+    updateButtonLabel()
+
+    return ExpectedInNotes_Sorted
+  });
+};
+
+function ExpectedInNotes_GetNote(contractDetails) {
+  if (contractDetails[1] == true) {
+    return UboxNote
+  }
+  return DefaultNote
+}
+
+async function processExpectedInNotesContracts() {
+  ExpectedInNote_Button.disabled = true;
+
+  const ContractList = ExpectedInNotes_ContractsWithoutNotes()
+  let ClockTime_Start;
+  let Sorted = 0;
+
+  ClockTime_Start = Date.now()
+  ExpectedInNotes_PauseUpdating = true;
+
+  for (const CurrentContractID of ContractList) {
+    BuildContractNoteView(CurrentContractID[0])
 
     await waitForElement("#notesTextBox", 10000);
     await wait(500);
     flashScreen("grey", 500); // Add the flash effect
+    $("#notesTextBox").val(ExpectedInNotes_GetNote(CurrentContractID));
 
-    $("#notesTextBox").val(genNoteForContract(contractId));
-
-    const checkbox = document.querySelector(".large-12.columns label:last-of-type .checkbox");
-    if (checkbox) {
-      checkbox.click(); // simulate a button click for the checkbox
+    const ExpInNoteCheckBox = document.querySelector(".large-12.columns label:last-of-type .checkbox");
+    if (ExpInNoteCheckBox) {
+      ExpInNoteCheckBox.click();
     }
+
     await wait(100);
     const submitButton = document.querySelector("#submit-note");
     if (submitButton) {
-      submitButton.click(); // simulate a click on the submit button
+      submitButton.click();
     }
 
     await waitForElement("#toast-container", 10000);
     await wait(200);
     const toastSelector = "#toast-container > div > button";
-    const button = document.querySelector(toastSelector);
-    if (button) {
-      button.click();
+    const Toastbutton = document.querySelector(toastSelector);
+    if (Toastbutton) {
+      Toastbutton.click();
     }
 
-    counter2++;
+    Sorted++;
 
-    const EstTimeRemaining = getEstimatedTimeRemaining(counter2, rawContractIdList.length);
+    // Get Time Remaining
+    const EstTimeRemaining = getEstimatedTimeRemaining(Sorted, ContractList.length);
     timeRemainingElement.textContent = `Estimated time remaining: ${EstTimeRemaining}`;
-    updateButtonLabel(rawContractIdList.length - counter2, EstTimeRemaining);
+    updateButtonLabel(rawContractIdList.length - Sorted, EstTimeRemaining);
 
     // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
     await waitForElementToDisappear(toastSelector, 10000);
     await wait(200);
   }
 
-  processedContracts.clear()
-  rawContractIdList = []
-  updateButtonLabel(0, "Completed - Reloading Section");
+  ExpectedInNotes_ProcessedContracts.clear()
+  updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)", 0, "Completed - Reloading Section");
 
-  const finishedTime = Date.now()
+  // Finished Toaster
+  const ClockTime_Finish = Date.now()
   const RefreshExpectedIn = "#ExpectedIn > header > a";
   const RefreshExpectedInButton = document.querySelector(RefreshExpectedIn);
   if (RefreshExpectedInButton) {
@@ -259,302 +246,36 @@ async function processContracts() {
   }
 
   await waitForElementToDisappear("#loadingDiv", 10000)
-  ShowToastrMessage(`Completed ${counter2} Note(s) in ${getDurationBetweenDates(startTime, finishedTime)}`, "Expected-In Notes Finished", !0)
-  pauseUpdating = false;
+  ShowToastrMessage(`Completed ${Sorted} Note(s) in ${getDurationBetweenDates(ClockTime_Start, ClockTime_Finish)}`, "Expected-In Notes Finished", !0)
+  ExpectedInNotes_PauseUpdating = false;
 }
 
-// run when visible
-function runScriptWhenVisible() {
-  ExpectedInTbody = document.querySelector("#ExpectedInTable > tbody");
-  const ExpectedInButtonId = "ExpInNotesButton";
+function ExpectedInNotesVisible() {
+  if (!document.getElementById(ExpectedInNote_ButtonID) && isExpectedInTableWrapperVisible()) {
+    const PrintButtonClone = document.querySelector("#ToolTables_ExpectedInTable_0");
+    ExpectedInNote_Button = PrintButtonClone.cloneNode(true);
+    ExpectedInNote_Button.setAttribute("id", ExpectedInNote_ButtonID)
 
-  if (!document.getElementById(ExpectedInButtonId) && isExpectedInTableWrapperVisible()) {
-    const PrintButton = document.querySelector("#ToolTables_ExpectedInTable_0");
+    const ExpectedInNote_Span = ExpectedInNote_Button.querySelector("span");
+    updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)");
+    ExpectedInNotes_ContractsWithoutNotes();
+    PrintButtonClone.parentElement.insertBefore(ExpectedInNote_Button, PrintButtonClone.nextSibling);
 
-    // clone the button
-    ExpectedInButton = PrintButton.cloneNode(true);
-    // Assign the cloned button to the global variable
-
-    // set a unique ID for the new button
-    ExpectedInButton.setAttribute("id", ExpectedInButtonId);
-
-    // update the button label
-    const ExpectedInButtonSpan = ExpectedInButton.querySelector("span");
-    ExpectedInButtonSpan.setAttribute("title", "0 Expected-In without note(s)");
-    ExpectedInButtonSpan.textContent = "Add Expected-In Notes";
-    updateButtonLabel()
-
-    getRawIdOfContractsWithoutNotes();
-
-    PrintButton.parentElement.insertBefore(ExpectedInButton, PrintButton.nextSibling);
-
-    ExpectedInButton.addEventListener("click", function () { // Call the function to start processing contracts
-      processContracts();
-    });
+    ExpectedInNote_Button.addEventListener("click", function() {
+      processExpectedInNotesContracts()
+    })
   }
 }
 
+function isExpectedInTableWrapperVisibleChecker() {
+  setInterval(() => {
+    ExpectedInBody = document.querySelector("#ExpectedInTable > tbody");
 
-
-
-const timeRemainingElementVerifyReturn = document.createElement("div");
-timeRemainingElementVerifyReturn.style.position = "fixed";
-timeRemainingElementVerifyReturn.style.bottom = "0";
-timeRemainingElementVerifyReturn.style.right = "0";
-timeRemainingElementVerifyReturn.style.background = "white";
-timeRemainingElementVerifyReturn.style.border = "1px solid black";
-timeRemainingElementVerifyReturn.style.padding = "5px";
-document.body.appendChild(timeRemainingElementVerifyReturn);
-
-let VerifyTimeButton; // Reference to Exp-In Notes Button
-let VerifyrawContractIdList = []; // List of RawIds for Contracts to add Notes
-let VerifymaxAmount = 200; // Max amount of contracts processed at a time
-let VerifyTbody; // set tbody
-let processedVerifiedContracts = new Set();
-let VerifypauseUpdating = false;
-
-// function to check if the ExpectedInTableWrapper is visible
-const isVerifyExpectedInTableWrapperVisible = () => {
-    const expectedInTableWrapper = document.querySelector("#ExpectedInTable_wrapper");
-    return (expectedInTableWrapper && expectedInTableWrapper.offsetWidth > 0 && expectedInTableWrapper.offsetHeight > 0);
-};
-
-// Update the text for the button
-const verifyUpdateButtonLabel = (overrideAmount, timeRemaining) => {
-    if (!VerifyTimeButton) {
-        console.log("newButton has not been created yet!");
-        return;
-    }
-
-    let MessagePreview;
-
-    if (timeRemaining) {
-        MessagePreview = `${overrideAmount || VerifyrawContractIdList.length
-            } Unverified Return Time/Date (Estimated time remaining: ${timeRemaining || "?"
-            })`
+    if (isExpectedInTableWrapperVisible()) {
+      ExpectedInNotesVisible();
+      ExpectedInNotes_ContractsWithoutNotes();
     } else {
-        MessagePreview = `${overrideAmount || VerifyrawContractIdList.length
-            } Unverified Return Time/Date`
+      ExpectedInNotes_ProcessedContracts.clear();
     }
-
-    VerifyTimeButton.setAttribute("title", MessagePreview)
-    const ExpectedInButtonSpan = VerifyTimeButton.querySelector("span");
-    ExpectedInButtonSpan.setAttribute("title", MessagePreview);
-    ExpectedInButtonSpan.textContent = MessagePreview
-};
-
-// Modify the getContractsInList function
-const getRawIdOfContractsWithoutVerified = () => {
-    if (VerifypauseUpdating) {
-        return VerifyrawContractIdList;
-    }
-
-    const tempContractIdList = []; // Clear the previous list
-    let stackAmount = 0; // Reset the counter
-
-    VerifyTbody.querySelectorAll("tr").forEach((tr) => {
-        const contractId = tr.getAttribute("data-contractid");
-        const isVerified = tr.querySelector(".verified-expectedin-dropoff-default:not([checked])");
-
-        if (isVerified && stackAmount < VerifymaxAmount) {
-            tempContractIdList.push(contractId);
-            stackAmount++; // increment the counter
-
-            if (processedVerifiedContracts.has(contractId)) { // return; // If the contract has already been processed, skip it
-            } else { // VerifyTbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.add('contract-row');
-                processedVerifiedContracts.add(contractId);
-            }
-        }
-    });
-
-    VerifyrawContractIdList = tempContractIdList;
-    verifyUpdateButtonLabel(); // Update the button label with the number of expected-ins without notes
-    return VerifyrawContractIdList;
-};
-
-function flashScreen(color = "grey", duration = 1000) {
-    const flashOverlay = document.createElement("div");
-    flashOverlay.style.position = "fixed";
-    flashOverlay.style.zIndex = 9999;
-    flashOverlay.style.left = 0;
-    flashOverlay.style.top = 0;
-    flashOverlay.style.width = "100%";
-    flashOverlay.style.height = "100%";
-    flashOverlay.style.backgroundColor = color;
-    flashOverlay.style.opacity = 0.2;
-
-    document.body.appendChild(flashOverlay);
-
-    setTimeout(() => {
-        document.body.removeChild(flashOverlay);
-    }, duration);
+  }, 1000);
 }
-
-function wait(time) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve();
-        }, time);
-    });
-}
-
-async function waitForElement(selector, timeout = 10000) {
-    const startTime = Date.now();
-
-    while (Date.now() - startTime < timeout) {
-        const element = document.querySelector(selector);
-
-        if (element) {
-            return element;
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-
-    // Return null if the element is not found within the timeout period
-    return null;
-}
-
-async function waitForElementToDisappear(selector, timeout = 30000) {
-    const startTime = Date.now();
-
-    while (Date.now() - startTime < timeout) {
-        const element = document.querySelector(selector);
-
-        if (!element || element.style.display === "none" || element.style.visibility === "hidden") {
-            break;
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-}
-
-function getDurationBetweenDates(start, end) {
-    const elapsedTime = end - start;
-    const seconds = Math.round(elapsedTime / 1000) % 60;
-    const minutes = Math.floor(elapsedTime / 1000 / 60);
-    return `${minutes}m ${seconds}s`;
-}
-
-async function processContracts() {
-    VerifyTimeButton.disabled = true;
-    const rawContractList = getRawIdOfContractsWithoutVerified();
-    let startTime;
-    startTime = Date.now();
-    pauseUpdating = true;
-    let counter2 = 0;
-
-    function getEstimatedTimeRemaining(currentIndex, totalContracts) {
-        const elapsedTime = Date.now() - startTime;
-        const averageTimePerContract = elapsedTime / (currentIndex + 1);
-        const remainingContracts = totalContracts - currentIndex - 1;
-        const estimatedTimeRemaining = averageTimePerContract * remainingContracts;
-        const seconds = Math.round(estimatedTimeRemaining / 1000) % 60;
-        const minutes = Math.floor(estimatedTimeRemaining / 1000 / 60);
-        return `${minutes}m ${seconds}s`;
-    }
-
-    for (const contractId of rawContractList) {
-        displayVerifyExpectedDatePopup(contractId); // call the displayVerifyExpectedDatePopup function with the contract ID
-
-        await waitForElement("#SecondaryPopup", 10000);
-        await wait(400);
-
-        const submitButton = document.getElementById('expected-in-datetime-submit');
-        if (submitButton) {
-            submitButton.click();
-        }
-
-        await waitForElement("#toast-container", 10000);
-        await wait(400);
-        const toastSelector = "#toast-container > div > button";
-        const button = document.querySelector(toastSelector);
-        if (button) {
-            button.click();
-        }
-
-        counter2++;
-
-        const EstTimeRemaining = getEstimatedTimeRemaining(counter2, VerifyrawContractIdList.length);
-        timeRemainingElement.textContent = `Estimated time remaining: ${EstTimeRemaining}`;
-        verifyUpdateButtonLabel(VerifyrawContractIdList.length - counter2, EstTimeRemaining);
-
-        // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
-        await waitForElementToDisappear(toastSelector, 10000);
-        await wait(1000);
-
-        const cancelButton = document.getElementById('expected-in-datetime-cancel');
-        if (cancelButton) {
-            cancelButton.click();
-        }
-    }
-
-    processedVerifiedContracts.clear()
-    VerifyrawContractIdList = []
-    verifyUpdateButtonLabel(0, "Completed - Reloading Section");
-
-    const finishedTime = Date.now()
-    const RefreshExpectedIn = "#ExpectedIn > header > a";
-    const RefreshExpectedInButton = document.querySelector(RefreshExpectedIn);
-    if (RefreshExpectedInButton) {
-        RefreshExpectedInButton.click();
-    }
-
-    await waitForElementToDisappear("#loadingDiv", 10000)
-    ShowToastrMessage(`Sent verfiy Time/Date to ${counter2} Expected-In Contracts, Finished In - ${getDurationBetweenDates(startTime, finishedTime)}`, "Expected-In Verify Time/Date Finished", !0)
-    pauseUpdating = false;
-}
-
-// run when visible
-function runScriptWhenVisible() {
-    VerifyTbody = document.querySelector("#ExpectedInTable > tbody");
-    const VerifyTimeButtonId = "VerifyExpInButton";
-
-    if (!document.getElementById(VerifyTimeButtonId) && isVerifyExpectedInTableWrapperVisible()) {
-        const PrintButton = document.querySelector(".buttons-print");
-
-        // clone the button
-        VerifyTimeButton = PrintButton.cloneNode(true);
-        // Assign the cloned button to the global variable
-
-        // set a unique ID for the new button
-        VerifyTimeButton.setAttribute("id", VerifyTimeButtonId);
-
-        // update the button label
-        const VerifyTimeButtonSpan = VerifyTimeButton.querySelector("span");
-        VerifyTimeButtonSpan.setAttribute("title", "0 Contracts to Verify Time/Date");
-        VerifyTimeButtonSpan.textContent = "Verify Time/Date Returns";
-        verifyUpdateButtonLabel()
-
-        getRawIdOfContractsWithoutVerified();
-
-        PrintButton.parentElement.insertBefore(VerifyTimeButton, PrintButton.nextSibling);
-
-        VerifyTimeButton.addEventListener("click", function () { // Call the function to start processing contracts
-            processContracts();
-        });
-    }
-}
-
-
-
-// Function to continuously check if the textSubmitForm is visible
-function continuouslyCheckTextSubmitFormVisibility() {
-    setInterval(() => {
-        tbody = document.querySelector("#ExpectedInTable > tbody");
-        VerifyTbody = document.querySelector("#ExpectedInTable > tbody");
-
-        if (isExpectedInTableWrapperVisible() || isVerifyExpectedInTableWrapperVisible()) {
-            runScriptWhenVisible();
-            runVerifyScriptWhenVisible();
-            getRawIdOfContractsWithoutNotes();
-            getRawIdOfContractsWithoutVerified();
-        } else {
-            processedContracts.clear();
-            processedVerifiedContracts.clear();
-        }
-    }, 1000); // Check every 1000ms
-}
-
-// Start checking the textSubmitForm visibility
-continuouslyCheckTextSubmitFormVisibility();
