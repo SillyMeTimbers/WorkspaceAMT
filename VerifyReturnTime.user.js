@@ -26,7 +26,7 @@ document.body.appendChild(timeRemainingElementVerifyReturn);
 let VerifyTimeButton; // Reference to Exp-In Notes Button
 let VerifyrawContractIdList = []; // List of RawIds for Contracts to add Notes
 let VerifymaxAmount = 200; // Max amount of contracts processed at a time
-let tbody; // set tbody
+let Verifytbody; // set tbody
 const processedContracts = new Set();
 let pauseUpdating = false;
 
