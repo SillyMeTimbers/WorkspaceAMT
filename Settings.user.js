@@ -9,4 +9,4 @@
 // @grant        none
 // ==/UserScript==
 
-const UpdateScripts = 5 // Seconds
+GM_setValue("UpdateAmount", 1)
