@@ -30,7 +30,7 @@ let Verifytbody; // set tbody
 let VerifypauseUpdating = false;
 
 // function to check if the ExpectedInTableWrapper is visible
-const isExpectedInTableWrapperVisible = () => {
+const isVerifyExpectedInTableWrapperVisible = () => {
     const expectedInTableWrapper = document.querySelector("#ExpectedInTable_wrapper");
     return (expectedInTableWrapper && expectedInTableWrapper.offsetWidth > 0 && expectedInTableWrapper.offsetHeight > 0);
 };
@@ -226,7 +226,7 @@ function runScriptWhenVisible() {
     Verifytbody = document.querySelector("#ExpectedInTable > tbody");
     const VerifyTimeButtonId = "VerifyExpInButton";
 
-    if (!document.getElementById(VerifyTimeButtonId) && isExpectedInTableWrapperVisible()) {
+    if (!document.getElementById(VerifyTimeButtonId) && isVerifyExpectedInTableWrapperVisible()) {
         const PrintButton = document.querySelector("#ToolTables_ExpectedInTable_0");
 
         // clone the button
@@ -255,7 +255,7 @@ function runScriptWhenVisible() {
 // Function to continuously check if the textSubmitForm is visible
 function continuouslyCheckTextSubmitFormVisibility() {
     setInterval(() => {
-        if (isExpectedInTableWrapperVisible()) {
+        if (isVerifyExpectedInTableWrapperVisible()) {
             runScriptWhenVisible();
             getRawIdOfContractsWithoutNotes();
         } else {
