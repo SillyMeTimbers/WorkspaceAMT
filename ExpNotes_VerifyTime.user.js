@@ -33,7 +33,7 @@ const isExpectedInTableWrapperVisible = () => {
   return (expectedInTableWrapper && expectedInTableWrapper.offsetWidth > 0 && expectedInTableWrapper.offsetHeight > 0);
 };
 
-const updateButtonLabel = (button, text, overrideAmount, timeRemaining) => {
+const updateButtonLabel = (button, text, List, overrideAmount, timeRemaining) => {
   if (!button) {
     console.log("button has not been created yet!");
     return;
@@ -42,11 +42,11 @@ const updateButtonLabel = (button, text, overrideAmount, timeRemaining) => {
   let MessagePreview;
 
   if (timeRemaining) {
-    MessagePreview = `${overrideAmount || rawContractIdList.length
+    MessagePreview = `${overrideAmount || List.length
       } ${text} (Estimated time remaining: ${timeRemaining || "?"
       })`
   } else {
-    MessagePreview = `${overrideAmount || rawContractIdList.length
+    MessagePreview = `${overrideAmount || List.length
       } ${text}`
   }
 
