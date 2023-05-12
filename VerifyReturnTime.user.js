@@ -27,6 +27,7 @@ let VerifyTimeButton; // Reference to Exp-In Notes Button
 let VerifyrawContractIdList = []; // List of RawIds for Contracts to add Notes
 let VerifymaxAmount = 200; // Max amount of contracts processed at a time
 let VerifyTbody; // set tbody
+let processedVerifiedContracts = new Set();
 let VerifypauseUpdating = false;
 
 // function to check if the ExpectedInTableWrapper is visible
@@ -81,9 +82,9 @@ const getRawIdOfContractsWithoutVerified = () => {
             tempContractIdList.push(contractId);
             stackAmount++; // increment the counter
 
-            if (processedContracts.has(contractId)) { // return; // If the contract has already been processed, skip it
+            if (processedVerifiedContracts.has(contractId)) { // return; // If the contract has already been processed, skip it
             } else { // VerifyTbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.add('contract-row');
-                processedContracts.add(contractId);
+                processedVerifiedContracts.add(contractId);
             }
         }
     });
@@ -210,7 +211,7 @@ async function processContracts() {
         }
     }
 
-    processedContracts.clear()
+    processedVerifiedContracts.clear()
     VerifyrawContractIdList = []
     verifyUpdateButtonLabel(0, "Completed - Reloading Section");
 
@@ -264,7 +265,7 @@ function continuouslyCheckTextSubmitFormVisibility() {
             runScriptWhenVisible();
             getRawIdOfContractsWithoutVerified();
         } else {
-            processedContracts.clear();
+            processedVerifiedContracts.clear();
         }
     }, 1000); // Check every 100ms
 }
