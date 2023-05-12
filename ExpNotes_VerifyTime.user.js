@@ -33,7 +33,7 @@ const isExpectedInTableWrapperVisible = () => {
   return (expectedInTableWrapper && expectedInTableWrapper.offsetWidth > 0 && expectedInTableWrapper.offsetHeight > 0);
 };
 
-const updateButtonLabel = (button, text, List, overrideAmount, timeRemaining) => {
+const updateButtonLabel = (button, text, List = [], overrideAmount, timeRemaining) => {
   if (!button) {
     console.log("button has not been created yet!");
     return;
