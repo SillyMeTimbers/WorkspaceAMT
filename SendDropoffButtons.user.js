@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 
-var LastVisible = false;
+let LastVisible = false;
 function isTextSubmitFormVisible() {
     const textSubmitForm = document.querySelector("#SecondaryPopup");
     const TextForumHeader = document.querySelector("#SecondaryPopup > section > header > h1");
