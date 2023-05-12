@@ -27,7 +27,7 @@ let VerifyTimeButton; // Reference to Exp-In Notes Button
 let VerifyrawContractIdList = []; // List of RawIds for Contracts to add Notes
 let VerifymaxAmount = 200; // Max amount of contracts processed at a time
 let Verifytbody; // set tbody
-let pauseUpdating = false;
+let VerifypauseUpdating = false;
 
 // function to check if the ExpectedInTableWrapper is visible
 const isExpectedInTableWrapperVisible = () => {
@@ -61,7 +61,7 @@ const updateButtonLabel = (overrideAmount, timeRemaining) => {
 
 // Modify the getContractsInList function
 const getRawIdOfContractsWithoutNotes = () => {
-    if (pauseUpdating) {
+    if (VerifypauseUpdating) {
         return VerifyrawContractIdList;
     }
 
