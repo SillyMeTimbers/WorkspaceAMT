@@ -138,7 +138,7 @@ function resetBackgroundColor(contractId) {
 async function visualizeList(contracts, hexColor) {
   for (const contractId of contracts) {
     await new Promise((resolve) => setTimeout(resolve, 0)); // wait for the specified delay time
-    ExpectedInTbody.querySelector(`tr[data-contractid="${contractId}"]`).style.setProperty('background-color', hexColor);
+    ExpectedInBody.querySelector(`tr[data-contractid="${contractId}"]`).style.setProperty('background-color', hexColor);
   }
 };
 
