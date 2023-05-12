@@ -279,3 +279,5 @@ function isExpectedInTableWrapperVisibleChecker() {
     }
   }, 1000);
 }
+
+isExpectedInTableWrapperVisibleChecker();
