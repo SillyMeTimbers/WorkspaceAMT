@@ -9,6 +9,8 @@
 // @grant        none
 // ==/UserScript==
 
+console.log(`Fetched Version ${Date.now()}`)
+
 // Expected-In Note Variables
 const ExpectedInNote_UBOXNote = "UBOX";
 const ExpectedInNote_DefaultNote = "Provided cx info to drop-off address";
