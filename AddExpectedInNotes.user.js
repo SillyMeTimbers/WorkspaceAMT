@@ -13,9 +13,9 @@ const UboxNote = "UBOX";
 const DefaultNote = "Provided cx info to drop-off address";
 
 // Add the CSS style for hover effect
-const style = document.createElement('style');
-style.innerHTML = ".contract-row { " + "background-color: #5e6472; " + "} " + ".contract-row.has-no-note:hover, " + ".contract-row.has-no-note:nth-child(even):hover, " + ".contract-row.has-no-note:nth-child(odd):hover { " + "background-color: #A2A7B2; " + "}";
-document.head.appendChild(style);
+const ExpectedInStyle = document.createElement('style');
+ExpectedInStyle.innerHTML = ".contract-row { " + "background-color: #5e6472; " + "} " + ".contract-row.has-no-note:hover, " + ".contract-row.has-no-note:nth-child(even):hover, " + ".contract-row.has-no-note:nth-child(odd):hover { " + "background-color: #A2A7B2; " + "}";
+document.head.appendChild(ExpectedInStyle);
 
 const timeRemainingElement = document.createElement("div");
 timeRemainingElement.style.position = "fixed";
