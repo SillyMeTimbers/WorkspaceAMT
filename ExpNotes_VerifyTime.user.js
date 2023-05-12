@@ -9,7 +9,13 @@
 // @grant        none
 // ==/UserScript==
 
-console.log(`Fetched Version ${Date.now()}`)
+const currentTime = new Date(Date.now());
+const hours = String(currentTime.getHours()).padStart(2, '0');
+const minutes = String(currentTime.getMinutes()).padStart(2, '0');
+const seconds = String(currentTime.getSeconds()).padStart(2, '0');
+
+const formattedTime = `${hours}:${minutes}:${seconds}`;
+console.log(`Fetched Version ${formattedTime}`)
 
 // Expected-In Note Variables
 const ExpectedInNote_UBOXNote = "UBOX";
