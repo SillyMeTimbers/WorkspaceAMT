@@ -29,7 +29,7 @@ document.body.appendChild(timeRemainingElement);
 let ExpectedInButton; // Reference to Exp-In Notes Button
 let rawContractIdList = []; // List of RawIds for Contracts to add Notes
 let maxAmount = 300; // Max amount of contracts processed at a time
-let tbody; // set tbody
+let ExpectedInTbody; // set tbody
 const processedContracts = new Set();
 let pauseUpdating = false;
 
@@ -64,13 +64,13 @@ const updateButtonLabel = (overrideAmount, timeRemaining) => {
 };
 
 function resetBackgroundColor(contractId) {
-  tbody.querySelector(`tr[data-contractid="${contractId}"]`).style.backgroundColor = "";
+  ExpectedInTbody.querySelector(`tr[data-contractid="${contractId}"]`).style.backgroundColor = "";
 }
 
 async function visualizeList(contracts, hexColor) {
   for (const contractId of contracts) {
     await new Promise((resolve) => setTimeout(resolve, 0)); // wait for the specified delay time
-    tbody.querySelector(`tr[data-contractid="${contractId}"]`).style.setProperty('background-color', hexColor);
+    ExpectedInTbody.querySelector(`tr[data-contractid="${contractId}"]`).style.setProperty('background-color', hexColor);
   }
 }
 
@@ -83,7 +83,7 @@ const getRawIdOfContractsWithoutNotes = () => {
   const tempContractIdList = []; // Clear the previous list
   let stackAmount = 0; // Reset the counter
 
-  tbody.querySelectorAll("tr").forEach((tr) => {
+  ExpectedInTbody.querySelectorAll("tr").forEach((tr) => {
     const contractId = tr.getAttribute("data-contractid");
     const note = tr.querySelector("td.note.has-tip");
 
@@ -94,15 +94,15 @@ const getRawIdOfContractsWithoutNotes = () => {
     if (!note || (note && note.textContent.trim() === "" || note.textContent.trim().length < 3) && stackAmount < maxAmount) {
       tempContractIdList.push([contractId, isUBoxReservation]);
       stackAmount++; // increment the counter
-      tbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.add("has-no-note");
+      ExpectedInTbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.add("has-no-note");
 
       if (processedContracts.has(contractId)) { // return; // If the contract has already been processed, skip it
-      } else { // tbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.add('contract-row');
+      } else { // ExpectedInTbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.add('contract-row');
         processedContracts.add(contractId);
       } visualizeList([contractId], "#ADD8E6");
     } else {
       resetBackgroundColor(contractId);
-      tbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.remove("has-no-note");
+      ExpectedInTbody.querySelector(`tr[data-contractid="${contractId}"]`).classList.remove("has-no-note");
     }
   });
 
@@ -260,7 +260,7 @@ async function processContracts() {
 
 // run when visible
 function runScriptWhenVisible() {
-  tbody = document.querySelector("#ExpectedInTable > tbody");
+  ExpectedInTbody = document.querySelector("#ExpectedInTable > tbody");
   const ExpectedInButtonId = "ExpInNotesButton";
 
   if (!document.getElementById(ExpectedInButtonId) && isExpectedInTableWrapperVisible()) {
