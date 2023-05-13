@@ -31,6 +31,14 @@ let ExpectedInNote_ContractIdList = [];
 let ExpectedInNotes_ProcessedContracts = new Set();
 let ExpectedInNotes_PauseUpdating = false;
 
+
+// Verify Return Time
+let VerifyReturn_Button;
+let VerifyReturn_ButtonID = "VerifyReturnButton"
+let VerifyReturn_ContractIdList = [];
+let VerifyReturn_ProcessedContracts = new Set()
+let VerifyReturn_PauseUpdating = false;
+
 // Shared Variables
 let maxProcessAmount = 300;
 let ExpectedInBody;
@@ -104,7 +112,6 @@ async function waitForElement(selector, timeout = 10000) {
         await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
-    // Return null if the element is not found within the timeout period
     return null;
 }
 
@@ -139,7 +146,6 @@ function getEstimatedTimeRemaining(currentIndex, totalContracts, StartTime) {
     return `${minutes}m ${seconds}s`;
 }
 
-// Expected-In Note Functions
 function resetBackgroundColor(contractId) {
     ExpectedInBody.querySelector(`tr[data-contractid="${contractId}"]`).style.backgroundColor = "";
 };
@@ -151,6 +157,113 @@ async function visualizeList(contracts, hexColor) {
     }
 };
 
+// Verify Return Functions
+const VerifyReturn_ContractsNotVerified = () => {
+    if (VerifyReturn_PauseUpdating) {
+        return VerifyReturn_ContractIdList
+    }
+
+    const VerifyReturn_TempList = [];
+    let VerifyReturn_Sorted = 0;
+
+    ExpectedInBody.querySelectorAll("tr").forEach((tr) => {
+        const VerifyReturnContractID = tr.getAttribute("data-contractid");
+        const VerifyReturnIsNotVerified = tr.querySelector(".verified-expectedin-dropoff-default:not([checked])");
+
+        if (VerifyReturnIsNotVerified && VerifyReturn_Sorted < maxProcessAmount) {
+         VerifyReturn_TempList.push(VerifyReturnContractID);
+         VerifyReturn_Sorted++;
+
+         if (!VerifyReturn_ProcessedContracts.has(VerifyReturnContractID)) {
+            VerifyReturn_ProcessedContracts.add(VerifyReturnContractID)
+         }
+        }
+    });
+
+    VerifyReturn_ContractIdList = VerifyReturn_TempList;
+    updateButtonLabel(VerifyReturn_Button, "Unverified Return Time/Date", VerifyReturn_ContractIdList);
+
+    return VerifyReturn_TempList;
+}
+
+async function processVerifyReturnContracts() {
+    VerifyReturn_Button.disabled = true;
+
+    const ContractList = VerifyReturn_ContractsNotVerified()
+    let ClockTime_Start;
+    let Sorted = 0;
+
+    ClockTime_Start = Date.now()
+    VerifyReturn_PauseUpdating = true;
+
+    for (const CurrentContractID of ContractList) {
+        displayVerifyExpectedDatePopup(CurrentContractID)
+
+        await waitForElement("#SecondaryPopup", 10000);
+        await wait(500);
+        flashScreen("grey", 500); // Add the flash effect
+
+        const submitButton = document.getElementById('expected-in-datetime-submit');
+        if (submitButton) {
+            submitButton.click();
+        }
+
+        await waitForElement("#toast-container", 10000);
+        await wait(400);
+        const toastSelector = "#toast-container > div > button";
+        const button = document.querySelector(toastSelector);
+        if (button) {
+            button.click();
+        }
+
+        Sorted++;
+        const EstTimeRemaining = getEstimatedTimeRemaining(Sorted, ContractList.length);
+        updateButtonLabel(VerifyReturn_Button, "Unverified Return Time/Date", VerifyReturn_ContractIdList, VerifyReturn_ContractIdList.length - Sorted, EstTimeRemaining);
+
+        // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
+        await waitForElementToDisappear(toastSelector, 10000);
+        await wait(1000);
+
+        const cancelButton = document.getElementById('expected-in-datetime-cancel');
+        if (cancelButton) {
+            cancelButton.click();
+        }
+    }
+
+    VerifyReturn_ProcessedContracts.clear()
+    updateButtonLabel(VerifyReturn_Button, "Unverified Return Time/Date", 0, "Completed - Reloading Section");
+
+    const ClockTime_Finish = Date.now()
+    const RefreshExpectedIn = "#ExpectedIn > header > a";
+    const RefreshExpectedInButton = document.querySelector(RefreshExpectedIn);
+    if (RefreshExpectedInButton) {
+        RefreshExpectedInButton.click();
+    }
+
+    await waitForElementToDisappear("#loadingDiv", 10000)
+    ShowToastrMessage(`Sent verfiy Time/Date to ${Sorted} Expected-In Contracts, Finished In - ${getDurationBetweenDates(ClockTime_Start, ClockTime_Finish)}`, "Verify Return Time/Date Finished", !0)
+    VerifyReturn_PauseUpdating = false;
+}
+
+function VerifyReturnVisible() {
+    if (!document.getElementById(VerifyReturn_ButtonID) && isExpectedInTableWrapperVisible()) {
+        const PrintButtonClone = document.querySelector("#ToolTables_ExpectedInTable_0");
+        VerifyReturn_Button = PrintButtonClone.cloneNode(true);
+        VerifyReturn_Button.setAttribute("id", VerifyReturn_ButtonID)
+
+        const ExpectedInNote_Span = VerifyReturn_Button.querySelector("span");
+        updateButtonLabel(VerifyReturn_Button, "Unverified Return Time/Date");
+        ExpectedInNotes_ContractsWithoutNotes();
+        PrintButtonClone.parentElement.insertBefore(VerifyReturn_Button, PrintButtonClone.nextSibling);
+
+        VerifyReturn_Button.addEventListener("click", function() {
+            processVerifyReturnContracts()
+        })
+    }
+}
+
+
+// Expected-In Note Functions
 function ExpectedInNotes_ContractsWithoutNotes() {
     if (ExpectedInNotes_PauseUpdating) {
         return ExpectedInNote_ContractIdList
@@ -232,10 +345,9 @@ async function processExpectedInNotesContracts() {
         }
 
         Sorted++;
-        // Get Time Remaining
         const EstTimeRemaining = getEstimatedTimeRemaining(Sorted, ContractList.length, ClockTime_Start);
         updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)", ExpectedInNote_ContractIdList, ExpectedInNote_ContractIdList.length - Sorted, EstTimeRemaining);
-        // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
+
         await waitForElementToDisappear(toastSelector, 10000);
         await wait(200);
     }
@@ -243,7 +355,6 @@ async function processExpectedInNotesContracts() {
     ExpectedInNotes_ProcessedContracts.clear()
     updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)", 0, "Completed - Reloading Section");
 
-    // Finished Toaster
     const ClockTime_Finish = Date.now()
     const RefreshExpectedIn = "#ExpectedIn > header > a";
     const RefreshExpectedInButton = document.querySelector(RefreshExpectedIn);
@@ -278,10 +389,15 @@ function isExpectedInTableWrapperVisibleChecker() {
         ExpectedInBody = document.querySelector("#ExpectedInTable > tbody");
 
         if (isExpectedInTableWrapperVisible()) {
-            ExpectedInNotesVisible();
             ExpectedInNotes_ContractsWithoutNotes();
+            ExpectedInNotesVisible();
+
+            VerifyReturn_ContractsNotVerified();
+            VerifyReturnVisible();
+
         } else {
             ExpectedInNotes_ProcessedContracts.clear();
+            VerifyReturn_ProcessedContracts.clear();
         }
     }, 1000);
 }
