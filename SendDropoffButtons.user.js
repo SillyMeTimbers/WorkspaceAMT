@@ -31,7 +31,7 @@ function isDropoffPopupVisible() {
     return false;
 }
 
-function runWhenTextSubmitFormVisible() {
+function runWhenDropoffVisible() {
     if (DropOffButtons_LastVisible === false) {
         DropOffButtons_LastVisible = true;
 
@@ -103,7 +103,7 @@ function continuouslyCheckTextSubmitFormVisibility() {
     setInterval(() => {
         if (isDropoffPopupVisible()) {
             console.log("Executing [Send Dropoff Info]")
-            runWhenTextSubmitFormVisible();
+            runWhenDropoffVisible();
         }
     }, 100);
 }
