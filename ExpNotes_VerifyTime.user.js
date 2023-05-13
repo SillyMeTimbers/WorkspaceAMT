@@ -69,7 +69,6 @@ const updateButtonLabel = (button, text, List = [], overrideAmount, timeRemainin
     buttonSpan.textContent = MessagePreview;
 };
 
-
 function flashScreen(color = "grey", duration = 1000) {
     const flashOverlay = document.createElement("div");
     flashOverlay.style.position = "fixed";
@@ -162,18 +161,22 @@ const VerifyReturn_ContractsNotVerified = () => {
 
     const VerifyReturn_TempList = [];
     let VerifyReturn_Sorted = 0;
-
+    
     ExpectedInBody.querySelectorAll("tr").forEach((tr) => {
-        const VerifyReturnContractID = tr.getAttribute("data-contractid");
-        const VerifyReturnIsNotVerified = tr.querySelector(".verified-expectedin-dropoff-default:not([checked])");
+        if (ExpectedInBody) {
+            const VerifyReturnContractID = tr.getAttribute("data-contractid");
+            const VerifyReturnIsNotVerified = tr.querySelector(".verified-expectedin-dropoff-default:not([checked])");
+               
+            if (ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`)) {
+                if (VerifyReturnIsNotVerified && VerifyReturn_Sorted < maxProcessAmount) {
+                    VerifyReturn_TempList.push(VerifyReturnContractID);
+                    VerifyReturn_Sorted++;
 
-        if (VerifyReturnIsNotVerified && VerifyReturn_Sorted < maxProcessAmount) {
-         VerifyReturn_TempList.push(VerifyReturnContractID);
-         VerifyReturn_Sorted++;
-
-         if (!VerifyReturn_ProcessedContracts.has(VerifyReturnContractID)) {
-            VerifyReturn_ProcessedContracts.add(VerifyReturnContractID)
-         }
+                    if (!VerifyReturn_ProcessedContracts.has(VerifyReturnContractID)) {
+                     VerifyReturn_ProcessedContracts.add(VerifyReturnContractID)
+                    }
+                }
+            }
         }
     });
 
