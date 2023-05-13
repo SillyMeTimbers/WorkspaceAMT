@@ -762,8 +762,6 @@ ${MessageEnd}`;
       for (const key in MessageTemplates) {
           const existingLi = Array.from(ulElement.children).find((li) => li.textContent === key);
           const liElement = document.createElement("li");
-          console.log(MessageTemplates[key].displayName)
-          console.log(key)
           liElement.textContent = `${MessageTemplates[key].displayName || key}`;
           liElement.innerHTML = `<img src="${imageSrc}" alt="Dynamic" width="16" height="16" style="vertical-align: middle; margin-right: 5px;"> <span style="color: #2A517C;">${MessageTemplates[key].displayName || key}</span>`;
 
