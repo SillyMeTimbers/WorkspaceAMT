@@ -8,7 +8,6 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-
 const currentTime = new Date(Date.now());
 const hours = String(currentTime.getHours()).padStart(2, '0');
 const minutes = String(currentTime.getMinutes()).padStart(2, '0');
@@ -30,7 +29,6 @@ let ExpectedInNote_ButtonID = "ExpInNotesButton";
 let ExpectedInNote_ContractIdList = [];
 let ExpectedInNotes_ProcessedContracts = new Set();
 let ExpectedInNotes_PauseUpdating = false;
-
 
 // Verify Return Time
 let VerifyReturn_Button;
@@ -56,7 +54,6 @@ const updateButtonLabel = (button, text, List = [], overrideAmount, timeRemainin
     }
 
     let MessagePreview;
-
     if (timeRemaining) {
         MessagePreview = `${overrideAmount || List.length
     } ${text} (Estimated time remaining: ${timeRemaining || "?"
@@ -188,13 +185,13 @@ const VerifyReturn_ContractsNotVerified = () => {
 
 async function processVerifyReturnContracts() {
     VerifyReturn_Button.disabled = true;
-
+    VerifyReturn_PauseUpdating = true;
+    
     const ContractList = VerifyReturn_ContractsNotVerified()
     let ClockTime_Start;
     let Sorted = 0;
 
     ClockTime_Start = Date.now()
-    VerifyReturn_PauseUpdating = true;
 
     for (const CurrentContractID of ContractList) {
         displayVerifyExpectedDatePopup(CurrentContractID)
@@ -262,7 +259,6 @@ function VerifyReturnVisible() {
     }
 }
 
-
 // Expected-In Note Functions
 function ExpectedInNotes_ContractsWithoutNotes() {
     if (ExpectedInNotes_PauseUpdating) {
@@ -309,13 +305,13 @@ function ExpectedInNotes_GetNote(contractDetails) {
 
 async function processExpectedInNotesContracts() {
     ExpectedInNote_Button.disabled = true;
-
+    ExpectedInNotes_PauseUpdating = true;
+    
     const ContractList = ExpectedInNotes_ContractsWithoutNotes()
     let ClockTime_Start;
     let Sorted = 0;
 
     ClockTime_Start = Date.now()
-    ExpectedInNotes_PauseUpdating = true;
 
     for (const CurrentContractID of ContractList) {
         BuildContractNoteView(CurrentContractID[0])
@@ -394,7 +390,6 @@ function isExpectedInTableWrapperVisibleChecker() {
 
             VerifyReturn_ContractsNotVerified();
             VerifyReturnVisible();
-
         } else {
             ExpectedInNotes_ProcessedContracts.clear();
             VerifyReturn_ProcessedContracts.clear();
