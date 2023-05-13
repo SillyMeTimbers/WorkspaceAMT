@@ -79,7 +79,7 @@ function runWhenReservationPopupVisible() {
 
 // Function to continuously check
 function continuouslyCheckReservationPopupVisibility() {
-  console.log("Running [Send Dropoff Info]")
+  console.log("Running [Topbar Alert]")
   
   setInterval(() => {
     runWhenReservationPopupVisible();
