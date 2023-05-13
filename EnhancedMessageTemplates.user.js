@@ -845,8 +845,10 @@ ${MessageEnd}`;
 // Function to continuously check if the textSubmitForm is visible
 function continuouslyCheckTextSubmitFormVisibility() {
     console.log("Running [Dynamic Message Templates]")
+    
     setInterval(() => {
         if (isTextSubmitFormVisible()) {
+            console.log("Executed [Dynamic Message Templates]")
             runWhenTextSubmitFormVisible();
         } else {
             CurrentSelector = "";
