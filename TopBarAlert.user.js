@@ -8,6 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
+console.log("Started [Topbar Alert]")
 
 const displayText = '($) Reservation is Prepaid/Paid'
 
@@ -78,6 +79,8 @@ function runWhenReservationPopupVisible() {
 
 // Function to continuously check
 function continuouslyCheckReservationPopupVisibility() {
+  console.log("Running [Send Dropoff Info]")
+  
   setInterval(() => {
     runWhenReservationPopupVisible();
   }, 100); // Check every 100ms
