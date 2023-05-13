@@ -234,7 +234,6 @@ async function processExpectedInNotesContracts() {
 
     // Get Time Remaining
     const EstTimeRemaining = getEstimatedTimeRemaining(Sorted, ContractList.length, ClockTime_Start);
-    timeRemainingElement.textContent = `Estimated time remaining: ${EstTimeRemaining}`;
     updateButtonLabel(ExpectedInNotes_TempList.length - Sorted, EstTimeRemaining);
 
     // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
