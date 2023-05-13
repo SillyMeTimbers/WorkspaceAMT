@@ -72,6 +72,7 @@ function runWhenReservationPopupVisible() {
   if (targetElement && isResPaid()) { // Check if the cancelReservationLink id exists on the page
     const cancelReservationLink = document.getElementById('cancelReservationLink');
     if (cancelReservationLink) { // Add the isPrepaidDiv to the top of the list
+      console.log("Executing [Topbar Alert]")
       addIsPrepaidDivToReservationPopup(targetElement, 'top');
     }
   }
@@ -82,7 +83,6 @@ function continuouslyCheckReservationPopupVisibility() {
   console.log("Running [Topbar Alert]")
   
   setInterval(() => {
-    console.log("Executing [Topbar Alert]")
     runWhenReservationPopupVisible();
   }, 100); // Check every 100ms
 }
