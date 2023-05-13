@@ -8,8 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-
-// Works just as intended, no changes in development
+console.log("Started [View In POS - Overdue]")
 
 // Function to check if the OverdueSearchResultsDiv is visible
 function isOverdueSearchResultsDivVisible() {
@@ -82,6 +81,7 @@ const observer = new MutationObserver((mutationsList, observer) => {
       setTimeout(() => {
         runWhenOverdueVisible();
       }, 100); // Add a 10ms cooldown
+      console.log("Started [View In POS - Overdue]")
       // No need to disconnect the observer, keep it running
     }
   }
