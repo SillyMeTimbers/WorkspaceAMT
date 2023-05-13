@@ -8,9 +8,9 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
+console.log("Started [Dynamic Message Templates]"
 
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
-
 function GetEquipmentNameFromId(equipId) {
     const equipmentMap = {
         "BE": "Cargo Van",
@@ -846,6 +846,7 @@ ${MessageEnd}`;
 
 // Function to continuously check if the textSubmitForm is visible
 function continuouslyCheckTextSubmitFormVisibility() {
+    console.log("Running [Dynamic Message Templates]"
     setInterval(() => {
         if (isTextSubmitFormVisible()) {
             runWhenTextSubmitFormVisible();
