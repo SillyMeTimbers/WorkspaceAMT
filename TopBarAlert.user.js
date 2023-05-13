@@ -82,6 +82,7 @@ function continuouslyCheckReservationPopupVisibility() {
   console.log("Running [Topbar Alert]")
   
   setInterval(() => {
+    console.log("Executing [Topbar Alert]")
     runWhenReservationPopupVisible();
   }, 100); // Check every 100ms
 }
