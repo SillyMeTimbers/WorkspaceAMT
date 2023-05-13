@@ -37,255 +37,253 @@ let ExpectedInBody;
 
 // Shared Functions
 const isExpectedInTableWrapperVisible = () => {
-  const expectedInTableWrapper = document.querySelector("#ExpectedInTable_wrapper");
-  return (expectedInTableWrapper && expectedInTableWrapper.offsetWidth > 0 && expectedInTableWrapper.offsetHeight > 0);
+    const expectedInTableWrapper = document.querySelector("#ExpectedInTable_wrapper");
+    return (expectedInTableWrapper && expectedInTableWrapper.offsetWidth > 0 && expectedInTableWrapper.offsetHeight > 0);
 };
 
 const updateButtonLabel = (button, text, List = [], overrideAmount, timeRemaining) => {
-  if (!(button instanceof HTMLElement)) {
-    console.log("button is not an HTMLElement or is null!");
-    return;
-  }
+    if (!(button instanceof HTMLElement)) {
+        console.log("button is not an HTMLElement or is null!");
+        return;
+    }
 
-  let MessagePreview;
+    let MessagePreview;
 
-  if (timeRemaining) {
-    MessagePreview = `${overrideAmount || List.length
-      } ${text} (Estimated time remaining: ${timeRemaining || "?"
-      })`;
-  } else {
-    MessagePreview = `${overrideAmount || List.length
-      } ${text}`;
-  }
+    if (timeRemaining) {
+        MessagePreview = `${overrideAmount || List.length
+    } ${text} (Estimated time remaining: ${timeRemaining || "?"
+    })`;
+    } else {
+        MessagePreview = `${overrideAmount || List.length
+    } ${text}`;
+    }
 
-  button.setAttribute("title", MessagePreview);
-  const buttonSpan = button.querySelector("span");
-  buttonSpan.setAttribute("title", MessagePreview);
-  buttonSpan.textContent = MessagePreview;
+    button.setAttribute("title", MessagePreview);
+    const buttonSpan = button.querySelector("span");
+    buttonSpan.setAttribute("title", MessagePreview);
+    buttonSpan.textContent = MessagePreview;
 };
 
 
 function flashScreen(color = "grey", duration = 1000) {
-  const flashOverlay = document.createElement("div");
-  flashOverlay.style.position = "fixed";
-  flashOverlay.style.zIndex = 9999;
-  flashOverlay.style.left = 0;
-  flashOverlay.style.top = 0;
-  flashOverlay.style.width = "100%";
-  flashOverlay.style.height = "100%";
-  flashOverlay.style.backgroundColor = color;
-  flashOverlay.style.opacity = 0.2;
+    const flashOverlay = document.createElement("div");
+    flashOverlay.style.position = "fixed";
+    flashOverlay.style.zIndex = 9999;
+    flashOverlay.style.left = 0;
+    flashOverlay.style.top = 0;
+    flashOverlay.style.width = "100%";
+    flashOverlay.style.height = "100%";
+    flashOverlay.style.backgroundColor = color;
+    flashOverlay.style.opacity = 0.2;
 
-  document.body.appendChild(flashOverlay);
+    document.body.appendChild(flashOverlay);
 
-  setTimeout(() => {
-    document.body.removeChild(flashOverlay);
-  }, duration);
+    setTimeout(() => {
+        document.body.removeChild(flashOverlay);
+    }, duration);
 }
 
 function wait(time) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, time);
-  });
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, time);
+    });
 }
 
 async function waitForElement(selector, timeout = 10000) {
-  const startTime = Date.now();
+    const startTime = Date.now();
 
-  while (Date.now() - startTime < timeout) {
-    const element = document.querySelector(selector);
+    while (Date.now() - startTime < timeout) {
+        const element = document.querySelector(selector);
 
-    if (element) {
-      return element;
+        if (element) {
+            return element;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
-
-  // Return null if the element is not found within the timeout period
-  return null;
+    // Return null if the element is not found within the timeout period
+    return null;
 }
 
 async function waitForElementToDisappear(selector, timeout = 30000) {
-  const startTime = Date.now();
+    const startTime = Date.now();
 
-  while (Date.now() - startTime < timeout) {
-    const element = document.querySelector(selector);
+    while (Date.now() - startTime < timeout) {
+        const element = document.querySelector(selector);
 
-    if (!element || element.style.display === "none" || element.style.visibility === "hidden") {
-      break;
+        if (!element || element.style.display === "none" || element.style.visibility === "hidden") {
+            break;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
     }
-
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
 }
 
 function getDurationBetweenDates(start, end) {
-  const elapsedTime = end - start;
-  const seconds = Math.round(elapsedTime / 1000) % 60;
-  const minutes = Math.floor(elapsedTime / 1000 / 60);
-  return `${minutes}m ${seconds}s`;
+    const elapsedTime = end - start;
+    const seconds = Math.round(elapsedTime / 1000) % 60;
+    const minutes = Math.floor(elapsedTime / 1000 / 60);
+    return `${minutes}m ${seconds}s`;
 }
 
 function getEstimatedTimeRemaining(currentIndex, totalContracts, StartTime) {
-  const elapsedTime = Date.now() - StartTime;
-  const averageTimePerContract = elapsedTime / (currentIndex + 1);
-  const remainingContracts = totalContracts - currentIndex - 1;
-  const estimatedTimeRemaining = averageTimePerContract * remainingContracts;
-  const seconds = Math.round(estimatedTimeRemaining / 1000) % 60;
-  const minutes = Math.floor(estimatedTimeRemaining / 1000 / 60);
-  return `${minutes}m ${seconds}s`;
+    const elapsedTime = Date.now() - StartTime;
+    const averageTimePerContract = elapsedTime / (currentIndex + 1);
+    const remainingContracts = totalContracts - currentIndex - 1;
+    const estimatedTimeRemaining = averageTimePerContract * remainingContracts;
+    const seconds = Math.round(estimatedTimeRemaining / 1000) % 60;
+    const minutes = Math.floor(estimatedTimeRemaining / 1000 / 60);
+    return `${minutes}m ${seconds}s`;
 }
 
 // Expected-In Note Functions
 function resetBackgroundColor(contractId) {
-  ExpectedInBody.querySelector(`tr[data-contractid="${contractId}"]`).style.backgroundColor = "";
+    ExpectedInBody.querySelector(`tr[data-contractid="${contractId}"]`).style.backgroundColor = "";
 };
 
 async function visualizeList(contracts, hexColor) {
-  for (const contractId of contracts) {
-    await new Promise((resolve) => setTimeout(resolve, 0)); // wait for the specified delay time
-    ExpectedInBody.querySelector(`tr[data-contractid="${contractId}"]`).style.setProperty('background-color', hexColor);
-  }
+    for (const contractId of contracts) {
+        await new Promise((resolve) => setTimeout(resolve, 0)); // wait for the specified delay time
+        ExpectedInBody.querySelector(`tr[data-contractid="${contractId}"]`).style.setProperty('background-color', hexColor);
+    }
 };
 
 function ExpectedInNotes_ContractsWithoutNotes() {
-  if (ExpectedInNotes_PauseUpdating) {
-    return ExpectedInNote_ContractIdList
-  }
-
-  const ExpectedInNotes_TempList = [];
-  let ExpectedInNotes_Sorted = 0;
-
-  ExpectedInBody.querySelectorAll("tr").forEach((tr) => {
-    const ExpInContractID = tr.getAttribute("data-contractid");
-    const ExpInNote = tr.querySelector("td.note.has-tip");
-    const ExpInContent = tr.textContent;
-    const ExpInUBOX = ExpInContent.includes("UBox") || ExpInContent.includes("DB") || ExpInContent.includes("UB");
-
-    if (!ExpInNote || (ExpInNote && ExpInNote.textContent.trim() === "" || ExpInNote.textContent.trim().length < 1) && ExpectedInNotes_Sorted < maxProcessAmount) {
-      ExpectedInNotes_TempList.push([ExpInContractID, ExpInUBOX])
-      ExpectedInNotes_Sorted++;
-      ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.add("has-no-note");
-
-      if (!ExpectedInNotes_ProcessedContracts.has(ExpInContractID)) {
-        ExpectedInNotes_ProcessedContracts.add(ExpInContractID)
-      }
-
-      visualizeList([ExpInContractID], "#ADD8E6")
-    } else {
-      resetBackgroundColor(ExpInContractID)
-      ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.remove("has-no-note");
+    if (ExpectedInNotes_PauseUpdating) {
+        return ExpectedInNote_ContractIdList
     }
-  });
 
-  ExpectedInNote_ContractIdList = ExpectedInNotes_TempList;
-  updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)", ExpectedInNote_ContractIdList);
+    const ExpectedInNotes_TempList = [];
+    let ExpectedInNotes_Sorted = 0;
 
-  return ExpectedInNotes_TempList;
+    ExpectedInBody.querySelectorAll("tr").forEach((tr) => {
+        const ExpInContractID = tr.getAttribute("data-contractid");
+        const ExpInNote = tr.querySelector("td.note.has-tip");
+        const ExpInContent = tr.textContent;
+        const ExpInUBOX = ExpInContent.includes("UBox") || ExpInContent.includes("DB") || ExpInContent.includes("UB");
+
+        if (!ExpInNote || (ExpInNote && ExpInNote.textContent.trim() === "" || ExpInNote.textContent.trim().length < 1) && ExpectedInNotes_Sorted < maxProcessAmount) {
+            ExpectedInNotes_TempList.push([ExpInContractID, ExpInUBOX])
+            ExpectedInNotes_Sorted++;
+            ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.add("has-no-note");
+
+            if (!ExpectedInNotes_ProcessedContracts.has(ExpInContractID)) {
+                ExpectedInNotes_ProcessedContracts.add(ExpInContractID)
+            }
+
+            visualizeList([ExpInContractID], "#ADD8E6")
+        } else {
+            resetBackgroundColor(ExpInContractID)
+            ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.remove("has-no-note");
+        }
+    });
+
+    ExpectedInNote_ContractIdList = ExpectedInNotes_TempList;
+    updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)", ExpectedInNote_ContractIdList);
+
+    return ExpectedInNotes_TempList;
 }
 
 function ExpectedInNotes_GetNote(contractDetails) {
-  if (contractDetails[1] == true) {
-    return ExpectedInNote_UBOXNote
-  }
-  return ExpectedInNote_DefaultNote
+    if (contractDetails[1] == true) {
+        return ExpectedInNote_UBOXNote
+    }
+    return ExpectedInNote_DefaultNote
 }
 
 async function processExpectedInNotesContracts() {
-  ExpectedInNote_Button.disabled = true;
+    ExpectedInNote_Button.disabled = true;
 
-  const ContractList = ExpectedInNotes_ContractsWithoutNotes()
-  let ClockTime_Start;
-  let Sorted = 0;
+    const ContractList = ExpectedInNotes_ContractsWithoutNotes()
+    let ClockTime_Start;
+    let Sorted = 0;
 
-  ClockTime_Start = Date.now()
-  ExpectedInNotes_PauseUpdating = true;
+    ClockTime_Start = Date.now()
+    ExpectedInNotes_PauseUpdating = true;
 
-  for (const CurrentContractID of ContractList) {
-    BuildContractNoteView(CurrentContractID[0])
+    for (const CurrentContractID of ContractList) {
+        BuildContractNoteView(CurrentContractID[0])
 
-    await waitForElement("#notesTextBox", 10000);
-    await wait(500);
-    flashScreen("grey", 500); // Add the flash effect
-    $("#notesTextBox").val(ExpectedInNotes_GetNote(CurrentContractID));
+        await waitForElement("#notesTextBox", 10000);
+        await wait(500);
+        flashScreen("grey", 500); // Add the flash effect
+        $("#notesTextBox").val(ExpectedInNotes_GetNote(CurrentContractID));
 
-    const ExpInNoteCheckBox = document.querySelector(".large-12.columns label:last-of-type .checkbox");
-    if (ExpInNoteCheckBox) {
-      ExpInNoteCheckBox.click();
+        const ExpInNoteCheckBox = document.querySelector(".large-12.columns label:last-of-type .checkbox");
+        if (ExpInNoteCheckBox) {
+            ExpInNoteCheckBox.click();
+        }
+
+        await wait(100);
+        const submitButton = document.querySelector("#submit-note");
+        if (submitButton) {
+            submitButton.click();
+        }
+
+        await waitForElement("#toast-container", 10000);
+        await wait(200);
+        const toastSelector = "#toast-container > div > button";
+        const Toastbutton = document.querySelector(toastSelector);
+        if (Toastbutton) {
+            Toastbutton.click();
+        }
+
+        Sorted++;
+        // Get Time Remaining
+        const EstTimeRemaining = getEstimatedTimeRemaining(Sorted, ContractList.length, ClockTime_Start);
+        updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)", ExpectedInNote_ContractIdList, ExpectedInNote_ContractIdList.length - Sorted, EstTimeRemaining);
+        // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
+        await waitForElementToDisappear(toastSelector, 10000);
+        await wait(200);
     }
 
-    await wait(100);
-    const submitButton = document.querySelector("#submit-note");
-    if (submitButton) {
-      submitButton.click();
+    ExpectedInNotes_ProcessedContracts.clear()
+    updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)", 0, "Completed - Reloading Section");
+
+    // Finished Toaster
+    const ClockTime_Finish = Date.now()
+    const RefreshExpectedIn = "#ExpectedIn > header > a";
+    const RefreshExpectedInButton = document.querySelector(RefreshExpectedIn);
+    if (RefreshExpectedInButton) {
+        RefreshExpectedInButton.click();
     }
 
-    await waitForElement("#toast-container", 10000);
-    await wait(200);
-    const toastSelector = "#toast-container > div > button";
-    const Toastbutton = document.querySelector(toastSelector);
-    if (Toastbutton) {
-      Toastbutton.click();
-    }
-
-    Sorted++;
-
-    // Get Time Remaining
-    const EstTimeRemaining = getEstimatedTimeRemaining(Sorted, ContractList.length, ClockTime_Start);
-    updateButtonLabel(ContractList.length - Sorted, EstTimeRemaining);
-
-    // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
-    await waitForElementToDisappear(toastSelector, 10000);
-    await wait(200);
-  }
-
-  ExpectedInNotes_ProcessedContracts.clear()
-  updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)", 0, "Completed - Reloading Section");
-
-  // Finished Toaster
-  const ClockTime_Finish = Date.now()
-  const RefreshExpectedIn = "#ExpectedIn > header > a";
-  const RefreshExpectedInButton = document.querySelector(RefreshExpectedIn);
-  if (RefreshExpectedInButton) {
-    RefreshExpectedInButton.click();
-  }
-
-  await waitForElementToDisappear("#loadingDiv", 10000)
-  ShowToastrMessage(`Completed ${Sorted} Note(s) in ${getDurationBetweenDates(ClockTime_Start, ClockTime_Finish)}`, "Expected-In Notes Finished", !0)
-  ExpectedInNotes_PauseUpdating = false;
+    await waitForElementToDisappear("#loadingDiv", 10000)
+    ShowToastrMessage(`Completed ${Sorted} Note(s) in ${getDurationBetweenDates(ClockTime_Start, ClockTime_Finish)}`, "Expected-In Notes Finished", !0)
+    ExpectedInNotes_PauseUpdating = false;
 }
 
 function ExpectedInNotesVisible() {
-  if (!document.getElementById(ExpectedInNote_ButtonID) && isExpectedInTableWrapperVisible()) {
-    const PrintButtonClone = document.querySelector("#ToolTables_ExpectedInTable_0");
-    ExpectedInNote_Button = PrintButtonClone.cloneNode(true);
-    ExpectedInNote_Button.setAttribute("id", ExpectedInNote_ButtonID)
+    if (!document.getElementById(ExpectedInNote_ButtonID) && isExpectedInTableWrapperVisible()) {
+        const PrintButtonClone = document.querySelector("#ToolTables_ExpectedInTable_0");
+        ExpectedInNote_Button = PrintButtonClone.cloneNode(true);
+        ExpectedInNote_Button.setAttribute("id", ExpectedInNote_ButtonID)
 
-    const ExpectedInNote_Span = ExpectedInNote_Button.querySelector("span");
-    updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)");
-    ExpectedInNotes_ContractsWithoutNotes();
-    PrintButtonClone.parentElement.insertBefore(ExpectedInNote_Button, PrintButtonClone.nextSibling);
+        const ExpectedInNote_Span = ExpectedInNote_Button.querySelector("span");
+        updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)");
+        ExpectedInNotes_ContractsWithoutNotes();
+        PrintButtonClone.parentElement.insertBefore(ExpectedInNote_Button, PrintButtonClone.nextSibling);
 
-    ExpectedInNote_Button.addEventListener("click", function() {
-      processExpectedInNotesContracts()
-    })
-  }
+        ExpectedInNote_Button.addEventListener("click", function() {
+            processExpectedInNotesContracts()
+        })
+    }
 }
 
 function isExpectedInTableWrapperVisibleChecker() {
-  setInterval(() => {
-    ExpectedInBody = document.querySelector("#ExpectedInTable > tbody");
+    setInterval(() => {
+        ExpectedInBody = document.querySelector("#ExpectedInTable > tbody");
 
-    if (isExpectedInTableWrapperVisible()) {
-      ExpectedInNotesVisible();
-      ExpectedInNotes_ContractsWithoutNotes();
-    } else {
-      ExpectedInNotes_ProcessedContracts.clear();
-    }
-  }, 1000);
+        if (isExpectedInTableWrapperVisible()) {
+            ExpectedInNotesVisible();
+            ExpectedInNotes_ContractsWithoutNotes();
+        } else {
+            ExpectedInNotes_ProcessedContracts.clear();
+        }
+    }, 1000);
 }
 
 isExpectedInTableWrapperVisibleChecker();
