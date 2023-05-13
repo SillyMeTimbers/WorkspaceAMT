@@ -269,24 +269,28 @@ function ExpectedInNotes_ContractsWithoutNotes() {
     let ExpectedInNotes_Sorted = 0;
 
     ExpectedInBody.querySelectorAll("tr").forEach((tr) => {
-        const ExpInContractID = tr.getAttribute("data-contractid");
-        const ExpInNote = tr.querySelector("td.note.has-tip");
-        const ExpInContent = tr.textContent;
-        const ExpInUBOX = ExpInContent.includes("UBox") || ExpInContent.includes("DB") || ExpInContent.includes("UB");
+        if (ExpectedInBody) {
+            const ExpInContractID = tr.getAttribute("data-contractid");
+            const ExpInNote = tr.querySelector("td.note.has-tip");
+            const ExpInContent = tr.textContent;
+            const ExpInUBOX = ExpInContent.includes("UBox") || ExpInContent.includes("DB") || ExpInContent.includes("UB");
 
-        if (!ExpInNote || (ExpInNote && ExpInNote.textContent.trim() === "" || ExpInNote.textContent.trim().length < 1) && ExpectedInNotes_Sorted < maxProcessAmount) {
-            ExpectedInNotes_TempList.push([ExpInContractID, ExpInUBOX])
-            ExpectedInNotes_Sorted++;
-            ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.add("has-no-note");
+            if (ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`)) {
+                    if (!ExpInNote || (ExpInNote && ExpInNote.textContent.trim() === "" || ExpInNote.textContent.trim().length < 1) && ExpectedInNotes_Sorted < maxProcessAmount) {
+                    ExpectedInNotes_TempList.push([ExpInContractID, ExpInUBOX])
+                    ExpectedInNotes_Sorted++;
+                    ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.add("has-no-note");
 
-            if (!ExpectedInNotes_ProcessedContracts.has(ExpInContractID)) {
-                ExpectedInNotes_ProcessedContracts.add(ExpInContractID)
+                    if (!ExpectedInNotes_ProcessedContracts.has(ExpInContractID)) {
+                        ExpectedInNotes_ProcessedContracts.add(ExpInContractID)
+                    }
+
+                    visualizeList([ExpInContractID], "#ADD8E6")
+                } else {
+                    resetBackgroundColor(ExpInContractID)
+                    ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.remove("has-no-note");
+                }
             }
-
-            visualizeList([ExpInContractID], "#ADD8E6")
-        } else {
-            resetBackgroundColor(ExpInContractID)
-            ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.remove("has-no-note");
         }
     });
 
