@@ -486,15 +486,16 @@ const MessageTemplates = {
 };
 
 function isMessageTemplatesForumVisible() {
-    console.log("Visible Yes")
     const textSubmitForm = document.querySelector("#textMessageArea");
     if (
         textSubmitForm &&
         textSubmitForm.offsetWidth > 0 &&
         textSubmitForm.offsetHeight > 0
     ) {
+        console.log("Visible Yes")
         return true;
     }
+    console.log("not visible")
     LastVisible = false;
     return false;
 }
