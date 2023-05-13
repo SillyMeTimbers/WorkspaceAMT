@@ -100,6 +100,7 @@ function continuouslyCheckTextSubmitFormVisibility() {
     
     setInterval(() => {
         if (isTextSubmitFormVisible()) {
+            console.log("Executing [Send Dropoff Info]")
             runWhenTextSubmitFormVisible();
         }
     }, 100); // Check every 100ms
