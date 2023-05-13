@@ -10,8 +10,10 @@
 // ==/UserScript==
 console.log("Started [Send Dropoff Info]")
 
-let DropoffLastVisible = false;
-function isTextSubmitFormVisible() {
+// Variables
+let DropOffButtons_LastVisible = false;
+
+function isDropoffPopupVisible() {
     const textSubmitForm = document.querySelector("#SecondaryPopup");
     const TextForumHeader = document.querySelector("#SecondaryPopup > section > header > h1");
 
@@ -25,13 +27,13 @@ function isTextSubmitFormVisible() {
         }
     }
 
-    DropoffLastVisible = false;
+    DropOffButtons_LastVisible = false;
     return false;
 }
 
 function runWhenTextSubmitFormVisible() {
-    if (DropoffLastVisible === false) {
-        DropoffLastVisible = true;
+    if (DropOffButtons_LastVisible === false) {
+        DropOffButtons_LastVisible = true;
 
         function createButton(id, text, email, sms) {
             const button = document.createElement('button');
@@ -99,11 +101,11 @@ function continuouslyCheckTextSubmitFormVisibility() {
     console.log("Running [Send Dropoff Info]")
     
     setInterval(() => {
-        if (isTextSubmitFormVisible()) {
+        if (isDropoffPopupVisible()) {
             console.log("Executing [Send Dropoff Info]")
             runWhenTextSubmitFormVisible();
         }
-    }, 100); // Check every 100ms
+    }, 100);
 }
 
 // Start checking the textSubmitForm visibility
