@@ -90,7 +90,6 @@ function runWhenTextSubmitFormVisible() {
                     sendDropoffInfo("text")
                 }
             }
-            // Your implementation for scheduling the message
         }
     }
 }
