@@ -8,6 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
+console.log("Started [Send Dropoff Info]")
 
 let DropoffLastVisible = false;
 function isTextSubmitFormVisible() {
@@ -96,6 +97,8 @@ function runWhenTextSubmitFormVisible() {
 
 // Function to continuously check if the textSubmitForm is visible
 function continuouslyCheckTextSubmitFormVisibility() {
+    console.log("Running [Send Dropoff Info]")
+    
     setInterval(() => {
         if (isTextSubmitFormVisible()) {
             runWhenTextSubmitFormVisible();
