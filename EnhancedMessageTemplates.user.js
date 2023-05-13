@@ -857,9 +857,4 @@ function isMessageTemplatesForumVisibleRepeat() {
 }
 
 // Start checking the textSubmitForm visibility
-<<<<<<< HEAD
 isMessageTemplatesForumVisibleRepeat();
-=======
-isMessageTemplatesForumVisibleRepeat();
-
->>>>>>> c9fb8e08e929e16fa70e8beac3b52c5888111200
