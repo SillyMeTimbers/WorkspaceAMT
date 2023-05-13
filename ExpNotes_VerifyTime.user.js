@@ -8,14 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-
-const currentTime = new Date(Date.now());
-const hours = String(currentTime.getHours()).padStart(2, '0');
-const minutes = String(currentTime.getMinutes()).padStart(2, '0');
-const seconds = String(currentTime.getSeconds()).padStart(2, '0');
-
-const formattedTime = `${hours}:${minutes}:${seconds}`;
-console.log(`Fetched Version-- f ${formattedTime}`)
+console.log("Started [Expected-In Buttons]")
 
 // Expected-In Note Variables
 const ExpectedInNote_UBOXNote = "UBOX";
@@ -389,9 +382,11 @@ function ExpectedInNotesVisible() {
 }
 
 function isExpectedInTableWrapperVisibleChecker() {
+    console.log("Running [Expected-In Buttons]")
+    
     setInterval(() => {
         ExpectedInBody = document.querySelector("#ExpectedInTable > tbody");
-
+        
         if (isExpectedInTableWrapperVisible()) {
             ExpectedInNotes_ContractsWithoutNotes();
             ExpectedInNotesVisible();
