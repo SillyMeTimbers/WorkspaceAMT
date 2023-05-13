@@ -485,7 +485,8 @@ const MessageTemplates = {
     },
 };
 
-function isTextSubmitFormVisible() {
+function isMessageTemplatesForumVisible() {
+    console.log("Visible Yes")
     const textSubmitForm = document.querySelector("#textSubmitForm");
     if (
         textSubmitForm &&
@@ -843,11 +844,11 @@ ${MessageEnd}`;
 }
 
 // Function to continuously check if the textSubmitForm is visible
-function continuouslyCheckTextSubmitFormVisibility() {
+function isMessageTemplatesForumVisibleRepeat() {
     console.log("Running [Dynamic Message Templates]")
     
     setInterval(() => {
-        if (isTextSubmitFormVisible()) {
+        if (isMessageTemplatesForumVisible()) {
             console.log("Executed [Dynamic Message Templates]")
             runWhenTextSubmitFormVisible();
         } else {
@@ -857,4 +858,4 @@ function continuouslyCheckTextSubmitFormVisibility() {
 }
 
 // Start checking the textSubmitForm visibility
-continuouslyCheckTextSubmitFormVisibility();
+isMessageTemplatesForumVisibleRepeat();
