@@ -42,8 +42,8 @@ const isExpectedInTableWrapperVisible = () => {
 };
 
 const updateButtonLabel = (button, text, List = [], overrideAmount, timeRemaining) => {
-  if (!button) {
-    console.log("button has not been created yet!");
+  if (!(button instanceof HTMLElement)) {
+    console.log("button is not an HTMLElement or is null!");
     return;
   }
 
@@ -52,10 +52,10 @@ const updateButtonLabel = (button, text, List = [], overrideAmount, timeRemainin
   if (timeRemaining) {
     MessagePreview = `${overrideAmount || List.length
       } ${text} (Estimated time remaining: ${timeRemaining || "?"
-      })`
+      })`;
   } else {
     MessagePreview = `${overrideAmount || List.length
-      } ${text}`
+      } ${text}`;
   }
 
   button.setAttribute("title", MessagePreview);
@@ -63,6 +63,7 @@ const updateButtonLabel = (button, text, List = [], overrideAmount, timeRemainin
   buttonSpan.setAttribute("title", MessagePreview);
   buttonSpan.textContent = MessagePreview;
 };
+
 
 function flashScreen(color = "grey", duration = 1000) {
   const flashOverlay = document.createElement("div");
