@@ -15,7 +15,7 @@ const minutes = String(currentTime.getMinutes()).padStart(2, '0');
 const seconds = String(currentTime.getSeconds()).padStart(2, '0');
 
 const formattedTime = `${hours}:${minutes}:${seconds}`;
-console.log(`Fetched Version ${formattedTime}`)
+console.log(`Fetched Version - ${formattedTime}`)
 
 // Expected-In Note Variables
 const ExpectedInNote_UBOXNote = "UBOX";
