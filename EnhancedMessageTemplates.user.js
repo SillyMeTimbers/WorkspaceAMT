@@ -487,7 +487,7 @@ const MessageTemplates = {
 
 function isMessageTemplatesForumVisible() {
     console.log("Visible Yes")
-    const textSubmitForm = document.querySelector("#textSubmitForm");
+    const textSubmitForm = document.querySelector("#textMessageArea");
     if (
         textSubmitForm &&
         textSubmitForm.offsetWidth > 0 &&
