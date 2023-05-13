@@ -8,6 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
+
 const currentTime = new Date(Date.now());
 const hours = String(currentTime.getHours()).padStart(2, '0');
 const minutes = String(currentTime.getMinutes()).padStart(2, '0');
