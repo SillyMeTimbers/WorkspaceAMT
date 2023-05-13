@@ -388,6 +388,8 @@ function isExpectedInTableWrapperVisibleChecker() {
         ExpectedInBody = document.querySelector("#ExpectedInTable > tbody");
         
         if (isExpectedInTableWrapperVisible()) {
+            console.log("Executed [Expected-In Buttons]")
+            
             ExpectedInNotes_ContractsWithoutNotes();
             ExpectedInNotesVisible();
 
