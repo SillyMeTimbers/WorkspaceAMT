@@ -299,7 +299,7 @@ function getDynamicValuesForTemplate(templateName) {
 }
 
 let CurrentSelector = "";
-let LastVisible = false;
+let MessageTemplateLastVisible = false;
 const MessageTemplates = {
     "Storage Offer": {
         func: StorageOfferMessage,
@@ -492,10 +492,8 @@ function isMessageTemplatesForumVisible() {
         textSubmitForm.offsetWidth > 0 &&
         textSubmitForm.offsetHeight > 0
     ) {
-        console.log("Visible Yes")
         return true;
     }
-    console.log("not visible")
     LastVisible = false;
     return false;
 }
@@ -859,4 +857,9 @@ function isMessageTemplatesForumVisibleRepeat() {
 }
 
 // Start checking the textSubmitForm visibility
+<<<<<<< HEAD
 isMessageTemplatesForumVisibleRepeat();
+=======
+isMessageTemplatesForumVisibleRepeat();
+
+>>>>>>> c9fb8e08e929e16fa70e8beac3b52c5888111200
