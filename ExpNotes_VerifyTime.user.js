@@ -161,7 +161,7 @@ const VerifyReturn_ContractsNotVerified = () => {
             const VerifyReturnContractID = tr.getAttribute("data-contractid");
             const VerifyReturnIsNotVerified = tr.querySelector(".verified-expectedin-dropoff-default:not([checked])");
                
-            if (ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`)) {
+            if (ExpectedInBody.querySelector(`tr[data-contractid="${VerifyReturnContractID}"]`)) {
                 if (VerifyReturnIsNotVerified && VerifyReturn_Sorted < maxProcessAmount) {
                     VerifyReturn_TempList.push(VerifyReturnContractID);
                     VerifyReturn_Sorted++;
