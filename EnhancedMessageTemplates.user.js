@@ -523,6 +523,23 @@ function runWhenTextSubmitFormVisible() {
     if (LastVisible === false) {
         LastVisible = true;
 
+        const phoneNumberInput = document.querySelector("#CustomerPhoneNumber");
+        
+        function formatPhoneNumber(inputElement) {
+            let value = inputElement.value.replace(/\D/g, '');
+            if (value.length > 10) value = value.slice(0, 10); // Limit to 10 numerical characters
+
+            let formattedValue = '';
+            if (value.length > 0) formattedValue += '(' + value.slice(0, 3);
+            if (value.length > 3) formattedValue += ') ' + value.slice(3, 6);
+            if (value.length > 6) formattedValue += '-' + value.slice(6);
+            inputElement.value = formattedValue;
+        }
+
+        phoneNumberInput.addEventListener('input', function() {
+            formatPhoneNumber(this);
+        });
+        
         function updateMessage() {
             if (CurrentSelector == "Equipment Change") {
                 const newEquip1 = document.querySelector("#newEquip");
