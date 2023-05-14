@@ -93,6 +93,22 @@ function runWhenDropoffVisible() {
             }
         }
         
+           
+        const phoneNumberInput = document.querySelector("#CustomerPhoneNumber");
+        const emailInput = document.querySelector("#CustomerEmailAddress");
+
+        function validateInputs() {
+            const phoneNumber = phoneNumberInput.value;
+            const email = emailInput.value;
+            const phoneNumberValid = phoneNumber.length === 10;
+            const emailValid = email.match(/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/) !== null && email.endsWith(".com");
+            const bothValid = phoneNumberValid && emailValid;
+
+            document.querySelector('#scheduleSendEmailBtn').disabled = !emailValid;
+            document.querySelector('#scheduleSendTextBtn').disabled = !phoneNumberValid;
+            document.querySelector('#scheduleSendEmailAndTextBtn').disabled = !bothValid;
+        }
+        
         function waitForElement(selector, callback) {
             const observer = new MutationObserver((mutationsList, observer) => {
                 for (const mutation of mutationsList) {
