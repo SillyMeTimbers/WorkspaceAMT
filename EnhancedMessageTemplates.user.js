@@ -540,6 +540,8 @@ function runWhenTextSubmitFormVisible() {
             formatPhoneNumber(this);
         });
         
+        formatPhoneNumber(phoneNumberInput);
+        
         function updateMessage() {
             if (CurrentSelector == "Equipment Change") {
                 const newEquip1 = document.querySelector("#newEquip");
