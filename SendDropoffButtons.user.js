@@ -77,7 +77,6 @@ function runWhenDropoffVisible() {
             email_textPrompt[i].remove();
         }
 
-        addButtons();
         $('#emailPrompt').show();
         $('#textPrompt').show();
         function ScheduleNowSendMessage(event, sendEmail, sendText) {
@@ -94,26 +93,31 @@ function runWhenDropoffVisible() {
             }
         }
         
-        
-        const phoneNumberInput = document.querySelector("#CustomerPhoneNumber");
-        const emailInput = document.querySelector("#CustomerEmailAddress");
+        function waitForElement(selector, callback) {
+            const observer = new MutationObserver((mutationsList, observer) => {
+                for (const mutation of mutationsList) {
+                    if (mutation.type === 'childList') {
+                        const element = document.querySelector(selector);
+                        if (element) {
+                            observer.disconnect();
+                            callback(element);
+                        }
+                    }
+                }
+            });
 
-        function validateInputs() {
-            const phoneNumber = phoneNumberInput.value;
-            const email = emailInput.value;
-            const phoneNumberValid = phoneNumber.length === 10;
-            const emailValid = email.match(/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/) !== null && email.endsWith(".com");
-            const bothValid = phoneNumberValid && emailValid;
-
-            document.querySelector('#scheduleSendEmailBtn').disabled = !emailValid;
-            document.querySelector('#scheduleSendTextBtn').disabled = !phoneNumberValid;
-            document.querySelector('#scheduleSendEmailAndTextBtn').disabled = !bothValid;
+            observer.observe(document.body, { attributes: false, childList: true, subtree: true });
         }
 
-        phoneNumberInput.addEventListener('input', validateInputs);
-        emailInput.addEventListener('input', validateInputs);
+        waitForElement("#CustomerPhoneNumber", (phoneNumberInput) => {
+            phoneNumberInput.addEventListener('input', validateInputs);
+        });
 
-        addButtons();
+        waitForElement("#CustomerEmailAddress", (emailInput) => {
+            emailInput.addEventListener('input', validateInputs);
+        });
+
+        addButtons(); // Keep only this call to addButtons()
         validateInputs();
     }
 }
