@@ -77,6 +77,7 @@ function runWhenDropoffVisible() {
             email_textPrompt[i].remove();
         }
 
+        addButtons(); // Keep only this call to addButtons()
         $('#emailPrompt').show();
         $('#textPrompt').show();
         function ScheduleNowSendMessage(event, sendEmail, sendText) {
@@ -92,13 +93,13 @@ function runWhenDropoffVisible() {
                 }
             }
         }
-        
-           
-        const phoneNumberInput = document.querySelector("#CustomerPhoneNumber");
-        const emailInput = document.querySelector("#CustomerEmailAddress");
+
+
+        const phoneNumberInput = document.querySelector("#customerPhoneNumber");
+        const emailInput = document.querySelector("#customerEmail");
 
         function validateInputs() {
-            const phoneNumber = phoneNumberInput.value;
+            const phoneNumber = phoneNumberInput.value.replace(/\D/g, '');
             const email = emailInput.value;
             const phoneNumberValid = phoneNumber.length === 10;
             const emailValid = email.match(/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/) !== null && email.endsWith(".com");
@@ -108,7 +109,7 @@ function runWhenDropoffVisible() {
             document.querySelector('#scheduleSendTextBtn').disabled = !phoneNumberValid;
             document.querySelector('#scheduleSendEmailAndTextBtn').disabled = !bothValid;
         }
-        
+
         function waitForElement(selector, callback) {
             const observer = new MutationObserver((mutationsList, observer) => {
                 for (const mutation of mutationsList) {
@@ -125,15 +126,25 @@ function runWhenDropoffVisible() {
             observer.observe(document.body, { attributes: false, childList: true, subtree: true });
         }
 
-        waitForElement("#CustomerPhoneNumber", (phoneNumberInput) => {
-            phoneNumberInput.addEventListener('input', validateInputs);
+        function formatPhoneNumber(inputElement) {
+            let value = inputElement.value.replace(/\D/g, '');
+            if (value.length > 10) value = value.slice(0, 10); // Limit to 10 numerical characters
+
+            let formattedValue = '';
+            if (value.length > 0) formattedValue += '(' + value.slice(0, 3);
+            if (value.length > 3) formattedValue += ') ' + value.slice(3, 6);
+            if (value.length > 6) formattedValue += '-' + value.slice(6);
+            inputElement.value = formattedValue;
+        }
+
+        phoneNumberInput.addEventListener('input', function() {
+            formatPhoneNumber(this);
         });
 
-        waitForElement("#CustomerEmailAddress", (emailInput) => {
-            emailInput.addEventListener('input', validateInputs);
-        });
+        formatPhoneNumber(phoneNumberInput); // Call the function initially to format the value
 
-        addButtons(); // Keep only this call to addButtons()
+        phoneNumberInput.addEventListener('input', validateInputs);
+        emailInput.addEventListener('input', validateInputs);
         validateInputs();
     }
 }
@@ -141,7 +152,7 @@ function runWhenDropoffVisible() {
 // Function to continuously check if the textSubmitForm is visible
 function continuouslyCheckTextSubmitFormVisibility() {
     console.log("Running [Send Dropoff Info]")
-    
+
     setInterval(() => {
         if (isDropoffPopupVisible()) {
             console.log("Executing [Send Dropoff Info]")
