@@ -211,9 +211,9 @@ async function processVerifyReturnContracts() {
         }
 
         Sorted++;
-        const EstTimeRemaining = getEstimatedTimeRemaining(Sorted, ContractList.length);
+        const EstTimeRemaining = getEstimatedTimeRemaining(Sorted, ContractList.length, ClockTime_Start);
         updateButtonLabel(VerifyReturn_Button, "Unverified Return Time/Date", VerifyReturn_ContractIdList, VerifyReturn_ContractIdList.length - Sorted, EstTimeRemaining);
-
+        
         // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
         await waitForElementToDisappear(toastSelector, 10000);
         await wait(1000);
