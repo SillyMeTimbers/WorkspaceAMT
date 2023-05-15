@@ -10,13 +10,50 @@
 // ==/UserScript==
 console.log("Started [Expected-In Buttons]")
 
+// Styles
+function injectCSS(css) {
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+}
+
+const ExpectedInNoNotes = `
+    tr.noNote:not(.open),
+    .wrapper > .row > .large-10 > section .item table tr.noNote:not(.open) {
+        background: #89c2d9;
+    }
+    tr.noNote:not(.open) td,
+    .wrapper > .row > .large-10 > section .item table tr.noNote:not(.open) td {
+        color: #fff;
+    }
+    tr.noNote:not(.open):hover,
+    .wrapper > .row > .large-10 > section .item table tr.noNote:not(.open):hover {
+        background: #a9d6e5;
+    }
+`;
+
+const ExpectedInNotVerified = `
+    tr.noVerify:not(.open),
+    .wrapper > .row > .large-10 > section .item table tr.noVerify:not(.open) {
+        background: #74c69d;
+    }
+    tr.noVerify:not(.open) td,
+    .wrapper > .row > .large-10 > section .item table tr.noVerify:not(.open) td {
+        color: #fff;
+    }
+    tr.noVerify:not(.open):hover,
+    .wrapper > .row > .large-10 > section .item table tr.noVerify:not(.open):hover {
+        background: #95d5b2;
+    }
+`;
+
+injectCSS(ExpectedInNoNotes);
+injectCSS(ExpectedInNotVerified);
+
 // Expected-In Note Variables
 const ExpectedInNote_UBOXNote = "UBOX";
 const ExpectedInNote_DefaultNote = "Provided cx info to drop-off address";
-
-const ExpectedInNote_Style = document.createElement('style');
-ExpectedInNote_Style.innerHTML = ".contract-row { " + "background-color: #5e6472; " + "} " + ".contract-row.has-no-note:hover, " + ".contract-row.has-no-note:nth-child(even):hover, " + ".contract-row.has-no-note:nth-child(odd):hover { " + "background-color: #A2A7B2; " + "}";
-document.head.appendChild(ExpectedInNote_Style);
 
 let ExpectedInNote_Button;
 let ExpectedInNote_ButtonID = "ExpInNotesButton";
@@ -136,17 +173,6 @@ function getEstimatedTimeRemaining(currentIndex, totalContracts, StartTime) {
     return `${minutes}m ${seconds}s`;
 }
 
-function resetBackgroundColor(contractId) {
-    ExpectedInBody.querySelector(`tr[data-contractid="${contractId}"]`).style.backgroundColor = "";
-};
-
-async function visualizeList(contracts, hexColor) {
-    for (const contractId of contracts) {
-        await new Promise((resolve) => setTimeout(resolve, 0)); // wait for the specified delay time
-        ExpectedInBody.querySelector(`tr[data-contractid="${contractId}"]`).style.setProperty('background-color', hexColor);
-    }
-};
-
 // Verify Return Functions
 const VerifyReturn_ContractsNotVerified = () => {
     if (VerifyReturn_PauseUpdating) {
@@ -155,20 +181,23 @@ const VerifyReturn_ContractsNotVerified = () => {
 
     const VerifyReturn_TempList = [];
     let VerifyReturn_Sorted = 0;
-    
+
     ExpectedInBody.querySelectorAll("tr").forEach((tr) => {
         if (ExpectedInBody) {
             const VerifyReturnContractID = tr.getAttribute("data-contractid");
             const VerifyReturnIsNotVerified = tr.querySelector(".verified-expectedin-dropoff-default:not([checked])");
-               
+
             if (ExpectedInBody.querySelector(`tr[data-contractid="${VerifyReturnContractID}"]`)) {
                 if (VerifyReturnIsNotVerified && VerifyReturn_Sorted < maxProcessAmount) {
                     VerifyReturn_TempList.push(VerifyReturnContractID);
                     VerifyReturn_Sorted++;
 
+                    ExpectedInBody.querySelector(`tr[data-contractid="${VerifyReturnContractID}"]`).classList.add("noVerify");
                     if (!VerifyReturn_ProcessedContracts.has(VerifyReturnContractID)) {
                      VerifyReturn_ProcessedContracts.add(VerifyReturnContractID)
                     }
+                } else {
+                    ExpectedInBody.querySelector(`tr[data-contractid="${VerifyReturnContractID}"]`).classList.remove("noVerify");
                 }
             }
         }
@@ -183,7 +212,7 @@ const VerifyReturn_ContractsNotVerified = () => {
 async function processVerifyReturnContracts() {
     VerifyReturn_Button.disabled = true;
     VerifyReturn_PauseUpdating = true;
-    
+
     const ContractList = VerifyReturn_ContractsNotVerified()
     let ClockTime_Start;
     let Sorted = 0;
@@ -213,7 +242,7 @@ async function processVerifyReturnContracts() {
         Sorted++;
         const EstTimeRemaining = getEstimatedTimeRemaining(Sorted, ContractList.length, ClockTime_Start);
         updateButtonLabel(VerifyReturn_Button, "Unverified Return Time/Date", VerifyReturn_ContractIdList, VerifyReturn_ContractIdList.length - Sorted, EstTimeRemaining);
-        
+
         // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
         await waitForElementToDisappear(toastSelector, 10000);
         await wait(1000);
@@ -276,16 +305,14 @@ function ExpectedInNotes_ContractsWithoutNotes() {
                     if (!ExpInNote || (ExpInNote && ExpInNote.textContent.trim() === "" || ExpInNote.textContent.trim().length < 1) && ExpectedInNotes_Sorted < maxProcessAmount) {
                     ExpectedInNotes_TempList.push([ExpInContractID, ExpInUBOX])
                     ExpectedInNotes_Sorted++;
-                    ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.add("has-no-note");
+                    ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.add("noNote");
 
                     if (!ExpectedInNotes_ProcessedContracts.has(ExpInContractID)) {
                         ExpectedInNotes_ProcessedContracts.add(ExpInContractID)
                     }
 
-                    visualizeList([ExpInContractID], "#ADD8E6")
                 } else {
-                    resetBackgroundColor(ExpInContractID)
-                    ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.remove("has-no-note");
+                    ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.remove("noNote");
                 }
             }
         }
@@ -307,7 +334,7 @@ function ExpectedInNotes_GetNote(contractDetails) {
 async function processExpectedInNotesContracts() {
     ExpectedInNote_Button.disabled = true;
     ExpectedInNotes_PauseUpdating = true;
-    
+
     const ContractList = ExpectedInNotes_ContractsWithoutNotes()
     let ClockTime_Start;
     let Sorted = 0;
@@ -383,13 +410,13 @@ function ExpectedInNotesVisible() {
 
 function isExpectedInTableWrapperVisibleChecker() {
     console.log("Running [Expected-In Buttons]")
-    
+
     setInterval(() => {
         ExpectedInBody = document.querySelector("#ExpectedInTable > tbody");
-        
+
         if (isExpectedInTableWrapperVisible()) {
             console.log("Executed [Expected-In Buttons]")
-            
+
             ExpectedInNotes_ContractsWithoutNotes();
             ExpectedInNotesVisible();
 
