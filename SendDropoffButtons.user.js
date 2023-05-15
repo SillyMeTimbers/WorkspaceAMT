@@ -102,7 +102,8 @@ function runWhenDropoffVisible() {
             const phoneNumber = phoneNumberInput.value.replace(/\D/g, '');
             const email = emailInput.value;
             const phoneNumberValid = phoneNumber.length === 10;
-            const emailValid = email.match(/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/) !== null && email.endsWith(".com");
+            const validExtensions = ['.com', '.org', '.edu'];
+            const emailValid = email.match(/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/) !== null && validExtensions.some(extension => email.endsWith(extension));
             const bothValid = phoneNumberValid && emailValid;
 
             document.querySelector('#scheduleSendEmailBtn').disabled = !emailValid;
