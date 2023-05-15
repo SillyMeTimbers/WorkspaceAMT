@@ -154,16 +154,19 @@ function CancelationMessage(cxFirstName, cxLastName, resNumber, MonthText, DayNu
 }
 
 function getDynamicValuesForTemplate(templateName) {
-    function capitalizeWordsFunc(string) {
-        let words = string.split(' ');
-        for (let i = 0; i < words.length; i++) {
-            words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1).toLowerCase();
+    function processWord(word, capitalizeWords, lowercaseWords) {
+        if (capitalizeWords.includes(word)) {
+            return word;
+        } else if (lowercaseWords.includes(word)) {
+            return word.toLowerCase();
+        } else {
+            return word.replace(/([a-z])([A-Z])/g, (_, a, b) => a.toUpperCase() + '-' + b.toUpperCase());
         }
-        return words.join(' ');
     }
 
-    function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    function processBusinessName(name, capitalizeWords, lowercaseWords) {
+        lowercaseWords = lowercaseWords || [];
+        return name.split(" ").map((word) => processWord(word, capitalizeWords, lowercaseWords)).join(" ");
     }
 
     function formatDate(dateString) {
@@ -197,14 +200,10 @@ function getDynamicValuesForTemplate(templateName) {
 
     function processAddress(pickupCityStateZip, pickupStreet) {
         const addressComponents = pickupCityStateZip.split(", ");
-        const city = addressComponents[0].split(" ").map(capitalizeFirstLetter).join(" ");
+        const city = addressComponents[0].split(" ").map(word => processWord(word, [], ['of', 'the'])).join(" "); // Use processWord function here
         const state = addressComponents[1].split(" ").join(" ");
         const zipcode = addressComponents[2].trim();
         return [pickupStreet, city, state, zipcode]; // Return an array
-    }
-
-    function processBusinessName(name, capitalizeWords) {
-        return name.split(" ").map((word) => capitalizeWords.includes(word) ? word : capitalizeFirstLetter(word)).join(" ");
     }
 
     function findPhoneNumber(list) {
@@ -234,8 +233,8 @@ function getDynamicValuesForTemplate(templateName) {
     }
 
     const reservationNumber = document.querySelector("#textDocumentNumber").value.trim();
-    const customerName = capitalizeFirstLetter(document.querySelector("#customerFirstNameOnly").value.trim());
-    const customerLastName = capitalizeFirstLetter(document.querySelector("#ReservationPopup > section > header > h1").textContent.split("-")[1].trim())
+    const customerName = processWord(document.querySelector("#customerFirstNameOnly").value.trim(), [], []);
+    const customerLastName = processWord(document.querySelector("#ReservationPopup > section > header > h1").textContent.split("-")[1].trim(), [], []);
     const preferredPickupDateElements = document.querySelectorAll("#Contract_PreferredPickupDate");
     const rawPreferredPickupDate = Array.from(preferredPickupDateElements).find((element) => element.value).value;
     const formattedPreferredPickupDate = formatDate(rawPreferredPickupDate);
@@ -254,47 +253,46 @@ function getDynamicValuesForTemplate(templateName) {
     const businessName = processBusinessName(ddElements[0].innerText, capitalizeWords);
     const phoneNumber = findPhoneNumber(dtElements);
 
-    if (templateName === "High Demand" || templateName === "Low Availability ") {
-        const fromCityValue = document.getElementById("FromCityValue");
-        const text = fromCityValue.textContent.trim(); // Trim any leading/trailing spaces
+if (templateName === "High Demand" || templateName === "Low Availability ") {
+    const fromCityValue = document.getElementById("FromCityValue");
+    const text = fromCityValue.textContent.trim(); // Trim any leading/trailing spaces
 
-        return {
-            cxFirstName: customerName,
-            cxLastName: customerLastName,
-            resNumber: reservationNumber,
-            pickupMonthNum: month,
-            pickupDayNum: dayPref,
-            pickupYear: year,
-            pickupHour: hour,
-            pickupMinute: minute,
-            pickupDay: dayText,
-            pAMPM: ampm,
-            pickupCity: capitalizeWordsFunc(text.split(",")[0].trim()),
-            pickupState: text.split(",")[1].trim().toUpperCase(),
-            pickupStreet: street,
-            pickupZipcode: zipcode,
-            pickupBusinessName: businessName,
-            pickupPhone: phoneNumber,
-        };
-    } else {
-        return {
-            cxFirstName: customerName,
-            cxLastName: customerLastName,
-            resNumber: reservationNumber,
-            pickupMonthNum: month,
-            pickupDayNum: dayPref,
-            pickupYear: year,
-            pickupHour: hour,
-            pickupMinute: minute,
-            pickupDay: dayText,
-            pAMPM: ampm,
-            pickupCity: city,
-            pickupState: state,
-            pickupStreet: street,
-            pickupZipcode: zipcode,
-            pickupBusinessName: businessName,
-            pickupPhone: phoneNumber,
-        }
+    return {
+        cxFirstName: customerName,
+        cxLastName: customerLastName,
+        resNumber: reservationNumber,
+        pickupMonthNum: month,
+        pickupDayNum: dayPref,
+        pickupYear: year,
+        pickupHour: hour,
+        pickupMinute: minute,
+        pickupDay: dayText,
+        pAMPM: ampm,
+        pickupCity: processWord(text.split(",")[0].trim(), [], ['of', 'the']),
+        pickupState: text.split(",")[1].trim().toUpperCase(),
+        pickupStreet: street,
+        pickupZipcode: zipcode,
+        pickupBusinessName: businessName,
+        pickupPhone: phoneNumber,
+    };
+} else {
+    return {
+        cxFirstName: customerName,
+        cxLastName: customerLastName,
+        resNumber: reservationNumber,
+        pickupMonthNum: month,
+        pickupDayNum: dayPref,
+        pickupYear: year,
+        pickupHour: hour,
+        pickupMinute: minute,
+        pickupDay: dayText,
+        pAMPM: ampm,
+        pickupCity: city,
+        pickupState: state,
+        pickupStreet: street,
+        pickupZipcode: zipcode,
+        pickupBusinessName: businessName,
+        pickupPhone: phoneNumber,
     }
 }
 
@@ -409,19 +407,6 @@ const MessageTemplates = {
             return false
         }
     },
-
-    // "Late Pickup Cancellation": {
-    //   func: LatePickupCancellationMessage,
-    //   overrideOriginalMessage: true,
-
-    //   shouldRun: function () {
-    //     // if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate")) {
-    //     //   return true
-    //     // }
-
-    //     return false
-    //   }
-    // },
 
     "Duplicate Reservation": {
         func: TestingMessage,
