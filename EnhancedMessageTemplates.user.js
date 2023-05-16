@@ -648,6 +648,40 @@ ${MessageEnd}`;
                     }
                 }
             }
+
+            if (CurrentSelector == "High Demand") {
+                const styleDropdown = document.querySelector("#styleDropdown");
+                if (styleDropdown) {
+                    let NewMsg = "";
+                    const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
+                    const style = styleDropdown.options[styleDropdown.selectedIndex].text;
+
+                    if (style === "#2 - No Triangle") {
+                        NewMsg = `U-Haul Reservation High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+You are receiving this notice in regard to your rental reserved for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}. At this time we are experiencing delays with incoming equipment in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
+We will be contacting you 48 Hours Prior to your rental to provide you with a pickup address for this reservation. If you do not receive any Calls, Text Messages, or Emails within 24 hours of ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}
+Contact U-Haul Scheduling to confirm a pickup address has been assigned. If you have any further questions or concerns regarding the reservation and would like to speak with a representative contact us using the number below.
+${MessageEnd}`;
+                    } else if (style === "#3 - Yellow Triangle") {
+                        NewMsg = `U-Haul Reservation High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+You are receiving this notice in regard to your rental reserved for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}. At this time we are experiencing high shortages with the size equipment you had reserved in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
+We will be contacting you 48 Hours Prior to your rental to provide you with a pickup address for this reservation. If we do not have a nearby location available for you to pickup from we will discuss alternative options such as the Pickup Date/Time and or Size of the equipment. If you do not receive any Calls, Text Messages, or Emails within 24 hours of ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}
+Contact U-Haul Scheduling to confirm a pickup address has been assigned. If you have any further questions or concerns regarding the reservation and would like to speak with a representative contact us using the number below.
+${MessageEnd}`;
+                    } else if (style === "#4 - Red Triangle") {
+                        NewMsg = `U-Haul Reservation High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+You are receiving this notice in regard to your rental reserved for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}. At this time we are experiencing high shortages with the size equipment you had reserved in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
+We are wanting to inform you the size equipment you have reserved may not be available at a nearby location and you may need to travel to a further location. We will attempt to reach you 48 Hours prior to the date of your rental to discuss what equipment we have available for your rental, If you do not receive any Calls, Text Messages, or Emails within 24 hours of ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}
+Contact U-Haul Scheduling to confirm a pickup address has been assigned. If you have any further questions or concerns regarding the reservation and would like to speak with a representative contact us using the number below.
+${MessageEnd}`;
+                    }
+
+                    if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
+                        const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
+                        HiddenMsg.value = NewMsg
+                    }
+                }
+            }
         }
 
         function handleTemplateDropdownChange(event) {
@@ -749,6 +783,23 @@ ${MessageEnd}`;
 
                 // Add event listeners to the additional dropdowns to update the message when their values change
                 cancelDropdown.addEventListener("change", updateMessage);
+
+                // Update the message initially based on the default selected values
+                updateMessage();
+            }
+
+            if (selectedOptionValue.trim() === "High Demand") {
+                const rentalType = [
+                    { value: "1", text: "#2 - No Triangle" },
+                    { value: "2", text: "#3 - Yellow Triangle" },
+                    { value: "3", text: "#4 - Red Triangle" },
+                ];
+
+                const rentalTypeDropdown = createAndInsertDropdown("styleDropdown", "Rental Type", rentalType);
+                extraDropdownsContainer.appendChild(rentalTypeDropdown);
+
+                // Add event listeners to the additional dropdowns to update the message when their values change
+                rentalTypeDropdown.addEventListener("change", updateMessage);
 
                 // Update the message initially based on the default selected values
                 updateMessage();
