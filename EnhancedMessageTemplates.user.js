@@ -516,12 +516,17 @@ function runWhenTextSubmitFormVisible() {
         // Fix Whitespace in message
         const AddTemplateButton = document.querySelector('#textSubmitForm > div > div > div > div:nth-child(1) > div:nth-child(2) > div.medium-4.columns > input');
         
-        if (AddTemplateButton) {
-            AddTemplateButton.addEventListener("click", function() {
-                document.getElementById('textMessageArea').trim()
+         if (AddTemplateButton) {
+          AddTemplateButton.addEventListener("click", function() {
+            const textarea = document.getElementById('textMessageArea');
+            if (textarea) {
+              textarea.value = textarea.value.trim();
+            } else {
+              console.error('Textarea not found');
             }
+          });
         }
-        
+    
         const phoneNumberInput = document.querySelector("#CustomerPhoneNumber");
 
         function formatPhoneNumber(inputElement) {
