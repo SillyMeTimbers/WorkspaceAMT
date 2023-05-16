@@ -574,7 +574,7 @@ Your pick up has been updated! You can find your equipment available to pickup a
 If you have any questions or concerns regarding your new pick up location, please call U-Haul Regional Scheduling Office.
 ${MessageEnd}`;
                     } else if (style === "Lack of availability") {
-                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} for ${dynamicValues.cxLastName}
+                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
 We regret to inform you that your pick-up location has been updated due to equipment availability. Your equipment will be ready for pick-up at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupState} ${dynamicValues.pickupCity} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
 We apologize for any inconvenience caused by this change. If you require assistance, need information on alternative equipment sizes, or wish to reschedule, do not hesitate to contact the U-Haul Regional Scheduling Office.
 ${MessageEnd}`;
