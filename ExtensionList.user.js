@@ -127,16 +127,19 @@ function createGrid(data) {
             extensionCell.textContent = extension;
             extensionCell.style.border = '1px solid black';
             extensionCell.title = 'Click to copy extension';
-            extensionCell.addEventListener('click', () => {
-                copyToClipboard(extension);
-                flashMouseIndicator(extensionCell);
-            });
-            extensionCell.addEventListener('mouseover', () => {
-                addMouseIndicator(extensionCell);
-            });
-            extensionCell.addEventListener('mouseleave', () => {
-                removeMouseIndicator(extensionCell);
-            });
+            
+            if (!extension === "-") {
+                extensionCell.addEventListener('click', () => {
+                    copyToClipboard(extension);
+                    flashMouseIndicator(extensionCell);
+                });
+                extensionCell.addEventListener('mouseover', () => {
+                    addMouseIndicator(extensionCell);
+                });
+                extensionCell.addEventListener('mouseleave', () => {
+                    removeMouseIndicator(extensionCell);
+                });
+            }
             row.appendChild(extensionCell);
 
             const phoneCell = document.createElement('td');
@@ -144,16 +147,19 @@ function createGrid(data) {
             phoneCell.textContent = phoneNumber;
             phoneCell.style.border = '1px solid black';
             phoneCell.title = 'Click to copy phone number';
-            phoneCell.addEventListener('click', () => {
-                copyToClipboard(phoneNumber);
-                flashMouseIndicator(phoneCell);
-            });
-            phoneCell.addEventListener('mouseover', () => {
-                addMouseIndicator(phoneCell);
-            });
-            phoneCell.addEventListener('mouseleave', () => {
-                removeMouseIndicator(phoneCell);
-            });
+            
+            if (!phoneNumber === "-") {
+                phoneCell.addEventListener('click', () => {
+                    copyToClipboard(phoneNumber);
+                    flashMouseIndicator(phoneCell);
+                });
+                phoneCell.addEventListener('mouseover', () => {
+                    addMouseIndicator(phoneCell);
+                });
+                phoneCell.addEventListener('mouseleave', () => {
+                    removeMouseIndicator(phoneCell);
+                });
+            }
             row.appendChild(phoneCell);
 
             const partyExtension = document.createElement('td');
@@ -170,11 +176,15 @@ function createGrid(data) {
 async function ExtensionListHandler() {
     await extensionButtonWaitForElement("#SendAppToCustomerPopup", 30000);
     const Popup = document.querySelector("#SendAppToCustomerPopup");
-
+//.reveal-modal.tiny
     if (Popup) {
         Popup.classList.add("ExtensionList")
         console.log("Open Popup");
 
+        // Update Size
+        Popup.style.marginLeft = "-25%"
+        Popup.style.width = "50%"
+        
         // Update Visuals
         const headerElement = await extensionButtonWaitForElement("#form0 > header > h1", 3e3);
         if (headerElement) {
