@@ -17,6 +17,7 @@ async function extensionButtonWaitForElement(selector, timeout = 10000) {
         const element = document.querySelector(selector);
 
         if (element) {
+            console.log(element)
             return element;
         }
 
@@ -38,7 +39,7 @@ function createGrid(data) {
     for (const category in data) {
         const categoryRow = document.createElement('tr');
         const categoryCell = document.createElement('td');
-        categoryCell.colSpan = 3;
+        categoryCell.colSpan = 4;
         categoryCell.textContent = category;
         categoryCell.style.backgroundColor = '#f2f2f2';
         categoryCell.style.fontWeight = 'bold';
@@ -107,12 +108,28 @@ async function ExtensionListHandler() {
         // Create and insert the grid
         const data = {
             "Traffic Extensions": {
-                "Angel Vega": [true, "781301"],
-                "Rick Ruiz": [false, "781302"],
-                "Joshua McCart": [false, "781313"],
-                "Michelle Asker": [false, "781304"],
-                "Mellisa Wise": [false, "781305"],
-                "Julianna Mayes": [false, "781306"],
+                "TCM - Angel Vega": [true, "781301"],
+                "RDM - Rick Ruiz": [false, "781302"],
+                "RM - Joshua McCart": [false, ""],
+                "RM - Michelle Asker": [false, ""],
+                "RM - Melissa Wise": [false, ""],
+                "RM - Julianna Mayes": [false, ""],
+				"RM - Nyla Whitty": [false, ""],
+				"RM - Emily Bertrand": [false, ""],
+				"RM - Sheryse McKenzie": [false, ""],
+				"RM - Wilson Burgos": [false, ""],
+				"RM - Matthew Glenn": [false, ""],
+				"RM - Daviena Wallace": [false, ""],
+            },
+			
+			"District 12 Extensions": {
+                "MCO 753 (UHC of Clearwater)": [false, "753300", "727-288-9919"],
+                "MCO 781 (UHC of Eastern Florida)": [false, "781300", "561-638-9428"],
+                "MCO 786 (UHC of West Tampa)": [false, "786300", "813-247-5016"],
+                "MCO 787 (UHC of Miami)": [false, "787300", "305-756-4639"],
+                "MCO 788 (UHC of Ft Lauderdale)": [false, "788300", "954-942-1101"],
+                "MCO 830 (UHC of Western Florida)": [false, "830300", "941-359-2413"],
+				"MCO 955 (UHC of East Tampa/Lakeland)": [false, "955300", "813-655-4434"],
             },
 
             "Contact Center Departmental Extensions": {
@@ -135,6 +152,29 @@ async function ExtensionListHandler() {
                 "Roadside Assistance": [true, "620902", "800-528-0355"],
                 "Truckshare 24/7, Customer Return or Live Verify Assistance": [true, "502901"],
                 "Equipment Distribution": [false, "", "866-323-4348", "1"],
+            },
+			
+			"Extensions Outside Contact Center": {
+                "Advertising": [false, "623802"],
+				"Alarm Room - Warm Transfer Required": [false, "607112", "800-238-4364"],
+				"Boxes (Buyers Club)": [false, "691904"],
+				"Boxes (help w/New & Existing Boxes/Moving Order Supplies": [false, "", "800-269-6737"],
+				"Center/Dealer Operations": [false, "571200"],
+				"Collections (Customer Owes U-Haul Money) - 7:30am - 4:00pm": [true, "612906"],
+				"Computer Support (MCOs, Centers, Dealers)": [false, "606901", "866-846-9927"],
+				"Credit Administration": [false, "612535", "800-345-5876"],
+				"CSS / Agent Support": [false, "606903"],
+				"Donation Request (req for U-Haul to doante Money, Equipment, Etc": [false, "623801"],
+				"E-Alerts (stops customers from renting equipment due to money owed, etc": [true, "620903"],
+				"Employment Verification": [false, "605020"],
+				"Equipment Recovery (abandonded equipment) - Warm Transfer Required": [true, "571200"],
+				"Fleet Sales (buy U-Haul Equipment, Trucks Only*), 6:00am - 6:00pm": [false, "672902", "866-404-0355"],
+				"Operator (U-Haul Towers Switchboard)": [false, "618010", "800-528-0463"],
+				"Republic Claims - REP West (U-Haul Insurance)": [false, "800-528-7134"],
+				"Tech Center": [false, "", "800-223-6218"],
+				"Truck - Side Signs (rent U-Haul truck/advertise your business on the side)": [false, "", "877-UHI-SIGN"],
+				"U-Car Share": [false, "618907", "877-990-8227"],
+				"Vendor Request (request to sell U-Haul a product/service refer online)": [false, "uhaul.com/purchasing"],
             },
         };
         const grid = createGrid(data);
@@ -166,6 +206,7 @@ function createExtensionButton() {
     // Add the new event listener
     anchorElement.addEventListener("click", function (event) {
         event.stopPropagation(); // Prevent the event from bubbling up to parent elements
+        CloseSecondaryPopup()
         OpenSendAppToCustomer(); // Call the original function
         ExtensionListHandler();
     });
@@ -181,6 +222,10 @@ function shouldAddExtensionListButton() {
 
         if (SendCXAppButton && !ExtensionButton) {
             createExtensionButton();
+        }
+
+        if (document.querySelector("body > div.wrapper > #SendAppToCustomerPopup")) {
+            document.querySelector("body > div.wrapper > #SendAppToCustomerPopup").innerHTML = ``
         }
     }, 100); // Check every 100ms
 }
