@@ -104,7 +104,7 @@ function createGrid(data) {
     table.style.width = 'calc(100% - 20px)';
     table.style.border = '1px solid black';
     table.style.margin = '0 auto';
-    table.style.marginBottom = '10px';
+    //table.style.marginBottom = '10px';
   
     for (const category in data) {
       const categoryRow = document.createElement('tr');
