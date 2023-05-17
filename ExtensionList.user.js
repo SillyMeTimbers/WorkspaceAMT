@@ -76,7 +76,7 @@ function addMouseIndicatorStyle() {
         animation: flashAnimation 0.1s;
       }
       @keyframes flashAnimation {
-        25%, 75% {
+        25% {
           background-color: rgba(0, 0, 0, 0.3);
         }
       }
@@ -98,14 +98,14 @@ function createGrid(data) {
     container.style.marginLeft = "10px";
     container.style.marginRight = "10px";
     container.style.border = '1px solid black';
-  
+
     const table = document.createElement('table');
     table.style.borderCollapse = 'collapse';
-    table.style.width = 'calc(100% - 20px)';
+    table.style.width = "100%";
     table.style.border = '1px solid black';
     table.style.margin = '0 auto';
     //table.style.marginBottom = '10px';
-  
+
     for (const category in data) {
       const categoryRow = document.createElement('tr');
       const categoryCell = document.createElement('td');
@@ -116,28 +116,28 @@ function createGrid(data) {
       categoryCell.style.border = '1px solid black';
       categoryRow.appendChild(categoryCell);
       table.appendChild(categoryRow);
-  
+
       for (const name in data[category]) {
         const item = data[category][name];
         const row = document.createElement('tr');
-  
+
         if (item[0] === true) {
           row.style.backgroundColor = '#eaea00';
         }
-  
+
         const nameCell = document.createElement('td');
         nameCell.textContent = name;
         nameCell.style.border = '1px solid black';
         row.appendChild(nameCell);
-  
+
         const extensionCell = document.createElement('td');
         const extension = item[1] || '-';
         extensionCell.textContent = extension;
         extensionCell.style.border = '1px solid black';
-  
+
         if (extension != '-') {
           extensionCell.title = 'Click to copy extension';
-  
+
           extensionCell.addEventListener('click', () => {
             copyToClipboard(extension);
             flashMouseIndicator(extensionCell);
@@ -150,15 +150,15 @@ function createGrid(data) {
           });
         }
         row.appendChild(extensionCell);
-  
+
         const phoneCell = document.createElement('td');
         const phoneNumber = item[2] || '-';
         phoneCell.textContent = phoneNumber;
         phoneCell.style.border = '1px solid black';
-  
+
         if (phoneNumber != '-') {
           phoneCell.title = 'Click to copy phone number';
-  
+
           phoneCell.addEventListener('click', () => {
             copyToClipboard(phoneNumber);
             flashMouseIndicator(phoneCell);
@@ -171,19 +171,19 @@ function createGrid(data) {
           });
         }
         row.appendChild(phoneCell);
-  
+
         const partyExtension = document.createElement('td');
         partyExtension.textContent = item[3] || '-';
         partyExtension.style.border = '1px solid black';
         row.appendChild(partyExtension);
-  
+
         table.appendChild(row);
       }
     }
-  
+
     container.appendChild(table);
     return container;
-  }  
+  }
 
 async function ExtensionListHandler() {
     await extensionButtonWaitForElement("#SendAppToCustomerPopup", 30000);
@@ -196,7 +196,7 @@ async function ExtensionListHandler() {
         // Update Size
         Popup.style.marginLeft = "-25%"
         Popup.style.width = "50%"
-        
+
         // Update Visuals
         const headerElement = await extensionButtonWaitForElement("#form0 > header > h1", 3e3);
         if (headerElement) {
