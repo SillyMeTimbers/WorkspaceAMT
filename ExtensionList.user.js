@@ -92,8 +92,10 @@ addMouseIndicatorStyle();
 
 function createGrid(data) {
     const container = document.createElement('div');
-    container.style.height = '300px'; // Adjust the height as needed
+    container.style.height = '600px'; // Adjust the height as needed
     container.style.overflow = 'auto';
+    container.style.marginBottom = "10px";
+    container.style.border = '1px solid black';
   
     const table = document.createElement('table');
     table.style.borderCollapse = 'collapse';
