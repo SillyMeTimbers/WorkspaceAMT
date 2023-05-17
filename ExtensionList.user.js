@@ -218,6 +218,7 @@ async function ExtensionListHandler() {
                 "RM - Wilson Burgos": [false, "781311"],
                 "RM - Matthew Glenn": [false, ""],
                 "RM - Daviena Wallace": [false, ""],
+                "": [false, ""],
             },
 
             "District 12 Extensions": {
@@ -228,6 +229,7 @@ async function ExtensionListHandler() {
                 "MCO 788 (UHC of Ft Lauderdale)": [false, "788300", "954-942-1101"],
                 "MCO 830 (UHC of Western Florida)": [false, "830300", "941-359-2413"],
                 "MCO 955 (UHC of East Tampa/Lakeland)": [false, "955300", "813-655-4434"],
+                "": [false, ""],
             },
 
             "Contact Center Departmental Extensions": {
@@ -242,6 +244,8 @@ async function ExtensionListHandler() {
                 "Spanish Speaking (Sales & Center Support)": [true, "621902"],
                 "Hitch Central - Internal Use Only, Do NOT transfer customers": [false, "672901"],
                 "Hitch Sales": [false, "621979"],
+                "Moving Help Support (Help with an existing order)": [true, "movinghelp.com", "866-748-4110"],
+                "Moving Help (Place new order)": [true, "movinghelp.com"],
                 "Corporate Accounts | 5:00am - 8:00pm": [false, "621911", "800-528-6042"],
                 "Center Support": [false, "620992"],
                 "Customer Service": [true, "620911", "800-789-3638"],
@@ -250,6 +254,7 @@ async function ExtensionListHandler() {
                 "Roadside Assistance": [true, "620902", "800-528-0355"],
                 "Truckshare 24/7, Customer Return or Live Verify Assistance": [true, "502901"],
                 "Equipment Distribution": [false, "", "866-323-4348", "1"],
+                "": [false, ""],
             },
 
             "Extensions Outside Contact Center": {
