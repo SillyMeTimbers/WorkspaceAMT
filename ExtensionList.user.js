@@ -95,6 +95,8 @@ function createGrid(data) {
     container.style.height = '600px'; // Adjust the height as needed
     container.style.overflow = 'auto';
     container.style.marginBottom = "10px";
+    container.style.marginLeft = "10px";
+    container.style.marginRight = "10px";
     container.style.border = '1px solid black';
   
     const table = document.createElement('table');
