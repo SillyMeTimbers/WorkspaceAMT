@@ -128,7 +128,7 @@ function createGrid(data) {
             extensionCell.style.border = '1px solid black';
             extensionCell.title = 'Click to copy extension';
             
-            if (!extension === "-") {
+            if (extension != '-') {
                 extensionCell.addEventListener('click', () => {
                     copyToClipboard(extension);
                     flashMouseIndicator(extensionCell);
@@ -148,7 +148,7 @@ function createGrid(data) {
             phoneCell.style.border = '1px solid black';
             phoneCell.title = 'Click to copy phone number';
             
-            if (!phoneNumber === "-") {
+            if (phoneNumber != '-') {
                 phoneCell.addEventListener('click', () => {
                     copyToClipboard(phoneNumber);
                     flashMouseIndicator(phoneCell);
