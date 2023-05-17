@@ -10,37 +10,6 @@
 // ==/UserScript==
 console.log("Started [Extension Sheet]")
 
-// function addIsPrepaidDivToReservationPopup(targetElement, position) {
-//     const isPrepaidDivId = 'isPrepaidDiv';
-//     let isPrepaidDiv = document.querySelector(`#${isPrepaidDivId}`);
-//     const isPersonInContract = document.querySelector('.whoseViewingStatus:not(#isPrepaidDiv)');
-
-//     if (!isPrepaidDiv) { // Create first time
-//         isPrepaidDiv = document.createElement('div');
-//         isPrepaidDiv.classList.add('whoseViewingStatus');
-//         isPrepaidDiv.dataset.contractid = '518120053';
-//         isPrepaidDiv.style.display = 'block';
-//         isPrepaidDiv.textContent = displayText;
-//         isPrepaidDiv.id = isPrepaidDivId;
-//         isPrepaidDiv.style.backgroundColor = '#bd362f'; // Set the background color to #bd362f
-//         isPrepaidDiv.style.color = 'white'; // Set the text color to white
-//         isPrepaidDiv.style.margin = '-1em 0 0.5em'
-//         targetElement.insertBefore(isPrepaidDiv, targetElement.firstChild);
-//     } else {
-//         isPrepaidDiv.textContent = displayText; // Update the text of the isPrepaidDiv element
-//         isPrepaidDiv.style.backgroundColor = '#bd362f'; // Set the background color to #bd362f
-//         isPrepaidDiv.style.color = 'white'; // Set the text color to white
-
-//         if (isPersonInContract.style.display !== "block") {
-//             targetElement.insertBefore(isPrepaidDiv, targetElement.firstChild);
-//             isPrepaidDiv.style.margin = '-1em 0 0.5em'
-//         } else {
-//             isPersonInContract.insertAdjacentElement('afterend', isPrepaidDiv);
-//             isPrepaidDiv.style.margin = '-.5em 0 0.5em'
-//         }
-//     }
-// }
-
 async function extensionButtonWaitForElement(selector, timeout = 10000) {
     const startTime = Date.now();
 
