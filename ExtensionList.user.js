@@ -91,89 +91,95 @@ function addMouseIndicatorStyle() {
 addMouseIndicatorStyle();
 
 function createGrid(data) {
+    const container = document.createElement('div');
+    container.style.height = '300px'; // Adjust the height as needed
+    container.style.overflow = 'auto';
+  
     const table = document.createElement('table');
     table.style.borderCollapse = 'collapse';
-    table.style.width = "calc(100% - 20px)";
+    table.style.width = 'calc(100% - 20px)';
     table.style.border = '1px solid black';
-    table.style.margin = "0 auto"
-    table.style.marginBottom = "10px"
-
+    table.style.margin = '0 auto';
+    table.style.marginBottom = '10px';
+  
     for (const category in data) {
-        const categoryRow = document.createElement('tr');
-        const categoryCell = document.createElement('td');
-        categoryCell.colSpan = 4;
-        categoryCell.textContent = category;
-        categoryCell.style.backgroundColor = '#f2f2f2';
-        categoryCell.style.fontWeight = 'bold';
-        categoryCell.style.border = '1px solid black';
-        categoryRow.appendChild(categoryCell);
-        table.appendChild(categoryRow);
-
-        for (const name in data[category]) {
-            const item = data[category][name];
-            const row = document.createElement('tr');
-
-            if (item[0] === true) {
-                row.style.backgroundColor = "#eaea00"
-            };
-
-            const nameCell = document.createElement('td');
-            nameCell.textContent = name;
-            nameCell.style.border = '1px solid black';
-            row.appendChild(nameCell);
-
-            const extensionCell = document.createElement('td');
-            const extension = item[1] || '-';
-            extensionCell.textContent = extension;
-            extensionCell.style.border = '1px solid black';
-
-            if (extension != '-') {
-                extensionCell.title = 'Click to copy extension';
-                
-                extensionCell.addEventListener('click', () => {
-                    copyToClipboard(extension);
-                    flashMouseIndicator(extensionCell);
-                });
-                extensionCell.addEventListener('mouseover', () => {
-                    addMouseIndicator(extensionCell);
-                });
-                extensionCell.addEventListener('mouseleave', () => {
-                    removeMouseIndicator(extensionCell);
-                });
-            }
-            row.appendChild(extensionCell);
-
-            const phoneCell = document.createElement('td');
-            const phoneNumber = item[2] || '-';
-            phoneCell.textContent = phoneNumber;
-            phoneCell.style.border = '1px solid black';
-            
-            if (phoneNumber != '-') {
-                phoneCell.title = 'Click to copy phone number';
-                
-                phoneCell.addEventListener('click', () => {
-                    copyToClipboard(phoneNumber);
-                    flashMouseIndicator(phoneCell);
-                });
-                phoneCell.addEventListener('mouseover', () => {
-                    addMouseIndicator(phoneCell);
-                });
-                phoneCell.addEventListener('mouseleave', () => {
-                    removeMouseIndicator(phoneCell);
-                });
-            }
-            row.appendChild(phoneCell);
-
-            const partyExtension = document.createElement('td');
-            partyExtension.textContent = item[3] || '-';
-            partyExtension.style.border = '1px solid black';
-            row.appendChild(partyExtension);
-
-            table.appendChild(row);
+      const categoryRow = document.createElement('tr');
+      const categoryCell = document.createElement('td');
+      categoryCell.colSpan = 4;
+      categoryCell.textContent = category;
+      categoryCell.style.backgroundColor = '#f2f2f2';
+      categoryCell.style.fontWeight = 'bold';
+      categoryCell.style.border = '1px solid black';
+      categoryRow.appendChild(categoryCell);
+      table.appendChild(categoryRow);
+  
+      for (const name in data[category]) {
+        const item = data[category][name];
+        const row = document.createElement('tr');
+  
+        if (item[0] === true) {
+          row.style.backgroundColor = '#eaea00';
         }
+  
+        const nameCell = document.createElement('td');
+        nameCell.textContent = name;
+        nameCell.style.border = '1px solid black';
+        row.appendChild(nameCell);
+  
+        const extensionCell = document.createElement('td');
+        const extension = item[1] || '-';
+        extensionCell.textContent = extension;
+        extensionCell.style.border = '1px solid black';
+  
+        if (extension != '-') {
+          extensionCell.title = 'Click to copy extension';
+  
+          extensionCell.addEventListener('click', () => {
+            copyToClipboard(extension);
+            flashMouseIndicator(extensionCell);
+          });
+          extensionCell.addEventListener('mouseover', () => {
+            addMouseIndicator(extensionCell);
+          });
+          extensionCell.addEventListener('mouseleave', () => {
+            removeMouseIndicator(extensionCell);
+          });
+        }
+        row.appendChild(extensionCell);
+  
+        const phoneCell = document.createElement('td');
+        const phoneNumber = item[2] || '-';
+        phoneCell.textContent = phoneNumber;
+        phoneCell.style.border = '1px solid black';
+  
+        if (phoneNumber != '-') {
+          phoneCell.title = 'Click to copy phone number';
+  
+          phoneCell.addEventListener('click', () => {
+            copyToClipboard(phoneNumber);
+            flashMouseIndicator(phoneCell);
+          });
+          phoneCell.addEventListener('mouseover', () => {
+            addMouseIndicator(phoneCell);
+          });
+          phoneCell.addEventListener('mouseleave', () => {
+            removeMouseIndicator(phoneCell);
+          });
+        }
+        row.appendChild(phoneCell);
+  
+        const partyExtension = document.createElement('td');
+        partyExtension.textContent = item[3] || '-';
+        partyExtension.style.border = '1px solid black';
+        row.appendChild(partyExtension);
+  
+        table.appendChild(row);
+      }
     }
-    return table;
-}
+  
+    container.appendChild(table);
+    return container;
+  }  
 
 async function ExtensionListHandler() {
     await extensionButtonWaitForElement("#SendAppToCustomerPopup", 30000);
