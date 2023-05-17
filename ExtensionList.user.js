@@ -126,9 +126,10 @@ function createGrid(data) {
             const extension = item[1] || '-';
             extensionCell.textContent = extension;
             extensionCell.style.border = '1px solid black';
-            extensionCell.title = 'Click to copy extension';
-            
+
             if (extension != '-') {
+                extensionCell.title = 'Click to copy extension';
+                
                 extensionCell.addEventListener('click', () => {
                     copyToClipboard(extension);
                     flashMouseIndicator(extensionCell);
@@ -146,9 +147,10 @@ function createGrid(data) {
             const phoneNumber = item[2] || '-';
             phoneCell.textContent = phoneNumber;
             phoneCell.style.border = '1px solid black';
-            phoneCell.title = 'Click to copy phone number';
             
             if (phoneNumber != '-') {
+                phoneCell.title = 'Click to copy phone number';
+                
                 phoneCell.addEventListener('click', () => {
                     copyToClipboard(phoneNumber);
                     flashMouseIndicator(phoneCell);
