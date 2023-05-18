@@ -247,7 +247,7 @@ async function ExtensionListHandler() {
                 "Callback Team": [false, "621907", "800-664-5017"],
                 "Spanish Callback Team": [false, "621926", "800-664-5017"],
                 "College U-Boxes": [false, "621929"],
-                "U-Box Shipping": [false, "555100", "Option 3"],
+                "U-Box Shipping": [true, "555100", "", "Option 3"],
                 "U-Box Support": [false, "620993"],
                 "U-Box Sales": [false, "621919", "877-468-4285"],
                 "Field Support / Center & Dealer Rate Line": [false, "621914", "800-248-4285"],
