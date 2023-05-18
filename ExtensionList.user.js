@@ -247,6 +247,7 @@ async function ExtensionListHandler() {
                 "Callback Team": [false, "621907", "800-664-5017"],
                 "Spanish Callback Team": [false, "621926", "800-664-5017"],
                 "College U-Boxes": [false, "621929"],
+                "U-Box Shipping": [false, "555100", "Option 3"],
                 "U-Box Support": [false, "620993"],
                 "U-Box Sales": [false, "621919", "877-468-4285"],
                 "Field Support / Center & Dealer Rate Line": [false, "621914", "800-248-4285"],
@@ -263,7 +264,7 @@ async function ExtensionListHandler() {
                 "Manager On Duty (MOD) - Customer Service - Warn Transfer Required": [false, "502190"],
                 "Roadside Assistance": [true, "620902", "800-528-0355"],
                 "Truckshare 24/7, Customer Return or Live Verify Assistance": [true, "502901"],
-                "Equipment Distribution": [false, "", "866-323-4348", "1"],
+                "Equipment Distribution": [false, "", "866-323-4348", "Option 1"],
                 "": [false, ""],
             },
 
