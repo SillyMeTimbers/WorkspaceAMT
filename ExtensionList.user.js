@@ -289,7 +289,7 @@ async function ExtensionListHandler() {
                 "Credit Administration": [false, "612535", "800-345-5876"],
                 "CSS / Agent Support": [false, "606903"],
                 "Donation Request (req for U-Haul to doante Money, Equipment, Etc": [false, "623801"],
-                "E-Alerts (stops customers from renting equipment due to money owed, etc": [true, "620903"],
+                "E-Alerts (stops customers from renting equipment due to money owed, etc)": [true, "620903"],
                 "Employment Verification": [false, "605020"],
                 "Equipment Recovery (abandonded equipment) - Warm Transfer Required": [true, "571200"],
                 "Fleet Sales (buy U-Haul Equipment, Trucks Only*), 6:00am - 6:00pm": [false, "672902", "866-404-0355"],
