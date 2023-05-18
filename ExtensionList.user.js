@@ -231,6 +231,16 @@ async function ExtensionListHandler() {
                 "": [false, ""],
             },
 
+            "MCO 781 AFM Extensions": {
+                "AFM 001 - Errol Ebanks": [false, "781001", "214-505-2349", "781001_afm@uhaul.com"],
+                "AFM 002 - Muler Gonzalez": [false, "781002", "772-777-9750", "781002_afm@uhaul.com"],
+                "AFM 003 - Marcus Black": [false, "781003", "561-348-0108", "781003_afm@uhaul.com"],
+                "AFM 004 - Patricia Evans": [false, "781004", "321-805-7648", "781004_afm@uhaul.com"],
+                "AFM 005 - Andrew Hutker": [false, "781005", "321-848-4414", "781005_afm@uhaul.com"],
+                "AFM 006 - Emilio Ruiz": [false, "781006", "954-465-6830", "781006_afm@uhaul.com"],
+                "": [false, ""],
+            },
+            
             "District 12 Extensions": {
                 "MCO 753 (UHC of Clearwater)": [false, "753300", "727-288-9919"],
                 "MCO 781 (UHC of Eastern Florida)": [false, "781300", "561-638-9428"],
