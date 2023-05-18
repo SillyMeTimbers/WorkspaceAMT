@@ -1,4 +1,7 @@
 # Latest Updates
+5/18/2023
+* Split scripts into Live Channel & Experimental Channel
+
 5/14/2023
 * Bug Fixes
 * Improved Phone Number Inputs, Automatic Formmating & Text Limiting
