@@ -26,7 +26,7 @@ const Redirects = [
   const timeString = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + '-' + now.getHours() + ':' + minutes;
 
   for (const redirect of Redirects) {
-    const url = `https://raw.githubusercontent.com/SillyMeTimbers/WorkspaceAMT/main/${redirect}.user.js?time=${timeString}`;
+    const url = `https://raw.githubusercontent.com/SillyMeTimbers/WorkspaceAMT/Live/${redirect}.user.js?time=${timeString}`;
     const response = await fetch(url);
     const scriptText = await response.text();
 
