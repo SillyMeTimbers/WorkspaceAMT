@@ -308,7 +308,9 @@ ${MessageEnd}`;
     },
 
     "Duplicate Reservation": {
-        func: TestingMessage,
+        func: function() {
+            return "nothing... Absolutely nothing should be here"
+        },
         overrideOriginalMessage: true,
 
         shouldRun: function () {
@@ -369,15 +371,6 @@ ${MessageEnd}`;
                 return true
             }
 
-            return false
-        }
-    },
-
-    "Testing Values": {
-        func: TestingMessage,
-        overrideOriginalMessage: false,
-
-        shouldRun: function () {
             return false
         }
     },
