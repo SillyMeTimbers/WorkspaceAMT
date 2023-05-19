@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-console.log("Running [Custom Message Templates] Build #1")
+console.log("Running [Custom Message Templates] Build #2")
 
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
 function getDynamicValuesForTemplate(templateName) {
