@@ -32,7 +32,7 @@ function isNotDispatchReportVisible() {
 
 function notDispatchUpdateCheckbox(checkbox) {
     if (checkbox.id === "addUBOX") {
-       NotDispatchSettings = $(checkbox).prop('checked')
+       NotDispatchSettings.UBOX = $(checkbox).prop('checked')
     }
 }
 
