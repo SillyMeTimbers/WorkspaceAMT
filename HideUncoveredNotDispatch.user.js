@@ -31,13 +31,8 @@ function runWhenOverdueVisible() {
     tbody.querySelectorAll("tr").forEach((tr) => {
         const locationId = tr.querySelector("td:nth-child(8)").textContent.trim();
 
-        console.log("-------------")
-        const ignoreLocations = ['781008', '781071', '781074'];
+        const ignoreLocations = ['781008'];
         const shouldHide = ignoreLocations.some(extension => locationId.endsWith(extension));
-        console.log(shouldHide)
-        console.log(locationId)
-        console.log("-------------")
-
         if (shouldHide == true) {
             tr.remove()
         }
