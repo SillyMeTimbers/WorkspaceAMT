@@ -11,14 +11,14 @@
 console.log("Started [Hide 781008 Not Dispatched Contracts] Build #1")
 
 // Function to check if the OverdueSearchResultsDiv is visible
-function isOverdueSearchResultsDivVisible() {
-  const OverdueSearchResultsDiv = document.querySelector(
-    "#OverdueEquipmentResultsTable"
+function isNotDispatchReportVisible() {
+  const NotDispatchReportDiv = document.querySelector(
+    "#NotDispatchedResults_wrapper"
   );
   if (
-    OverdueSearchResultsDiv &&
-    OverdueSearchResultsDiv.offsetWidth > 0 &&
-    OverdueSearchResultsDiv.offsetHeight > 0
+    NotDispatchReportDiv &&
+    NotDispatchReportDiv.offsetWidth > 0 &&
+    NotDispatchReportDiv.offsetHeight > 0
   ) {
     return true;
   }
@@ -28,7 +28,7 @@ function isOverdueSearchResultsDivVisible() {
 // Function to run when the OverdueSearchResultsDiv is visible
 function runWhenOverdueVisible() {
   // Select the tbody element
-  const tbody = document.querySelector("#OverdueEquipmentResultsTable > tbody");
+  const tbody = document.querySelector("#NotDispatchReportDiv > tbody");
 
   // Iterate through all the rows in the tbody
   tbody.querySelectorAll("tr").forEach((tr) => {
@@ -41,32 +41,7 @@ function runWhenOverdueVisible() {
 
       // Get the location ID from the relevant td element
       const locationId = tr.querySelector("td:nth-child(6)").textContent.trim();
-
-      // Check if the "Display Contract Notes" link already exists in the row
-      const existingLink = tr.querySelector(
-        `li > a[pos-contract-id="${contractId}"]`
-      );
-      if (existingLink) {
-        return;
-      }
-
-      // Duplicate the li element
-      const clonedLi = liElement.parentElement.cloneNode(true);
-
-      // Modify the onclick attribute of the cloned li element
-      clonedLi
-        .querySelector("a")
-        .setAttribute("onclick", `OpenPOSLink(${contractId}, ${locationId})`);
-
-      // Update the text of the cloned li element
-      clonedLi.querySelector("a").textContent = "View in POS";
-
-      // Set the data-contract-id attribute for the cloned li element
-      clonedLi.querySelector("a").setAttribute("pos-contract-id", contractId);
-
-      // Add the cloned li element to the ul at the top of the list
-      const ulElement = liElement.parentElement.parentElement;
-      ulElement.insertBefore(clonedLi, ulElement.firstChild);
+      console.log(locationId)
     }
   });
 }
