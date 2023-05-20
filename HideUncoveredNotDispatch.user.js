@@ -28,21 +28,16 @@ function isNotDispatchReportVisible() {
 // Function to run when the OverdueSearchResultsDiv is visible
 function runWhenOverdueVisible() {
   // Select the tbody element
-  const tbody = document.querySelector("#NotDispatchReportDiv > tbody");
+  const tbody = document.querySelector("#NotDispatchedResults > tbody");
 
   // Iterate through all the rows in the tbody
   tbody.querySelectorAll("tr").forEach((tr) => {
-    // Find the li element with the "View On-Line Doc" link
-    const liElement = tr.querySelector('li > a[onclick*="OpenOnlineDoc"]');
+    // Get the contract ID from the original onclick attribute
+    const contractId = liElement.getAttribute("onclick").match(/\d+/)[0];
 
-    if (liElement) {
-      // Get the contract ID from the original onclick attribute
-      const contractId = liElement.getAttribute("onclick").match(/\d+/)[0];
-
-      // Get the location ID from the relevant td element
-      const locationId = tr.querySelector("td:nth-child(6)").textContent.trim();
-      console.log(locationId)
-    }
+    // Get the location ID from the relevant td element
+    const locationId = tr.querySelector("td:nth-child(6)").textContent.trim();
+    console.log(locationId)
   });
 }
 
