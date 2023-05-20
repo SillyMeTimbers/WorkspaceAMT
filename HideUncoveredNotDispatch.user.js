@@ -12,33 +12,42 @@ console.log("Started [Hide 781008 Not Dispatched Contracts] Build #1")
 
 // Function to check if the OverdueSearchResultsDiv is visible
 function isNotDispatchReportVisible() {
-  const NotDispatchReportDiv = document.querySelector(
-    "#NotDispatchedResults_wrapper"
-  );
-  if (
-    NotDispatchReportDiv &&
-    NotDispatchReportDiv.offsetWidth > 0 &&
-    NotDispatchReportDiv.offsetHeight > 0
-  ) {
-    return true;
-  }
-  return false;
+    const NotDispatchReportDiv = document.querySelector(
+        "#NotDispatchedResults_wrapper"
+    );
+    if (
+        NotDispatchReportDiv &&
+        NotDispatchReportDiv.offsetWidth > 0 &&
+        NotDispatchReportDiv.offsetHeight > 0
+    ) {
+        return true;
+    }
+    return false;
 }
 
 // Function to run when the OverdueSearchResultsDiv is visible
 function runWhenOverdueVisible() {
-  // Select the tbody element
-  const tbody = document.querySelector("#NotDispatchedResults > tbody");
+    const tbody = document.querySelector("#NotDispatchedResults > tbody");
+    tbody.querySelectorAll("tr").forEach((tr) => {
+        const locationId = tr.querySelector("td:nth-child(8)").textContent.trim();
 
-  // Iterate through all the rows in the tbody
-  tbody.querySelectorAll("tr").forEach((tr) => {
-    // Get the contract ID from the original onclick attribute
-    const contractId = liElement.getAttribute("onclick").match(/\d+/)[0];
+        console.log("-------------")
+        const ignoreLocations = ['781008', '781071', '781074'];
+        const shouldHide = ignoreLocations.some(extension => locationId.endsWith(extension));
+        console.log(shouldHide)
+        console.log(locationId)
+        console.log("-------------")
 
-    // Get the location ID from the relevant td element
-    const locationId = tr.querySelector("td:nth-child(6)").textContent.trim();
-    console.log(locationId)
-  });
+        if (shouldHide == true) {
+            tr.remove()
+        }
+    });
+
+    let FlipVal = false;
+    tbody.querySelectorAll("tr").forEach((tr) => {
+        tr.classList.remove("odd")
+        tr.classList.remove("even")
+    });
 }
 
 // Function to continuously check if the textSubmitForm is visible
