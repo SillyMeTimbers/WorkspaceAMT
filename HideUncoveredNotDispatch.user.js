@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-console.log("Started [Hide 781008 Not Dispatched Contracts] Build #2")
+console.log("Started [Hide 781008 Not Dispatched Contracts] Build #3")
 let NotDispatchReportLastVisible = false;
 let NotDispatchSettings = {
     "UBOX": true,
@@ -86,7 +86,7 @@ function runWhenOverdueVisible() {
         console.log(NotDispatchSettings.UBOX)
         const ignoreLocations = ['781008'];
         const ignoreEquipment = ['AA', 'AB'];
-        const shouldHide = ((ignoreLocations.some(location => locationId.endsWith(location))) || (NotDispatchSettings.UBOX == false && ignoreEquipment.some(equipment => EquipType.endsWith(equipment))));
+        const shouldHide = ((ignoreLocations.some(location => locationId.endsWith(location))) || (false == false && ignoreEquipment.some(equipment => EquipType.includes(equipment))));
         if (shouldHide == true) {
             tr.remove()
         }
