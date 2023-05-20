@@ -59,6 +59,7 @@ function createCheckbox(id, name, text, defaultValue) {
     // Create the span element
     let span = document.createElement('span');
     span.setAttribute('class', 'custom checkbox');
+    span.style.marginRight = "5px";
 
     // Add the input elements and span to the label
     label.appendChild(input1);
@@ -73,7 +74,8 @@ function createCheckbox(id, name, text, defaultValue) {
 // Function to run when the OverdueSearchResultsDiv is visible
 function runWhenOverdueVisible() {
     if (NotDispatchReportLastVisible == false) {
-        createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Add U-Box', 'true');
+        const CheckBox = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Add U-Box', 'true');
+        document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(CheckBox);
     }
 
     const tbody = document.querySelector("#NotDispatchedResults > tbody");
