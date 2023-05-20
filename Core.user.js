@@ -16,6 +16,7 @@ const Redirects = [
   "OverdueOpenInPOS",
   "SendDropoffButtons",
   "EnhancedMessageTemplates",
+  "HideUncoveredNotDispatch",
 ];
 
 (async function() {
