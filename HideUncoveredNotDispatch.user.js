@@ -36,7 +36,7 @@ function notDispatchUpdateCheckbox(checkbox) {
     }
 }
 
-function createCustomElement(id, name, text, defaultValue) {
+function createCheckbox(id, name, text, defaultValue) {
     // Create the label element
     let label = document.createElement('label');
 
