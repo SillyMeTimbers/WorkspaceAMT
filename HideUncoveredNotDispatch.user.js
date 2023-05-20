@@ -86,7 +86,7 @@ function runWhenOverdueVisible() {
         console.log(NotDispatchSettings.UBOX)
         const ignoreLocations = ['781008'];
         const ignoreEquipment = ['AA', 'AB'];
-        const shouldHide = ignoreLocations.some(extension => locationId.endsWith(extension));
+        const shouldHide = ((ignoreLocations.some(location => locationId.endsWith(location))) || (NotDispatchSettings.UBOX == false && ignoreEquipment.some(equipment => EquipType.endsWith(equipment))));
         if (shouldHide == true) {
             tr.remove()
         }
