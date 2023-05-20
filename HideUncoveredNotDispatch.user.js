@@ -46,25 +46,13 @@ function runWhenOverdueVisible() {
   });
 }
 
-// Create a MutationObserver to watch for changes in the DOM
-const observer = new MutationObserver((mutationsList, observer) => {
-  for (const mutation of mutationsList) {
-    if (
-      mutation.type === "childList" &&
-      isOverdueSearchResultsDivVisible()
-    ) {
-      setTimeout(() => {
-        runWhenOverdueVisible();
-      }, 100); // Add a 10ms cooldown
-      // No need to disconnect the observer, keep it running
-    }
-  }
-});
+// Function to continuously check if the textSubmitForm is visible
+function isNotDispatchReportVisibleCheck() {
+    setInterval(() => {
+        if (isNotDispatchReportVisible()) {
+            runWhenOverdueVisible();
+        }
+    }, 100);
+}
 
-// Start observing the DOM changes
-observer.observe(document.body, {
-  childList: true,
-  subtree: true,
-  attributes: true,
-  attributeFilter: ["style"],
-});
+isNotDispatchReportVisibleCheck();
