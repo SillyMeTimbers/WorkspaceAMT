@@ -90,7 +90,7 @@ function runWhenNotDispatchReport() {
         if (shouldHide == true) {
             tr.style.display = "none"
         } else {
-            tr.style.display = "visible"
+            tr.style.display = ""
         }
     });
 
