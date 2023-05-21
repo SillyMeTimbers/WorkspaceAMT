@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-console.log("Started [Hide 781008 Not Dispatched Contracts] Build #4")
+console.log("Started [Hide 781008 Not Dispatched Contracts] Build #5")
 let NotDispatchReportLastVisible = false;
 let NotDispatchSettings = {
     "UBOX": true,
@@ -49,7 +49,8 @@ function createCheckbox(id, name, text, defaultValue) {
     input1.setAttribute('onchange', 'notDispatchUpdateCheckbox(this)');
     input1.setAttribute('type', 'checkbox');
     input1.setAttribute('value', defaultValue);
-
+    input1.style.marginRight = "5px";
+    
     // Create the second input element
     let input2 = document.createElement('input');
     input2.setAttribute('name', name);
@@ -59,7 +60,6 @@ function createCheckbox(id, name, text, defaultValue) {
     // Create the span element
     let span = document.createElement('span');
     span.setAttribute('class', 'custom checkbox');
-    span.style.marginRight = "5px";
 
     // Add the input elements and span to the label
     label.appendChild(input1);
@@ -72,7 +72,7 @@ function createCheckbox(id, name, text, defaultValue) {
 }
 
 // Function to run when the OverdueSearchResultsDiv is visible
-function runWhenOverdueVisible() {
+function runWhenNotDispatchReport() {
     if (NotDispatchReportLastVisible == false) {
         const CheckBox = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Add U-Box', 'true');
         document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(CheckBox);
@@ -88,7 +88,9 @@ function runWhenOverdueVisible() {
         const ignoreEquipment = ['AA', 'AB'];
         const shouldHide = ((ignoreLocations.some(location => locationId.endsWith(location))) || (NotDispatchSettings.UBOX == false && ignoreEquipment.some(equipment => EquipType.includes(equipment))));
         if (shouldHide == true) {
-            tr.remove()
+            tr.style.display = "none"
+        } else {
+            tr.style.display = "visible"
         }
     });
 
@@ -103,7 +105,7 @@ function runWhenOverdueVisible() {
 function isNotDispatchReportVisibleCheck() {
     setInterval(() => {
         if (isNotDispatchReportVisible()) {
-            runWhenOverdueVisible();
+            runWhenNotDispatchReport();
             NotDispatchReportLastVisible = true;
         }
     }, 100);
