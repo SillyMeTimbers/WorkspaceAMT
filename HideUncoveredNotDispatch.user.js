@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-console.log("Started [Hide 781008 Not Dispatched Contracts] Build #5")
+console.log("Started [Hide 781008 Not Dispatched Contracts] Build #6")
 let NotDispatchReportLastVisible = false;
 let NotDispatchSettings = {
     "UBOX": true,
