@@ -12,6 +12,7 @@ console.log("Started [Hide 781008 Not Dispatched Contracts] Build #6")
 let NotDispatchReportLastVisible = false;
 let NotDispatchSettings = {
     "UBOX": true,
+    "Uncovered": true,
 }
 
 // Function to check if the OverdueSearchResultsDiv is visible
@@ -32,7 +33,13 @@ function isNotDispatchReportVisible() {
 
 function notDispatchUpdateCheckbox(checkbox) {
     if (checkbox.id === "addUBOX") {
-       NotDispatchSettings.UBOX = $(checkbox).prop('checked')
+        NotDispatchSettings.UBOX = $(checkbox).prop('checked')
+        console.log(`Updated Value to ${NotDispatchSettings.UBOX}`)
+    }
+
+    if (checkbox.id === "addUncovered") {
+        NotDispatchSettings.Uncovered = $(checkbox).prop('checked')
+        console.log(`Updated Value to ${NotDispatchSettings.Uncovered}`)
     }
 }
 
@@ -40,32 +47,31 @@ function createCheckbox(id, name, text, defaultValue) {
     // Create the label element
     let label = document.createElement('label');
 
-    // Create the first input element
-    let input1 = document.createElement('input');
-    input1.setAttribute('data-val', 'true');
-    input1.setAttribute('data-val-required', 'The DownloadNote field is required.');
-    input1.setAttribute('id', id);
-    input1.setAttribute('name', name);
-    input1.setAttribute('onchange', 'notDispatchUpdateCheckbox(this)');
-    input1.setAttribute('type', 'checkbox');
-    input1.setAttribute('value', defaultValue);
-    input1.style.marginRight = "5px";
-    
-    // Create the second input element
-    let input2 = document.createElement('input');
-    input2.setAttribute('name', name);
-    input2.setAttribute('type', 'hidden');
-    input2.setAttribute('value', 'false');
+    // Create the input element
+    let input = document.createElement('input');
+    input.setAttribute('data-val', 'true');
+    input.setAttribute('data-val-required', 'The DownloadNote field is required.');
+    input.setAttribute('id', id);
+    input.setAttribute('name', name);
+    input.setAttribute('type', 'checkbox');
+    input.style.marginRight = '5px';
+
+    // Set the checked state based on defaultValue
+    input.checked = defaultValue;
+
+    input.addEventListener('change', function() {
+        notDispatchUpdateCheckbox(this);
+    });
 
     // Create the span element
     let span = document.createElement('span');
     span.setAttribute('class', 'custom checkbox');
 
-    // Add the input elements and span to the label
-    label.appendChild(input1);
+    // Add the input element and span to the label
+    label.appendChild(input);
     label.appendChild(document.createTextNode(text));
-    label.appendChild(input2);
     label.appendChild(span);
+    label.setAttribute('id', `${id}_Holder`);
 
     // Return the label element
     return label;
@@ -73,9 +79,14 @@ function createCheckbox(id, name, text, defaultValue) {
 
 // Function to run when the OverdueSearchResultsDiv is visible
 function runWhenNotDispatchReport() {
-    if (NotDispatchReportLastVisible == false) {
-        const CheckBox = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Add U-Box', 'true');
-        document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(CheckBox);
+    if (document.querySelector("#addUBOX_Holder") == null) {
+        const IncludeUBOX = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Include U-Box', NotDispatchSettings.UBOX);
+        document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUBOX);
+        console.log(IncludeUBOX.querySelector('input').checked);
+
+        const IncludeUncovered = createCheckbox('addUncovered', 'NotDispatchPanel.addUncovered', 'Include 781008', NotDispatchSettings.Uncovered);
+        document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUncovered);
+        console.log(IncludeUncovered.querySelector('input').checked);
     }
 
     const tbody = document.querySelector("#NotDispatchedResults > tbody");
@@ -83,21 +94,43 @@ function runWhenNotDispatchReport() {
         const locationId = tr.querySelector("td:nth-child(8)").textContent.trim();
         const EquipType = tr.querySelector("td:nth-child(7)").textContent.trim();
 
-        console.log(NotDispatchSettings.UBOX)
+        //  console.log(NotDispatchSettings.UBOX)
         const ignoreLocations = ['781008'];
         const ignoreEquipment = ['AA', 'AB'];
-        const shouldHide = ((ignoreLocations.some(location => locationId.endsWith(location))) || (NotDispatchSettings.UBOX == false && ignoreEquipment.some(equipment => EquipType.includes(equipment))));
-        if (shouldHide == true) {
-            tr.style.display = "none"
+        let shouldHide = false;
+
+        if(NotDispatchSettings.Uncovered == false && ignoreLocations.some(location => locationId.endsWith(location))) {
+            shouldHide = true;
+        } else if ((NotDispatchSettings.UBOX == false && ignoreEquipment.some(equipment => EquipType.includes(equipment)))) {
+            shouldHide = true;
         } else {
-            tr.style.display = ""
+            shouldHide = false;
+        }
+
+        if (shouldHide == true) {
+            tr.style.display = "none";
+        } else {
+            tr.style.display = null;
         }
     });
 
-    //let FlipVal = false;
+    let FlipVal = true;
     tbody.querySelectorAll("tr").forEach((tr) => {
         tr.classList.remove("odd")
         tr.classList.remove("even")
+
+        if (tr.style.display == "none") {
+        } else {
+            if (FlipVal == false) {
+                tr.style.background = "#f1f1f1";
+                /// tr.classList.add("odd")
+                FlipVal = true;
+            } else {
+                tr.style.background = '#ffffff';
+                //tr.classList.add("even")
+                FlipVal = false;
+            }
+        }
     });
 }
 
