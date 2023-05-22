@@ -109,7 +109,7 @@ function createGrid(data) {
       const categoryCell = document.createElement('td');
       categoryCell.colSpan = 4;
       categoryCell.textContent = category;
-      categoryCell.style.backgroundColor = '#f2f2f2';
+      categoryCell.style.backgroundColor = '#C9C9C9';
       categoryCell.style.fontWeight = 'bold';
   //    categoryCell.style.border = '1px solid black';
       categoryRow.appendChild(categoryCell);
@@ -226,7 +226,6 @@ async function ExtensionListHandler() {
                 "RM - Nyla Whitty": [false, "781316", "321-451-6460"],
                 "RM - Matthew Glenn": [false, ""],
                 "RM - Daviena Wallace": [false, ""],
-                "": [false, ""],
             },
 
             "MCO 781 AFM Extensions": {
@@ -236,7 +235,6 @@ async function ExtensionListHandler() {
                 "AFM 004 - Patricia Evans": [false, "781004", "321-805-7648", "781004_afm@uhaul.com"],
                 "AFM 005 - Andrew Hutker": [false, "781005", "321-848-4414", "781005_afm@uhaul.com"],
                 "AFM 006 - Emilio Ruiz": [false, "781006", "954-465-6830", "781006_afm@uhaul.com"],
-                "": [false, ""],
             },
             
             "District 12 Extensions": {
@@ -247,7 +245,6 @@ async function ExtensionListHandler() {
                 "MCO 788 (UHC of Ft Lauderdale)": [false, "788300", "954-942-1101"],
                 "MCO 830 (UHC of Western Florida)": [false, "830300", "941-359-2413"],
                 "MCO 955 (UHC of East Tampa/Lakeland)": [false, "955300", "813-655-4434"],
-                "": [false, ""],
             },
 
             "Contact Center Departmental Extensions": {
@@ -273,7 +270,6 @@ async function ExtensionListHandler() {
                 "Roadside Assistance": [true, "620902", "800-528-0355"],
                 "Truckshare 24/7, Customer Return or Live Verify Assistance": [true, "502901"],
                 "Equipment Distribution": [false, "", "866-323-4348", "Option 1"],
-                "": [false, ""],
             },
 
             "Extensions Outside Contact Center": {
