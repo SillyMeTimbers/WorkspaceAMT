@@ -8,8 +8,6 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-console.log("Started [Extension Sheet]")
-
 async function extensionButtonWaitForElement(selector, timeout = 10000) {
     const startTime = Date.now();
 
@@ -97,12 +95,12 @@ function createGrid(data) {
     container.style.marginBottom = "10px";
     container.style.marginLeft = "10px";
     container.style.marginRight = "10px";
-    container.style.border = '1px solid black';
+   // container.style.border = '1px solid black';
 
     const table = document.createElement('table');
     table.style.borderCollapse = 'collapse';
     table.style.width = "100%";
-    table.style.border = '1px solid black';
+  //  table.style.border = '1px solid black';
     table.style.margin = '0 auto';
     //table.style.marginBottom = '10px';
 
@@ -113,7 +111,7 @@ function createGrid(data) {
       categoryCell.textContent = category;
       categoryCell.style.backgroundColor = '#f2f2f2';
       categoryCell.style.fontWeight = 'bold';
-      categoryCell.style.border = '1px solid black';
+  //    categoryCell.style.border = '1px solid black';
       categoryRow.appendChild(categoryCell);
       table.appendChild(categoryRow);
 
@@ -127,13 +125,13 @@ function createGrid(data) {
 
         const nameCell = document.createElement('td');
         nameCell.textContent = name;
-        nameCell.style.border = '1px solid black';
+   //     nameCell.style.border = '1px solid black';
         row.appendChild(nameCell);
 
         const extensionCell = document.createElement('td');
         const extension = item[1] || '-';
         extensionCell.textContent = extension;
-        extensionCell.style.border = '1px solid black';
+   //     extensionCell.style.border = '1px solid black';
 
         if (extension != '-') {
           extensionCell.title = 'Click to copy extension';
@@ -154,7 +152,7 @@ function createGrid(data) {
         const phoneCell = document.createElement('td');
         const phoneNumber = item[2] || '-';
         phoneCell.textContent = phoneNumber;
-        phoneCell.style.border = '1px solid black';
+    //    phoneCell.style.border = '1px solid black';
 
         if (phoneNumber != '-') {
           phoneCell.title = 'Click to copy phone number';
@@ -174,7 +172,7 @@ function createGrid(data) {
 
         const partyExtension = document.createElement('td');
         partyExtension.textContent = item[3] || '-';
-        partyExtension.style.border = '1px solid black';
+   //     partyExtension.style.border = '1px solid black';
         row.appendChild(partyExtension);
 
         table.appendChild(row);
@@ -338,8 +336,6 @@ function createExtensionButton() {
 
 // Function to continuously check
 function shouldAddExtensionListButton() {
-    console.log("Running [Extension Sheet]")
-
     setInterval(() => {
         const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > li.has-tip")
         const ExtensionButton = document.querySelector("#Header > nav > section > ul.left > li.extension-button")
