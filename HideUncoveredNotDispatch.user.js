@@ -12,7 +12,7 @@ console.log("Started [Hide 781008 Not Dispatched Contracts] Build #8")
 let NotDispatchReportLastVisible = false;
 let NotDispatchSettings = {
     "UBOX": true,
-    "Uncovered": true,
+    "Uncovered": false,
 }
 
 // Function to check if the OverdueSearchResultsDiv is visible
