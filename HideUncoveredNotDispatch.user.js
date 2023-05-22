@@ -72,7 +72,8 @@ function createCheckbox(id, name, text, defaultValue) {
     label.appendChild(document.createTextNode(text));
     label.appendChild(span);
     label.setAttribute('id', `${id}_Holder`);
-
+    label.style.width = "fitContent"
+    
     // Return the label element
     return label;
 }
