@@ -100,7 +100,7 @@ function runWhenDropoffVisible() {
 
         function validateInputs() {
             const phoneNumber = phoneNumberInput.value.replace(/\D/g, '');
-            const email = emailInput.value;
+            const email = emailInput.value.toLowerCase();
             const phoneNumberValid = phoneNumber.length === 10;
             const validExtensions = ['.com', '.org', '.edu', ".net"];
             const emailValid = email.match(/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/) !== null && validExtensions.some(extension => email.endsWith(extension));
