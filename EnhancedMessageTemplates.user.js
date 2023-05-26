@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-console.log("Running [Custom Message Templates] Build #2")
+console.log("Running [Custom Message Templates] Build #3")
 
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
 function getDynamicValuesForTemplate(templateName) {
@@ -416,18 +416,18 @@ function MessageTextForumVisible() {
 
         // Fix Whitespace in message
         const AddTemplateButton = document.querySelector('#textSubmitForm > div > div > div > div:nth-child(1) > div:nth-child(2) > div.medium-4.columns > input');
-        
-         if (AddTemplateButton) {
-          AddTemplateButton.addEventListener("click", function() {
-            const textarea = document.getElementById('textMessageArea');
-            if (textarea) {
-              textarea.value = textarea.value.trim();
-            } else {
-              console.error('Textarea not found');
-            }
-          });
+
+        if (AddTemplateButton) {
+            AddTemplateButton.addEventListener("click", function() {
+                const textarea = document.getElementById('textMessageArea');
+                if (textarea) {
+                    textarea.value = textarea.value.trim();
+                } else {
+                    console.error('Textarea not found');
+                }
+            });
         }
-    
+
         const phoneNumberInput = document.querySelector("#CustomerPhoneNumber");
 
         function formatPhoneNumber(inputElement) {
@@ -485,12 +485,12 @@ ${MessageEnd}`;
 
                     if (style === "Regular") {
                         NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-Your pick up has been updated! You can find your equipment available to pickup at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupState} ${dynamicValues.pickupCity} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
+Your pick up has been updated! You can find your equipment available to pickup at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
 If you have any questions or concerns regarding your new pick up location, please call U-Haul Regional Scheduling Office.
 ${MessageEnd}`;
                     } else if (style === "Lack of availability") {
                         NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-We regret to inform you that your pick-up location has been updated due to equipment availability. Your equipment will be ready for pick-up at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupState} ${dynamicValues.pickupCity} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
+We regret to inform you that your pick-up location has been updated due to equipment availability. Your equipment will be ready for pick-up at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
 We apologize for any inconvenience caused by this change. If you require assistance, need information on alternative equipment sizes, or wish to reschedule, do not hesitate to contact the U-Haul Regional Scheduling Office.
 ${MessageEnd}`;
                     }
@@ -518,6 +518,32 @@ ${MessageEnd}`;
                         NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
 Unfortunately, your dropoff location has been rescheduled to the nearest location that is able to receive your equipment. You will be able to return your equipment to ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
 We apologize for any inconveniences this may cause for you, if you have any questions, please call U-Haul Regional Scheduling Office.
+${MessageEnd}`;
+                    }
+
+                    if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
+                        const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
+                        HiddenMsg.value = NewMsg
+                    }
+                }
+            }
+
+            if (CurrentSelector == "Late Pickup Notice") {
+                const styleDropdown = document.querySelector("#styleDropdown");
+                if (styleDropdown) {
+                    let NewMsg = "";
+                    const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
+                    const style = styleDropdown.options[styleDropdown.selectedIndex].text;
+
+                    if (style === "Regular") {
+                        NewMsg = `U-Haul Reservation Cancelation Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+Your reservation is at risk of cancelation; Reservation Scheduled for ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
+Our records indicate it has not yet been picked up and is at risk of being canceled. If you have already picked up this equipment or wish to reschedule, please call U-Haul Regional Scheduling Office.
+${MessageEnd}`;
+                    } else if (style === "Not Avail") {
+                        NewMsg = `U-Haul Reservation Cancelation Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+Your reservation is at risk of cancelation; Reservation Scheduled for ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
+Our records indicate it has not yet been picked up and is at risk of being canceled. Unfortunately your current pickup location no longer has your requested equipment available. If you still need the equipment, already picked up this equipment, or need to reschedule.
 ${MessageEnd}`;
                     }
 
@@ -686,6 +712,22 @@ ${MessageEnd}`;
                 updateMessage();
             }
 
+            if (selectedOptionValue.trim() === "Late Pickup Notice") {
+                const cancelReasons = [
+                    { value: "1", text: "Regular"},
+                    { value: "2", text: "Not Avail"},
+                ];
+
+                const cancelDropdown = createAndInsertDropdown("styleDropdown", "Style", cancelReasons);
+                extraDropdownsContainer.appendChild(cancelDropdown);
+
+                // Add event listeners to the additional dropdowns to update the message when their values change
+                cancelDropdown.addEventListener("change", updateMessage);
+
+                // Update the message initially based on the default selected values
+                updateMessage();
+            }
+
             if (selectedOptionValue.trim() === "Cancelation Notice") {
                 const cancelReasons = [
                     { value: "1", text: "Confirmation" },
@@ -756,6 +798,7 @@ ${MessageEnd}`;
                     const firstListItem = list.querySelector("li:first-child");
 
                     if (firstListItem) {
+                        firstListItem.click()
                         firstListItem.classList.add("selected"); // Add the "selected" class to the first list item
                         const firstListItemText = firstListItem.textContent;
                         currentAnchor.textContent = firstListItemText;
