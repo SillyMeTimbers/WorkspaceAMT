@@ -1,4 +1,9 @@
 # Latest Updates
+5/26/2023
+* Made changes to "Late pickup cancelation" messages, split into a multi-prompt.
+* Fixed "New Pickup" messages, City & State had been swapped so it looked like "FL, Palm Bay" instead of "Palm Bay, FL"
+* Updated "Core.user.js" Scripts in both Live & Experimental Branches to use a Permission System to allow/disable certain scripts for a certain user(s)
+
 5/18/2023
 * Split scripts into Live Channel & Experimental Channel
 
