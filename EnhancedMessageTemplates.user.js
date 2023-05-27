@@ -467,6 +467,12 @@ ${MessageEnd}`;
                         NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
 Due to lack of availability in your preferred area your U-Haul Equipment has been updated changed from "${oldEquip}" to "${newEquip}". If you have other equipment reserved, they will not appear in this message, please check your reservation on Uhaul.com for further details.
 ${MessageEnd}`;
+                    } else if (style === "New Equip/Pickup") {
+                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+Due to lack of availability in your preferred area your U-Haul Equipment has been updated changed from "${oldEquip}" to "${newEquip}". If you have other equipment reserved, they will not appear in this message.
+Additionally, your pick up location has been updated! You can find your equipment available to pickup at You can find your equipment available to pickup at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
+If you have any questions in regards to your equipment being changed or further questions for your new pickup address please check your reservation on Uhaul.com or call U-Haul Scheduling using the number provided below.
+${MessageEnd}`;
                     }
 
                     if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
@@ -635,32 +641,33 @@ ${MessageEnd}`;
             CurrentSelector = selectedOptionValue.trim()
             if (selectedOptionValue.trim() === "Equipment Change") {
                 const EquipList = [
-                    { value: "BE", text: "BE - Cargo Van" },
-                    { value: "BP", text: "BP - Pickup Truck" },
-                    { value: "MP", text: "MP - Ford Maverick Pickup Truck" },
-                    { value: "TM", text: "TM - 10' Box Truck" },
-                    { value: "DC", text: "DC - 15' Box Truck" },
-                    { value: "EL", text: "EL - 17' Box Truck" },
-                    { value: "TT", text: "TT - 20' Box Truck" },
-                    { value: "JH", text: "JH - 26' Box Truck" },
-                    { value: "FS", text: "FS - 4' X 7' Open Trailer" },
-                    { value: "AO", text: "AO - 5' X 8' Open Trailer" },
-                    { value: "RO", text: "RO - 6' X 12' Open Trailer" },
-                    { value: "HO", text: "HO - 6' X 12' Open Trailer w/Ramp" },
-                    { value: "UV", text: "UV - 4' X 8' Enclosed Trailer" },
-                    { value: "AV", text: "AV - 5' X 8' Enclosed Trailer" },
-                    { value: "RV", text: "RV - 6' X 12' Enclosed Trailer" },
-                    { value: "RT", text: "RT - 5' X 9' Open Trailer w/Ramp" },
-                    { value: "MT", text: "MT - Motorcycle Trailer" },
-                    { value: "TD", text: "TD - Tow Dolly" },
-                    { value: "AT", text: "AT - Auto Transport" },
-                    { value: "AA", text: "AA - Wooden U-Box" },
-                    { value: "AB", text: "AB - Plastic U-Box" },
+                    { value: "BE", text: "BE - Cargo Van"},
+                    { value: "BP", text: "BP - Pickup Truck"},
+                    { value: "MP", text: "MP - Ford Maverick Pickup Truck"},
+                    { value: "TM", text: "TM - 10' Box Truck"},
+                    { value: "DC", text: "DC - 15' Box Truck"},
+                    { value: "EL", text: "EL - 17' Box Truck"},
+                    { value: "TT", text: "TT - 20' Box Truck"},
+                    { value: "JH", text: "JH - 26' Box Truck"},
+                    { value: "FS", text: "FS - 4' X 7' Open Trailer"},
+                    { value: "AO", text: "AO - 5' X 8' Open Trailer"},
+                    { value: "RO", text: "RO - 6' X 12' Open Trailer"},
+                    { value: "HO", text: "HO - 6' X 12' Open Trailer w/Ramp"},
+                    { value: "UV", text: "UV - 4' X 8' Enclosed Trailer"},
+                    { value: "AV", text: "AV - 5' X 8' Enclosed Trailer"},
+                    { value: "RV", text: "RV - 6' X 12' Enclosed Trailer"},
+                    { value: "RT", text: "RT - 5' X 9' Open Trailer w/Ramp"},
+                    { value: "MT", text: "MT - Motorcycle Trailer"},
+                    { value: "TD", text: "TD - Tow Dolly"},
+                    { value: "AT", text: "AT - Auto Transport"},
+                    { value: "AA", text: "AA - Wooden U-Box"},
+                    { value: "AB", text: "AB - Plastic U-Box"},
                 ];
 
                 const styleOptions = [
-                    { value: "1", text: "Regular" },
-                    { value: "2", text: "Lack of availability" },
+                    { value: "1", text: "Regular"},
+                    { value: "2", text: "Lack of availability"},
+                    { value: "3", text: "New Equip/Pickup"},
                 ];
 
                 const oldEquip = createAndInsertDropdown("oldEquip", "Old Equipment:", EquipList);
@@ -675,15 +682,15 @@ ${MessageEnd}`;
                 oldEquip.addEventListener("change", updateMessage);
                 newEquip.addEventListener("change", updateMessage);
                 styleDropdown.addEventListener("change", updateMessage);
-
+                
                 // Update the message initially based on the default selected values
                 updateMessage();
             }
 
             if (selectedOptionValue.trim() === "New Pickup") {
                 const styleOptions = [
-                    { value: "1", text: "Regular" },
-                    { value: "2", text: "Lack of availability" },
+                    { value: "1", text: "Regular"},
+                    { value: "2", text: "Lack of availability"},
                 ];
 
                 const styleDropdown = createAndInsertDropdown("styleDropdown", "Message Style:", styleOptions);
@@ -698,8 +705,8 @@ ${MessageEnd}`;
 
             if (selectedOptionValue.trim() === "New Dropoff") {
                 const styleOptions = [
-                    { value: "1", text: "Regular" },
-                    { value: "2", text: "Lack of availability" },
+                    { value: "1", text: "Regular"},
+                    { value: "2", text: "Lack of availability"},
                 ];
 
                 const styleDropdown = createAndInsertDropdown("styleDropdown", "Message Style:", styleOptions);
@@ -730,9 +737,9 @@ ${MessageEnd}`;
 
             if (selectedOptionValue.trim() === "Cancelation Notice") {
                 const cancelReasons = [
-                    { value: "1", text: "Confirmation" },
-                    { value: "2", text: "No Call/No Show" },
-                    { value: "3", text: "Duplicate" },
+                    { value: "1", text: "Confirmation"},
+                    { value: "2", text: "No Call/No Show"},
+                    { value: "3", text: "Duplicate"},
                 ];
 
                 const cancelDropdown = createAndInsertDropdown("styleDropdown", "Cancelation Reason", cancelReasons);
@@ -747,9 +754,9 @@ ${MessageEnd}`;
 
             if (selectedOptionValue.trim() === "High Demand") {
                 const rentalType = [
-                    { value: "1", text: "#2 - No Triangle" },
-                    { value: "2", text: "#3 - Yellow Triangle" },
-                    { value: "3", text: "#4 - Red Triangle" },
+                    { value: "1", text: "#2 - No Triangle"},
+                    { value: "2", text: "#3 - Yellow Triangle"},
+                    { value: "3", text: "#4 - Red Triangle"},
                 ];
 
                 const rentalTypeDropdown = createAndInsertDropdown("styleDropdown", "Rental Type", rentalType);
