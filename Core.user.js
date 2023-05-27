@@ -18,35 +18,119 @@ const Redirects = [
   "EnhancedMessageTemplates",
 ];
 
+
 const PermissionsList = {
-  "Joshua Mccart": {
-    Branch: {
-      Live: false,
-      Experimental: true,
+    "Joshua Mccart": {
+        Branch: {
+            Live: false,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": true,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+        },
     },
-    Access: {
-      "ExtensionList": true,
-      "ExpNotes_VerifyTime": true,
-      "TopBarAlert": true,
-      "OverdueOpenInPOS": true,
-      "SendDropoffButtons": true,
-      "EnhancedMessageTemplates": true,
+
+    "Emily Bertrand": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": true,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+        },
     },
-  },
-  "Emily Bertrand": {
-    Branch: {
-      Live: false,
-      Experimental: true,
+
+    "Melissa Wise": {
+        Branch: {
+            Live: false,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": true,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+        },
     },
-    Access: {
-      "ExtensionList": true,
-      "ExpNotes_VerifyTime": true,
-      "TopBarAlert": true,
-      "OverdueOpenInPOS": true,
-      "SendDropoffButtons": true,
-      "EnhancedMessageTemplates": true,
+
+    "Julianna Mayes": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+        },
     },
-  },
+
+    "Michelle Asker": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": true,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+        },
+    },
+    
+    "Sheryse McKenzie": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+        },
+    },
+    
+    "Nyla Whitty": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+        },
+    },
+    
+    "Wilson Burgos": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+        },
+    },
 };
 
 (async function() {
