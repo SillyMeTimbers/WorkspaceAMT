@@ -8,8 +8,6 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-console.log("Started [Extension Sheet]")
-
 async function extensionButtonWaitForElement(selector, timeout = 10000) {
     const startTime = Date.now();
 
@@ -97,12 +95,12 @@ function createGrid(data) {
     container.style.marginBottom = "10px";
     container.style.marginLeft = "10px";
     container.style.marginRight = "10px";
-    container.style.border = '1px solid black';
+   // container.style.border = '1px solid black';
 
     const table = document.createElement('table');
     table.style.borderCollapse = 'collapse';
     table.style.width = "100%";
-    table.style.border = '1px solid black';
+  //  table.style.border = '1px solid black';
     table.style.margin = '0 auto';
     //table.style.marginBottom = '10px';
 
@@ -111,9 +109,9 @@ function createGrid(data) {
       const categoryCell = document.createElement('td');
       categoryCell.colSpan = 4;
       categoryCell.textContent = category;
-      categoryCell.style.backgroundColor = '#f2f2f2';
+      categoryCell.style.backgroundColor = '#C9C9C9';
       categoryCell.style.fontWeight = 'bold';
-      categoryCell.style.border = '1px solid black';
+  //    categoryCell.style.border = '1px solid black';
       categoryRow.appendChild(categoryCell);
       table.appendChild(categoryRow);
 
@@ -127,13 +125,13 @@ function createGrid(data) {
 
         const nameCell = document.createElement('td');
         nameCell.textContent = name;
-        nameCell.style.border = '1px solid black';
+   //     nameCell.style.border = '1px solid black';
         row.appendChild(nameCell);
 
         const extensionCell = document.createElement('td');
         const extension = item[1] || '-';
         extensionCell.textContent = extension;
-        extensionCell.style.border = '1px solid black';
+   //     extensionCell.style.border = '1px solid black';
 
         if (extension != '-') {
           extensionCell.title = 'Click to copy extension';
@@ -154,7 +152,7 @@ function createGrid(data) {
         const phoneCell = document.createElement('td');
         const phoneNumber = item[2] || '-';
         phoneCell.textContent = phoneNumber;
-        phoneCell.style.border = '1px solid black';
+    //    phoneCell.style.border = '1px solid black';
 
         if (phoneNumber != '-') {
           phoneCell.title = 'Click to copy phone number';
@@ -174,7 +172,7 @@ function createGrid(data) {
 
         const partyExtension = document.createElement('td');
         partyExtension.textContent = item[3] || '-';
-        partyExtension.style.border = '1px solid black';
+   //     partyExtension.style.border = '1px solid black';
         row.appendChild(partyExtension);
 
         table.appendChild(row);
@@ -226,9 +224,9 @@ async function ExtensionListHandler() {
                 "RM - Sheryse McKenzie": [false, "781312", "321-890-5774"],
                 "RM - Joshua McCart": [false, "781313", "321-652-0094"],
                 "RM - Nyla Whitty": [false, "781316", "321-451-6460"],
+                "Unassigned Desk": [false, "781317"],
                 "RM - Matthew Glenn": [false, ""],
                 "RM - Daviena Wallace": [false, ""],
-                "": [false, ""],
             },
 
             "MCO 781 AFM Extensions": {
@@ -238,7 +236,6 @@ async function ExtensionListHandler() {
                 "AFM 004 - Patricia Evans": [false, "781004", "321-805-7648", "781004_afm@uhaul.com"],
                 "AFM 005 - Andrew Hutker": [false, "781005", "321-848-4414", "781005_afm@uhaul.com"],
                 "AFM 006 - Emilio Ruiz": [false, "781006", "954-465-6830", "781006_afm@uhaul.com"],
-                "": [false, ""],
             },
             
             "District 12 Extensions": {
@@ -249,7 +246,6 @@ async function ExtensionListHandler() {
                 "MCO 788 (UHC of Ft Lauderdale)": [false, "788300", "954-942-1101"],
                 "MCO 830 (UHC of Western Florida)": [false, "830300", "941-359-2413"],
                 "MCO 955 (UHC of East Tampa/Lakeland)": [false, "955300", "813-655-4434"],
-                "": [false, ""],
             },
 
             "Contact Center Departmental Extensions": {
@@ -275,7 +271,6 @@ async function ExtensionListHandler() {
                 "Roadside Assistance": [true, "620902", "800-528-0355"],
                 "Truckshare 24/7, Customer Return or Live Verify Assistance": [true, "502901"],
                 "Equipment Distribution": [false, "", "866-323-4348", "Option 1"],
-                "": [false, ""],
             },
 
             "Extensions Outside Contact Center": {
@@ -301,8 +296,9 @@ async function ExtensionListHandler() {
                 "Vendor Request (request to sell U-Haul a product/service refer online)": [false, "uhaul.com/purchasing"],
             },
         };
+        
         const grid = createGrid(data);
-        const formElement = document.querySelector('#form0');
+        const formElement = document.querySelector('#SendAppToCustomerPopup > #form0');
         formElement.appendChild(grid);
     }
 }
@@ -338,8 +334,6 @@ function createExtensionButton() {
 
 // Function to continuously check
 function shouldAddExtensionListButton() {
-    console.log("Running [Extension Sheet]")
-
     setInterval(() => {
         const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > li.has-tip")
         const ExtensionButton = document.querySelector("#Header > nav > section > ul.left > li.extension-button")
