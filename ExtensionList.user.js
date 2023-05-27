@@ -224,6 +224,7 @@ async function ExtensionListHandler() {
                 "RM - Sheryse McKenzie": [false, "781312", "321-890-5774"],
                 "RM - Joshua McCart": [false, "781313", "321-652-0094"],
                 "RM - Nyla Whitty": [false, "781316", "321-451-6460"],
+                "Unassigned Desk": [false, "781317"],
                 "RM - Matthew Glenn": [false, ""],
                 "RM - Daviena Wallace": [false, ""],
             },
