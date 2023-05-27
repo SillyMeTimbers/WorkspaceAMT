@@ -24,7 +24,7 @@ const PermissionsList = {
             Live: false,
         },
         Access: {
-            "ExtensionList": false,
+            "ExtensionList": true,
             "ExpNotes_VerifyTime": true,
             "TopBarAlert": true,
             "OverdueOpenInPOS": true,
@@ -144,6 +144,7 @@ const PermissionsList = {
     const userPermissions = PermissionsList[userName];
     const branch = userPermissions.Branch.Live ? 'Live' : 'Experimental';
     const githubURL = `https://raw.githubusercontent.com/SillyMeTimbers/WorkspaceAMT/${branch}/`;
+    console.log(`Permissions for ${userName}`)
     console.log(userPermissions)
     
     for (const redirect of Redirects) {
