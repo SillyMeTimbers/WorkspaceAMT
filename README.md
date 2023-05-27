@@ -1,4 +1,4 @@
-# RECENT CHANGES
+# **RECENT CHANGES**
 
 *5/27/2023*
 **EXPERIMENTAL**
@@ -7,7 +7,7 @@
 **LIVE**
 - no changes made
 ----
-# PREVIOUS CHANGES
+# **PREVIOUS CHANGES**
 
 ## *5/26/2023*
 * Made changes to "Late pickup cancelation" messages, split into a multi-prompt.
