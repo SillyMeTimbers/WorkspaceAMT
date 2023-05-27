@@ -16,13 +16,11 @@
   const minutes = Math.floor(now.getMinutes() / UpdateVal) * UpdateVal;
   const timeString = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + '-' + now.getHours() + ':' + minutes;
 
-  for (const redirect of Redirects) {
-    const url = `https://raw.githubusercontent.com/SillyMeTimbers/WorkspaceAMT/main/Core.user.js?time=${timeString}`;
-    const response = await fetch(url);
-    const scriptText = await response.text();
+  const url = `https://raw.githubusercontent.com/SillyMeTimbers/WorkspaceAMT/main/Core.user.js?time=${timeString}`;
+  const response = await fetch(url);
+  const scriptText = await response.text();
 
-    const script = document.createElement('script');
-    script.textContent = scriptText;
-    document.head.appendChild(script);
-  }
+  const script = document.createElement('script');
+  script.textContent = scriptText;
+  document.head.appendChild(script);
 })();
