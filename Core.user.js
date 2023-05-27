@@ -16,6 +16,7 @@ const Redirects = [
   "OverdueOpenInPOS",
   "SendDropoffButtons",
   "EnhancedMessageTemplates",
+  "HideUncoveredNotDispatch",
 ];
 
 const PermissionsList = {
@@ -30,6 +31,7 @@ const PermissionsList = {
             "OverdueOpenInPOS": true,
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
         },
     },
 
@@ -44,6 +46,7 @@ const PermissionsList = {
             "OverdueOpenInPOS": true,
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
         },
     },
 
@@ -58,6 +61,7 @@ const PermissionsList = {
             "OverdueOpenInPOS": true,
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
         },
     },
 
@@ -72,6 +76,7 @@ const PermissionsList = {
             "OverdueOpenInPOS": true,
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
         },
     },
 
@@ -86,6 +91,7 @@ const PermissionsList = {
             "OverdueOpenInPOS": true,
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
         },
     },
     
@@ -100,6 +106,7 @@ const PermissionsList = {
             "OverdueOpenInPOS": true,
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
         },
     },
     
@@ -114,6 +121,7 @@ const PermissionsList = {
             "OverdueOpenInPOS": true,
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
         },
     },
     
@@ -128,6 +136,7 @@ const PermissionsList = {
             "OverdueOpenInPOS": true,
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
         },
     },
 };
