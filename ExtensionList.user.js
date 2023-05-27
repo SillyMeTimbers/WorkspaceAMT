@@ -295,8 +295,9 @@ async function ExtensionListHandler() {
                 "Vendor Request (request to sell U-Haul a product/service refer online)": [false, "uhaul.com/purchasing"],
             },
         };
+        
         const grid = createGrid(data);
-        const formElement = document.querySelector('#form0');
+        const formElement = document.querySelector('#SendAppToCustomerPopup > #form0');
         formElement.appendChild(grid);
     }
 }
