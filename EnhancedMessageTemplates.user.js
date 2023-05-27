@@ -8,8 +8,6 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-console.log("Running [Custom Message Templates] Build #3")
-
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
 function getDynamicValuesForTemplate(templateName) {
     function processName(name, capitalizeWords, lowercaseWords) {
@@ -549,7 +547,7 @@ ${MessageEnd}`;
                     } else if (style === "Not Avail") {
                         NewMsg = `U-Haul Reservation Cancelation Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
 Your reservation is at risk of cancelation; Reservation Scheduled for ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
-Our records indicate it has not yet been picked up and is at risk of being canceled. Unfortunately your current pickup location no longer has your requested equipment available. If you still need the equipment, already picked up this equipment, or need to reschedule.
+Our records indicate it has not yet been picked up and is at risk of being canceled. Unfortunately your current pickup location no longer has your requested equipment available. If you still need the equipment, already picked up this equipment, or need to reschedule, please call U-Haul Regional Scheduling Office.
 ${MessageEnd}`;
                     }
 
