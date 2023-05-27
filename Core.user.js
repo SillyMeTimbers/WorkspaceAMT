@@ -56,7 +56,7 @@ const PermissionsList = {
   const minutes = Math.floor(now.getMinutes() / UpdateVal) * UpdateVal;
   const timeString = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + '-' + now.getHours() + ':' + minutes;
 
-  const userName = dynatraceUserName;
+  const userName = dynatraceUserName.textContent;
   if (userName in PermissionsList) {
     const userPermissions = PermissionsList[userName];
     const branch = userPermissions.Branch.Live ? 'Live' : 'Experimental';
