@@ -25,7 +25,7 @@ const PermissionsList = {
             Live: false,
         },
         Access: {
-            "ExtensionList": true,
+            "ExtensionList": false,
             "ExpNotes_VerifyTime": true,
             "TopBarAlert": true,
             "OverdueOpenInPOS": true,
