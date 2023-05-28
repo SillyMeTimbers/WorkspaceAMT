@@ -446,6 +446,7 @@ function MessageTextForumVisible() {
         formatPhoneNumber(phoneNumberInput);
 
         function updateMessage() {
+            // EQUIPMENT CHANGE
             if (CurrentSelector == "Equipment Change") {
                 const newEquip1 = document.querySelector("#newEquip");
                 const oldEquip1 = document.querySelector("#oldEquip");
@@ -458,15 +459,15 @@ function MessageTextForumVisible() {
                     const style = styleDropdown.options[styleDropdown.selectedIndex].text;
 
                     if (style === "Regular") {
-                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 Your U-Haul equipment has been changed from "${oldEquip}" to "${newEquip}". If you have other equipment reserved, they will not appear in this message, please check your reservation on Uhaul.com for further details.
 ${MessageEnd}`;
                     } else if (style === "Lack of availability") {
-                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 Due to lack of availability in your preferred area your U-Haul Equipment has been updated changed from "${oldEquip}" to "${newEquip}". If you have other equipment reserved, they will not appear in this message, please check your reservation on Uhaul.com for further details.
 ${MessageEnd}`;
                     } else if (style === "New Equip/Pickup") {
-                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 Due to lack of availability in your preferred area your U-Haul Equipment has been updated changed from "${oldEquip}" to "${newEquip}". If you have other equipment reserved, they will not appear in this message.
 Additionally, your pick up location has been updated! You can find your equipment available to pickup at You can find your equipment available to pickup at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
 If you have any questions in regards to your equipment being changed or further questions for your new pickup address please check your reservation on Uhaul.com or call U-Haul Scheduling using the number provided below.
@@ -480,6 +481,11 @@ ${MessageEnd}`;
                 }
             }
 
+            
+            
+            
+            
+            // NEW PICKUP
             if (CurrentSelector == "New Pickup") {
                 const styleDropdown = document.querySelector("#styleDropdown");
                 if (styleDropdown) {
@@ -488,12 +494,12 @@ ${MessageEnd}`;
                     const style = styleDropdown.options[styleDropdown.selectedIndex].text;
 
                     if (style === "Regular") {
-                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 Your pick up has been updated! You can find your equipment available to pickup at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
 If you have any questions or concerns regarding your new pick up location, please call U-Haul Regional Scheduling Office.
 ${MessageEnd}`;
                     } else if (style === "Lack of availability") {
-                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 We regret to inform you that your pick-up location has been updated due to equipment availability. Your equipment will be ready for pick-up at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
 We apologize for any inconvenience caused by this change. If you require assistance, need information on alternative equipment sizes, or wish to reschedule, do not hesitate to contact the U-Haul Regional Scheduling Office.
 ${MessageEnd}`;
@@ -506,6 +512,11 @@ ${MessageEnd}`;
                 }
             }
 
+            
+            
+            
+            
+            // NEW DROPOFF
             if (CurrentSelector == "New Dropoff") {
                 const styleDropdown = document.querySelector("#styleDropdown");
                 if (styleDropdown) {
@@ -532,6 +543,11 @@ ${MessageEnd}`;
                 }
             }
 
+            
+            
+            
+            
+            // LATE PICKUP NOTICE
             if (CurrentSelector == "Late Pickup Notice") {
                 const styleDropdown = document.querySelector("#styleDropdown");
                 if (styleDropdown) {
@@ -558,6 +574,11 @@ ${MessageEnd}`;
                 }
             }
 
+            
+            
+            
+            
+            // CANCELATION NOTICE
             if (CurrentSelector == "Cancelation Notice") {
                 const styleDropdown = document.querySelector("#styleDropdown");
                 if (styleDropdown) {
@@ -566,24 +587,19 @@ ${MessageEnd}`;
                     const style = styleDropdown.options[styleDropdown.selectedIndex].text;
 
                     if (style === "Confirmation") {
-                        NewMsg = `U-Haul Reservation Cancelation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-Your U-Haul reservation has recently been canceled. If you did not request this cancelation, please contact us at (561) 638-9428. Please have your reference number ready when you call.
-Reference number: ${dynamicValues.resNumber}
-Pickup Date: ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}
+                        NewMsg = `U-Haul Reservation; CANCELATION NOTICE: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
+We hope to see you back soon! If you change your mind in the near future, you can call us at the number below to make new arrangements.
 ${MessageEnd}`;
                     } else if (style === "No Call/No Show") {
-                        NewMsg = `U-Haul Reservation Cancelation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-Your U-Haul reservation has recently been canceled. Due to failure of pickup your U-Haul reservation scheduled on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}
-your reservation has been automatically cancelled, if you believe this was a mistake and are still in-need of this equipment, please contact us at (561) 638-9428. Please have your reference number ready when you call.
-Reference number: ${dynamicValues.resNumber}
-Pickup Date: ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}
+                        NewMsg = `U-Haul Reservation; CANCELATION NOTICE: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
+We hope we didn't miss your arrival, our records indicate the reservation has not yet been picked up. If you believe this was a mistake & you are still in-need of this equipment, you can call us at the number below to make new arrangements.
 ${MessageEnd}`;
                     } else if (style === "Duplicate") {
-                        NewMsg = `U-Haul Reservation Cancelation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-Your U-Haul reservation has recently been canceled. Our records lead us to believe you may have booked duplicate reservations, we see you have already picked up your requested equipment at a different location.
-In result, your reservation has been cancelled, if you believe this was a mistake and are still in-need of this equipment, please contact us at (561) 638-9428. Please have your reference number ready when you call.
-Reference number: ${dynamicValues.resNumber}
-Pickup Date: ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}
+                        NewMsg = `U-Haul Reservation; CANCELATION NOTICE: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
+Our records indicate multiple reservations were created. In Result, this reservation has been canceled. If you believe this was a mistake & you are in need of multiple equipment of the same class, you can call us at the number below to make new arrangements.
 ${MessageEnd}`;
                     }
 
@@ -594,6 +610,11 @@ ${MessageEnd}`;
                 }
             }
 
+            
+            
+            
+            
+            // HIGH DEMAND
             if (CurrentSelector == "High Demand") {
                 const styleDropdown = document.querySelector("#styleDropdown");
                 if (styleDropdown) {
