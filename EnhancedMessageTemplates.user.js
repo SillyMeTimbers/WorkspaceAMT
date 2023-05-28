@@ -515,12 +515,12 @@ ${MessageEnd}`;
 
                     if (style === "Regular") {
                         NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-Your dropoff has been updated! You can return your equipment to ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
+Your dropoff has been updated! You can return your equipment to ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
 If you have any questions or concerns regarding your new dropoff location, please call U-Haul Regional Scheduling Office.
 ${MessageEnd}`;
                     } else if (style === "Lack of availability") {
                         NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-Unfortunately, your dropoff location has been rescheduled to the nearest location that is able to receive your equipment. You will be able to return your equipment to ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
+Unfortunately, your dropoff location has been rescheduled to the nearest location that is able to receive your equipment. You will be able to return your equipment to ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
 We apologize for any inconveniences this may cause for you, if you have any questions, please call U-Haul Regional Scheduling Office.
 ${MessageEnd}`;
                     }
@@ -539,15 +539,15 @@ ${MessageEnd}`;
                     const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
                     const style = styleDropdown.options[styleDropdown.selectedIndex].text;
 
-                    if (style === "Regular") {
-                        NewMsg = `U-Haul Reservation Cancelation Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-Your reservation is at risk of cancelation; Reservation Scheduled for ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
-Our records indicate it has not yet been picked up and is at risk of being canceled. If you have already picked up this equipment or wish to reschedule, please call U-Haul Regional Scheduling Office.
+                    if (style === "Regular") { 
+                       NewMsg = `U-Haul Reservation; ACTION REQUIRED: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+Our records indicate your rental has not yet been picked up and is a risk of being canceled. This reservation was scheduled at ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute}${dynamicValues.pAMPM}.
+If you have already picked up this equipment or wish to reschedule to a later date/time, you can call us at the number below.
 ${MessageEnd}`;
                     } else if (style === "Not Avail") {
-                        NewMsg = `U-Haul Reservation Cancelation Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-Your reservation is at risk of cancelation; Reservation Scheduled for ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
-Our records indicate it has not yet been picked up and is at risk of being canceled. Unfortunately your current pickup location no longer has your requested equipment available. If you still need the equipment, already picked up this equipment, or need to reschedule, please call U-Haul Regional Scheduling Office.
+                        NewMsg = `U-Haul Reservation; ACTION REQUIRED: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+Our records indicate your rental has not yet been picked up and is a risk of being canceled. This reservation was scheduled at ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute}${dynamicValues.pAMPM}.
+If you have not picked up your equipment from the location provided above they no longer have the equipment available, If you wish to continue with the reservation you reschedule the reservation by using the number below.
 ${MessageEnd}`;
                     }
 
