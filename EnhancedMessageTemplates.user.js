@@ -616,37 +616,59 @@ ${MessageEnd}`;
             
             // HIGH DEMAND
             if (CurrentSelector == "High Demand") {
-                const styleDropdown = document.querySelector("#styleDropdown");
-                if (styleDropdown) {
                     let NewMsg = "";
                     const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
-                    const style = styleDropdown.options[styleDropdown.selectedIndex].text;
-
-                    if (style === "#2 - No Triangle") {
-                        NewMsg = `U-Haul Reservation High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-You are receiving this notice in regard to your rental reserved for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}. At this time we are experiencing delays with incoming equipment in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
-We will be contacting you 48 Hours Prior to your rental to provide you with a pickup address for this reservation. If you do not receive any Calls, Text Messages, or Emails within 24 hours of ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}
-Contact U-Haul Scheduling to confirm a pickup address has been assigned. If you have any further questions or concerns regarding the reservation and would like to speak with a representative contact us using the number below.
+                
+                NewMsg = `U-Haul High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+Thank you for choosing U-Haul, you are receiving this notice as we are experiencing a high-volume of incoming reservations into ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
+We ask you reach out to us at your earliest availability. We would like to collect more information on what flexibility you have with the Date/Time, Distance, Equipment Size.
+If we aren't able to confirm these details prior to ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} unwanted changes may be made during the scheduling process.
+As a reminder, the mode, date and location that you are choosing is a prefence and further changes may need to be made to accommodate your reservation.
 ${MessageEnd}`;
-                    } else if (style === "#3 - Yellow Triangle") {
-                        NewMsg = `U-Haul Reservation High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-You are receiving this notice in regard to your rental reserved for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}. At this time we are experiencing high shortages with the size equipment you had reserved in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
-We will be contacting you 48 Hours Prior to your rental to provide you with a pickup address for this reservation. If we do not have a nearby location available for you to pickup from we will discuss alternative options such as the Pickup Date/Time and or Size of the equipment. If you do not receive any Calls, Text Messages, or Emails within 24 hours of ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}
-Contact U-Haul Scheduling to confirm a pickup address has been assigned. If you have any further questions or concerns regarding the reservation and would like to speak with a representative contact us using the number below.
-${MessageEnd}`;
-                    } else if (style === "#4 - Red Triangle") {
-                        NewMsg = `U-Haul Reservation High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-You are receiving this notice in regard to your rental reserved for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}. At this time we are experiencing high shortages with the size equipment you had reserved in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
-We are wanting to inform you the size equipment you have reserved may not be available at a nearby location and you may need to travel to a further location. We will attempt to reach you 48 Hours prior to the date of your rental to discuss what equipment we have available for your rental, If you do not receive any Calls, Text Messages, or Emails within 24 hours of ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}
-Contact U-Haul Scheduling to confirm a pickup address has been assigned. If you have any further questions or concerns regarding the reservation and would like to speak with a representative contact us using the number below.
-${MessageEnd}`;
-                    }
-
+                
                     if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
                         const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
                         HiddenMsg.value = NewMsg
                     }
-                }
+                
+               // const styleDropdown = document.querySelector("#styleDropdown");
+//                 if (styleDropdown) {
+//                     let NewMsg = "";
+//                     const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
+//                     const style = styleDropdown.options[styleDropdown.selectedIndex].text;
+
+//                     if (style === "#2 - No Triangle") {
+//                         NewMsg = `U-Haul Reservation High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+// You are receiving this notice in regard to your rental reserved for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}. At this time we are experiencing delays with incoming equipment in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
+// We will be contacting you 48 Hours Prior to your rental to provide you with a pickup address for this reservation. If you do not receive any Calls, Text Messages, or Emails within 24 hours of ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}
+// Contact U-Haul Scheduling to confirm a pickup address has been assigned. If you have any further questions or concerns regarding the reservation and would like to speak with a representative contact us using the number below.
+// ${MessageEnd}`;
+                        
+//                         NewMsg = `U-Haul High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+// Thank you for choosing U-Haul, you are receiving this notice as we are experiencing a high-volume of incoming reservations into ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
+// We ask you reach out to us at your earliest availability. We would like to collect more information on what flexibility you have with the Date/Time, Distance, Equipment Size.
+// If we aren't able to confirm these details prior to ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} unwanted changes may be made during the scheduling process.
+// As a reminder, the mode, date and location that you are choosing is a prefence and further changes may need to be made to accommodate your reservation.
+// ${MessageEnd}`;
+//                     } else if (style === "#3 - Yellow Triangle") {
+//                         NewMsg = `U-Haul Reservation High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+// You are receiving this notice in regard to your rental reserved for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}. At this time we are experiencing high shortages with the size equipment you had reserved in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
+// We will be contacting you 48 Hours Prior to your rental to provide you with a pickup address for this reservation. If we do not have a nearby location available for you to pickup from we will discuss alternative options such as the Pickup Date/Time and or Size of the equipment. If you do not receive any Calls, Text Messages, or Emails within 24 hours of ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}
+// Contact U-Haul Scheduling to confirm a pickup address has been assigned. If you have any further questions or concerns regarding the reservation and would like to speak with a representative contact us using the number below.
+// ${MessageEnd}`;
+//                     } else if (style === "#4 - Red Triangle") {
+//                         NewMsg = `U-Haul Reservation High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
+// You are receiving this notice in regard to your rental reserved for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}. At this time we are experiencing high shortages with the size equipment you had reserved in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
+// We are wanting to inform you the size equipment you have reserved may not be available at a nearby location and you may need to travel to a further location. We will attempt to reach you 48 Hours prior to the date of your rental to discuss what equipment we have available for your rental, If you do not receive any Calls, Text Messages, or Emails within 24 hours of ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}
+// Contact U-Haul Scheduling to confirm a pickup address has been assigned. If you have any further questions or concerns regarding the reservation and would like to speak with a representative contact us using the number below.
+// ${MessageEnd}`;
+//                     }
+
+//                     if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
+//                         const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
+//                         HiddenMsg.value = NewMsg
+//                     }
+//                 }
             }
         }
 
