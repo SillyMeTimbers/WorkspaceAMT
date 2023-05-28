@@ -794,19 +794,19 @@ ${MessageEnd}`;
             }
 
             if (selectedOptionValue.trim() === "High Demand") {
-                const rentalType = [
-                    { value: "1", text: "#2 - No Triangle"},
-                    { value: "2", text: "#3 - Yellow Triangle"},
-                    { value: "3", text: "#4 - Red Triangle"},
-                ];
+//                 const rentalType = [
+//                     { value: "1", text: "#2 - No Triangle"},
+//                     { value: "2", text: "#3 - Yellow Triangle"},
+//                     { value: "3", text: "#4 - Red Triangle"},
+//                 ];
 
-                const rentalTypeDropdown = createAndInsertDropdown("styleDropdown", "Rental Type", rentalType);
-                extraDropdownsContainer.appendChild(rentalTypeDropdown);
+//                 const rentalTypeDropdown = createAndInsertDropdown("styleDropdown", "Rental Type", rentalType);
+//                 extraDropdownsContainer.appendChild(rentalTypeDropdown);
 
-                // Add event listeners to the additional dropdowns to update the message when their values change
-                rentalTypeDropdown.addEventListener("change", updateMessage);
+//                 // Add event listeners to the additional dropdowns to update the message when their values change
+//                 rentalTypeDropdown.addEventListener("change", updateMessage);
 
-                // Update the message initially based on the default selected values
+//                 // Update the message initially based on the default selected values
                 updateMessage();
             }
         }
