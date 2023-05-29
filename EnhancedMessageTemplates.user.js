@@ -563,7 +563,7 @@ ${MessageEnd}`;
                     } else if (style === "Not Avail") {
                         NewMsg = `U-Haul Reservation; ACTION REQUIRED: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 Our records indicate your rental has not yet been picked up and is a risk of being canceled. This reservation was scheduled at ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute}${dynamicValues.pAMPM}.
-If you have not picked up your equipment from the location provided above they no longer have the equipment available, If you wish to continue with the reservation you reschedule the reservation by using the number below.
+If you have not picked up your equipment from the location provided above they no longer have the equipment available, If you wish to continue with the reservation you can reschedule the reservation by calling the number below.
 ${MessageEnd}`;
                     }
 
@@ -599,7 +599,7 @@ ${MessageEnd}`;
                     } else if (style === "Duplicate") {
                         NewMsg = `U-Haul Reservation; CANCELATION NOTICE: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
-Our records indicate multiple reservations were created. In Result, this reservation has been canceled. If you believe this was a mistake & you are in need of multiple equipment of the same class, you can call us at the number below to make new arrangements.
+Our records indicate multiple reservations were created. In result, this reservation has been canceled. If you believe this was a mistake & you are in need of multiple equipment of the same class, you can call us at the number below to make new arrangements.
 ${MessageEnd}`;
                     }
 
