@@ -268,7 +268,7 @@ async function ExtensionListHandler() {
                 "Customer Service": [true, "620911", "800-789-3638"],
                 "Manager On Duty (MOD) - Sales & Center Support - Warn Transfer Required": [false, "500190"],
                 "Manager On Duty (MOD) - Customer Service - Warn Transfer Required": [false, "502190"],
-                "Roadside Assistance": [true, "620902", "800-528-0355"],
+                "Roadside Assistance": [true, "620901", "800-528-0355"],
                 "Truckshare 24/7, Customer Return or Live Verify Assistance": [true, "502901"],
                 "Equipment Distribution": [false, "", "866-323-4348", "Option 1"],
             },
