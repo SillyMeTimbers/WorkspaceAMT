@@ -29,7 +29,8 @@ function RunVersionList() {
 
         // Reference to user element
         let userElement = document.querySelector("#Header > nav > section > ul.right > li.user");
-
+        userElement.title = "";
+        
         // Show the dropdown when we hover over the specified element
         userElement.addEventListener('mouseenter', (event) => {
             // Update the dropdown items
