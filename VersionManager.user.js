@@ -23,6 +23,7 @@ function RunVersionList() {
         dropdown.style.borderRadius = '10px'; // Rounded corners
         dropdown.style.marginTop = '10px'; // Space below the username
         dropdown.style.border = '1.5px solid #c3c3c3'; // 1px red border
+        dropdown.stlye.zIndex = '999';
 
         // Append the dropdown to the body
         document.body.appendChild(dropdown);
