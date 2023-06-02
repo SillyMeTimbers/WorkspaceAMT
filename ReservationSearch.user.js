@@ -129,7 +129,7 @@ function IsResSearchVis() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Reservation Lookup", "1")
+    addScriptVersion("Reservation Lookup", "2")
 
     setInterval(() => {
         if (isReservationPanelOpen()) {
