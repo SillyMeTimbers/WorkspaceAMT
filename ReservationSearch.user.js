@@ -18,6 +18,14 @@ function isReservationPanelOpen() {
     }
 }
 
+function NextFieldResSearch(n, t) {
+    n.value.length >= n.maxLength && ($("#RSAreaCode").val() === "" ? ($("#RSPrefix, #RSSuffix").attr("readonly", !0),
+    $("#RSPrefix, #RSSuffix").val("")) : $("#RSPrefix").attr("readonly", !1),
+    $("#RSPrefix").val() === "" ? ($("#RSSuffix").attr("readonly", !0),
+    $("#RSSuffix").val("")) : $("#RSSuffix").attr("readonly", !1),
+    $("#RSPrefix").val() === "" && $("#RSFirstName").val() === "" && $("#RSLastName").val() === "" && $("#RSPrefix").val() === "" && $("#RSCreditCardNumber").val() === "" ? UpdateBoolsForSearch(!1) : UpdateBoolsForSearch(!0)
+)}
+
 function RunResSearch() {
     if (ResSearchLastVisible === false && !document.getElementById("newPhoneSelector")) {
         ResSearchLastVisible = true
@@ -33,6 +41,10 @@ function RunResSearch() {
         LastNameSelector.parentElement.insertBefore(NewPhoneNumberSelector, LastNameSelector.nextSibling);
 
         function formatPhoneNumber(inputElement) {
+            if (!inputElement || !inputElement.value) {
+                return
+            }
+
             let value = inputElement.value.replace(/\D/g, '');
             if (value.length > 10) value = value.slice(0, 10); // Limit to 10 numerical characters
 
@@ -46,18 +58,37 @@ function RunResSearch() {
         function assignPhoneNumber(phoneNumber) {
             const phoneNumberSplit = phoneNumber.value.replace(/\D/g, '');
 
+            const AreaCode = document.querySelector("#RSAreaCode")
+            const AreaPrefix = document.querySelector("#RSPrefix")
+            const AreaSuffix = document.querySelector("#RSSuffix")
+
             const areaCode = phoneNumberSplit.slice(0, 3);
             const prefix = phoneNumberSplit.slice(3, 6);
             const suffix = phoneNumberSplit.slice(6, 10);
 
-            document.querySelector("#RSAreaCode").value = areaCode ? areaCode : '';
-            document.querySelector("#RSPrefix").value = prefix ? prefix : '';
-            document.querySelector("#RSSuffix").value = suffix ? suffix : '';
+            AreaCode.value = areaCode ? areaCode : '';
+            AreaPrefix.value = prefix ? prefix : '';
+            AreaSuffix.value = suffix ? suffix : '';
+
+            if (AreaCode.value.length == 3 && AreaPrefix.value.length >= 1) {
+                console.log("AreaCode at 3")
+            }
+
+            if (AreaCode.value.length == 3 && AreaPrefix.value.length == 3) {
+                console.log("AreaPrefix at 3")
+                $("#RSDateFrom, #RSDateTo").prop("disabled", true);
+                UpdateBoolsForSearch(true);
+                console.log("disable")
+            } else {
+                $("#RSDateFrom, #RSDateTo").prop("disabled", false);
+                UpdateBoolsForSearch(false);
+                console.log("enable")
+            }
 
             console.log("-------------------------")
-            console.log(document.querySelector("#RSAreaCode").value)
-            console.log(document.querySelector("#RSPrefix").value)
-            console.log(document.querySelector("#RSSuffix").value)
+            console.log(AreaCode.value)
+            console.log(AreaPrefix.value)
+            console.log(AreaSuffix.value)
         }
 
         // Apply Visuals
@@ -66,12 +97,20 @@ function RunResSearch() {
         const PhoneNumberTextBox = document.querySelector("#newPhoneSelector").querySelector("#RSLastName")
         PhoneNumberTextBox.setAttribute("id", "#RSNewPhone")
 
+        formatPhoneNumber(PhoneNumberTextBox);
+        assignPhoneNumber(PhoneNumberTextBox);
+
         PhoneNumberTextBox.addEventListener('input', function() {
             formatPhoneNumber(this);
             assignPhoneNumber(this);
+            console.log(this)
         });
-        formatPhoneNumber(PhoneNumberTextBox);
-        assignPhoneNumber(this);
+
+        PhoneNumberTextBox.addEventListener('change', function() {
+            formatPhoneNumber(this);
+            assignPhoneNumber(this);
+            console.log(this)
+        });
     }
 }
 
