@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const VerifyReturnVersion = "1"
+const VerifyReturnVersion = "2"
 
 // Styles
 function injectCSS(css) {
@@ -19,31 +19,31 @@ function injectCSS(css) {
 }
 
 const ExpectedInNoNotes = `
-    tr.noNote:not(.open),
-    .wrapper > .row > .large-10 > section .item table tr.noNote:not(.open) {
+    tr.noNote:not(.opened ),
+    .wrapper > .row > .large-10 > section .item table tr.noNote:not(.opened ) {
         background: #89c2d9;
     }
-    tr.noNote:not(.open) td,
-    .wrapper > .row > .large-10 > section .item table tr.noNote:not(.open) td {
+    tr.noNote:not(.opened ) td,
+    .wrapper > .row > .large-10 > section .item table tr.noNote:not(.opened ) td {
         color: #fff;
     }
-    tr.noNote:not(.open):hover,
-    .wrapper > .row > .large-10 > section .item table tr.noNote:not(.open):hover {
+    tr.noNote:not(.opened ):hover,
+    .wrapper > .row > .large-10 > section .item table tr.noNote:not(.opened ):hover {
         background: #a9d6e5;
     }
 `;
 
 const ExpectedInNotVerified = `
-    tr.noVerify:not(.open),
-    .wrapper > .row > .large-10 > section .item table tr.noVerify:not(.open) {
+    tr.noVerify:not(.opened ),
+    .wrapper > .row > .large-10 > section .item table tr.noVerify:not(.opened ) {
         background: #74c69d;
     }
-    tr.noVerify:not(.open) td,
-    .wrapper > .row > .large-10 > section .item table tr.noVerify:not(.open) td {
+    tr.noVerify:not(.opened ) td,
+    .wrapper > .row > .large-10 > section .item table tr.noVerify:not(.opened ) td {
         color: #fff;
     }
-    tr.noVerify:not(.open):hover,
-    .wrapper > .row > .large-10 > section .item table tr.noVerify:not(.open):hover {
+    tr.noVerify:not(.opened ):hover,
+    .wrapper > .row > .large-10 > section .item table tr.noVerify:not(.opened ):hover {
         background: #95d5b2;
     }
 `;
@@ -419,7 +419,7 @@ function isExpectedInTableWrapperVisibleChecker() {
     }
 
     addScriptVersion("Expected-In Buttons", VerifyReturnVersion)
-    
+
     setInterval(() => {
         ExpectedInBody = document.querySelector("#ExpectedInTable > tbody");
 
