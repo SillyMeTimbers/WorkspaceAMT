@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
-const MessageTemplateVersion = "1"
+const MessageTemplateVersion = "2"
 function getDynamicValuesForTemplate(templateName) {
     function processName(name, capitalizeWords, lowercaseWords) {
         lowercaseWords = lowercaseWords || [];
@@ -866,7 +866,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages: ", MessageTemplateVersion)
+    addScriptVersion("Dynamic Messages", MessageTemplateVersion)
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {
