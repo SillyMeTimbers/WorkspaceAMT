@@ -382,7 +382,7 @@ function isMessageTextForumVisible() {
     return false;
 }
 
-function createAndInsertDropdown(id, label, options) {
+function createAndInsertDropdown(id, label, options, defaultOption) {
     const container = document.createElement("div");
     container.className = "columns";
 
@@ -396,6 +396,12 @@ function createAndInsertDropdown(id, label, options) {
         const optionElement = document.createElement("option");
         optionElement.value = option.value;
         optionElement.textContent = option.text;
+
+        // Add 'selected' attribute if this option is the default
+        if (option.value === defaultOption) {
+            optionElement.selected = true;
+        }
+
         select.appendChild(optionElement);
     });
     container.appendChild(select);
@@ -440,34 +446,33 @@ function MessageTextForumVisible() {
 
         formatPhoneNumber(phoneNumberInput);
 
+        function stringToBoolean(string) {
+            switch(string.toLowerCase().trim()){
+                case "true": return true;
+                case "false": return false;
+                default: return Boolean(string);
+            }
+        }
+
         function updateMessage() {
             // EQUIPMENT CHANGE
             if (CurrentSelector == "Equipment Change") {
                 const newEquip1 = document.querySelector("#newEquip");
                 const oldEquip1 = document.querySelector("#oldEquip");
-                const styleDropdown = document.querySelector("#styleDropdown");
-                if (newEquip && oldEquip && styleDropdown) {
+                const availabilityIssueDropdown = document.querySelector("#availabilityIssueDropdown");
+                const locationChangedDropdown = document.querySelector("#locationChangedDropdown");
+
+                if (newEquip1 && oldEquip1 && availabilityIssueDropdown && locationChangedDropdown) {
                     let NewMsg = "";
                     const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
                     const newEquip = newEquip1.options[newEquip1.selectedIndex].textContent.split(" - ")[1];
                     const oldEquip = oldEquip1.options[oldEquip1.selectedIndex].textContent.split(" - ")[1];
-                    const style = styleDropdown.options[styleDropdown.selectedIndex].text;
+                    const availabilityIssue = stringToBoolean(availabilityIssueDropdown.options[availabilityIssueDropdown.selectedIndex].text)
+                    const locationChanged = stringToBoolean(locationChangedDropdown.options[locationChangedDropdown.selectedIndex].text)
 
-                    if (style === "Regular") {
-                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
-Your U-Haul equipment has been changed from "${oldEquip}" to "${newEquip}". If you have other equipment reserved, they will not appear in this message, please check your reservation on Uhaul.com for further details.
+                    NewMsg = `U-Haul Reservation; Equipment Change : #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+The equipment you reserved equipment has been updated. ${availabilityIssue && locationChanged ? 'Due to changes in availability at your assigned location, your' : (availabilityIssue ? 'Due to availability issues at your assigned location, your' : 'Your') || (locationChanged ? 'Because of scheduling changes at your assigned location, your' : 'Your')} equipment has been changed from "${oldEquip}" to "${newEquip}". If you have other equipment reserved, these changes will not appear in this message. Please check your reservation on https://www.uhaul.com/Auth/OrderLookUp/ for complete details.
 ${MessageEnd}`;
-                    } else if (style === "Lack of availability") {
-                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
-Due to lack of availability in your preferred area your U-Haul Equipment has been updated changed from "${oldEquip}" to "${newEquip}". If you have other equipment reserved, they will not appear in this message, please check your reservation on Uhaul.com for further details.
-${MessageEnd}`;
-                    } else if (style === "New Equip/Pickup") {
-                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
-Due to lack of availability in your preferred area your U-Haul Equipment has been updated changed from "${oldEquip}" to "${newEquip}". If you have other equipment reserved, they will not appear in this message.
-Additionally, your pick up location has been updated! You can find your equipment available to pickup at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
-If you have any questions in regards to your equipment being changed or further questions for your new pickup address please check your reservation on Uhaul.com or call U-Haul Scheduling using the number provided below.
-${MessageEnd}`;
-                    }
 
                     if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
                         const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
@@ -476,27 +481,30 @@ ${MessageEnd}`;
                 }
             }
 
-            
-            
-            
-            
+
+
+
+
             // NEW PICKUP
             if (CurrentSelector == "New Pickup") {
                 const styleDropdown = document.querySelector("#styleDropdown");
-                if (styleDropdown) {
+                const wasPickupUpdatedDropdown = document.querySelector("#wasPickupUpdatedDropdown");
+
+                if (styleDropdown && wasPickupUpdatedDropdown) {
                     let NewMsg = "";
                     const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
-                    const style = styleDropdown.options[styleDropdown.selectedIndex].text;
+                    const style = styleDropdown.options[styleDropdown.selectedIndex].value;
+                    const wasPickupUpdated = stringToBoolean(wasPickupUpdatedDropdown.options[wasPickupUpdatedDropdown.selectedIndex].text);
 
-                    if (style === "Regular") {
+                    if (style === "1") {
                         NewMsg = `U-Haul Reservation; New Pickup : #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
-${wasPickupUpdated ? 'Your pick up location has been updated! ' : ''}You can find your equipment available to pickup at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
-If you have any questions regarding this location, please contact our office directly using the number below.
+${wasPickupUpdated ? 'Your pick-up location has been updated! You can find your equipment available to pick up at' : 'Your reservation is scheduled to be picked up at'} ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
+If you have any questions regarding this location, you can call them at ${dynamicValues.pickupPhone} or contact our office directly using the number below.
 ${MessageEnd}`;
-                    } else if (style === "Lack of availability") {
+                    } else if (style === "2") {
                         NewMsg = `U-Haul Reservation; New Pickup : #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 We're sorry for the inconvenience, but due to equipment availability at this time, your pickup location has been changed. Your equipment will be ready for pick-up at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
-We apologize for any disruptions this may cause. If you need further assistance, are interested in alternative equipment sizes, or wish to reschedule, please contact our office directly using the number below.
+We apologize for any disruptions this may cause. If have any questions regarding this location you can reach them at ${dynamicValues.pickupPhone} or if you are interested in alternative equipment sizes, wish to reschedule, please contact our office directly using the number below.
 ${MessageEnd}`;
                     }
 
@@ -507,24 +515,24 @@ ${MessageEnd}`;
                 }
             }
 
-            
-            
-            
-            
+
+
+
+
             // NEW DROPOFF
             if (CurrentSelector == "New Dropoff") {
                 const styleDropdown = document.querySelector("#styleDropdown");
                 if (styleDropdown) {
                     let NewMsg = "";
                     const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
-                    const style = styleDropdown.options[styleDropdown.selectedIndex].text;
+                    const style = styleDropdown.options[styleDropdown.selectedIndex].value;
 
-                    if (style === "Regular") {
+                    if (style === "1") {
                         NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
 Your dropoff has been updated! You can return your equipment to ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
 If you have any questions or concerns regarding your new dropoff location, please call U-Haul Regional Scheduling Office.
 ${MessageEnd}`;
-                    } else if (style === "Lack of availability") {
+                    } else if (style === "2") {
                         NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
 Unfortunately, your dropoff location has been rescheduled to the nearest location that is able to receive your equipment. You will be able to return your equipment to ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
 We apologize for any inconveniences this may cause for you, if you have any questions, please call U-Haul Regional Scheduling Office.
@@ -538,56 +546,56 @@ ${MessageEnd}`;
                 }
             }
 
-            
-            
-            
-            
+
+
+
+
             // LATE PICKUP NOTICE
             if (CurrentSelector == "Late Pickup Notice") {
                 const isEquipAvailDropdown = document.querySelector("#availDropdown");
 
                 if (isEquipAvailDropdown) {
                     const Dropdown = isEquipAvailDropdown.options[isEquipAvailDropdown.selectedIndex].text;
-                    const isAvail = Boolean(Dropdown);
+                    const isAvail = stringToBoolean(Dropdown);
                     let NewMsg = "";
                     const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
 
                     NewMsg = `U-Haul Reservation; Late Notice : Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
-Our records indicate your rental has not yet been started and may be at risk of cancellation. ${isAvail ? '' : 'Unfortunately, the equipment you reserved is no longer available at your current location.'} 
+Our records indicate your rental has not yet been started and may be at risk of cancellation. ${isAvail ? '' : 'Unfortunately, the equipment you reserved is no longer available at your current location.'}
 This notice is in regard to your reservation at ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
-If you have already started a rental or wish to reschedule to a later date/time, please reach us using the phone number below.
+If you have already started a rental or wish to reschedule for a later date/time, please reach us using the phone number below.
 ${MessageEnd}`;
 
                     if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
-                       const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
-                       HiddenMsg.value = NewMsg
+                        const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
+                        HiddenMsg.value = NewMsg
                     }
                 }
             }
 
-            
-            
-            
-            
+
+
+
+
             // CANCELATION NOTICE
             if (CurrentSelector == "Cancelation Notice") {
                 const styleDropdown = document.querySelector("#styleDropdown");
                 if (styleDropdown) {
                     let NewMsg = "";
                     const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
-                    const style = styleDropdown.options[styleDropdown.selectedIndex].text;
+                    const style = styleDropdown.options[styleDropdown.selectedIndex].value;
 
-                    if (style === "Confirmation") {
+                    if (style === "1") {
                         NewMsg = `U-Haul Reservation; CANCELATION NOTICE: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
 We hope to see you back soon! If you change your mind in the near future, you can call us at the number below to make new arrangements.
 ${MessageEnd}`;
-                    } else if (style === "No Call/No Show") {
+                    } else if (style === "2") {
                         NewMsg = `U-Haul Reservation; CANCELATION NOTICE: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
 We hope we didn't miss your arrival, our records indicate the reservation has not yet been picked up. If you believe this was a mistake & you are still in-need of this equipment, you can call us at the number below to make new arrangements.
 ${MessageEnd}`;
-                    } else if (style === "Duplicate") {
+                    } else if (style === "3") {
                         NewMsg = `U-Haul Reservation; CANCELATION NOTICE: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
 Our records indicate multiple reservations were created. In result, this reservation has been canceled. If you believe this was a mistake & you are in need of multiple equipment of the same class, you can call us at the number below to make new arrangements.
@@ -601,22 +609,22 @@ ${MessageEnd}`;
                 }
             }
 
-            
-            
-            
-            
+
+
+
+
             // HIGH DEMAND
             if (CurrentSelector == "High Demand") {
                 let NewMsg = "";
                 const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
-                
-                NewMsg = `U-Haul High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
-Thank you for choosing U-Haul, you are receiving this notice as we are experiencing a high-volume of incoming reservations into ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
-We ask you reach out to us at your earliest availability. We would like to collect more information on what flexibility you have with the Date/Time, Distance, Equipment Size.
+
+                NewMsg = `U-Haul Reservation; High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+You are receiving this notice as we are experiencing a high volume of incoming reservations into ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
+We ask you to reach out to us at your earliest availability. We would like to collect more information on what flexibility you have with the Date/Time, Distance, and Equipment Size.
 If we aren't able to confirm these details prior to ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} unwanted changes may be made during the scheduling process.
-As a reminder, the mode, date and location that you are choosing is a prefence and further changes may need to be made to accommodate your reservation.
+As a reminder, the mode, date, and location that you are choosing is a preference and further changes may need to be made to accommodate your reservation.
 ${MessageEnd}`;
-                
+
                 if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
                     const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
                     HiddenMsg.value = NewMsg
@@ -657,74 +665,79 @@ ${MessageEnd}`;
                     { value: "AB", text: "AB - Plastic U-Box"},
                 ];
 
-                const styleOptions = [
-                    { value: "1", text: "Regular"},
-                    { value: "2", text: "Lack of availability"},
-                    { value: "3", text: "New Equip/Pickup"},
+                const BooleanValues = [
+                    { value: "1", text: "True"},
+                    { value: "2", text: "False"},
                 ];
 
                 const oldEquip = createAndInsertDropdown("oldEquip", "Old Equipment:", EquipList);
                 const newEquip = createAndInsertDropdown("newEquip", "New Equipment:", EquipList);
-                const styleDropdown = createAndInsertDropdown("styleDropdown", "Message Style:", styleOptions);
+                const availabilityIssueDropdown = createAndInsertDropdown("availabilityIssueDropdown", "Availability Change:", BooleanValues, "2");
+                const locationChangedDropdown = createAndInsertDropdown("locationChangedDropdown", "Location Change:", BooleanValues, "2");
 
                 extraDropdownsContainer.appendChild(oldEquip);
                 extraDropdownsContainer.appendChild(newEquip);
-                extraDropdownsContainer.appendChild(styleDropdown);
+                extraDropdownsContainer.appendChild(availabilityIssueDropdown);
+                extraDropdownsContainer.appendChild(locationChangedDropdown);
 
-                // Add event listeners to the additional dropdowns to update the message when their values change
                 oldEquip.addEventListener("change", updateMessage);
                 newEquip.addEventListener("change", updateMessage);
-                styleDropdown.addEventListener("change", updateMessage);
-                
-                // Update the message initially based on the default selected values
+                availabilityIssueDropdown.addEventListener("change", updateMessage);
+                locationChangedDropdown.addEventListener("change", updateMessage);
+
                 updateMessage();
             }
 
             if (selectedOptionValue.trim() === "New Pickup") {
                 const styleOptions = [
                     { value: "1", text: "Regular"},
-                    { value: "2", text: "Lack of availability"},
+                    { value: "2", text: "Lacks Availability"},
                 ];
 
+                const wasPickupUpdated = [
+                    { value: "1", text: "True"},
+                    { value: "2", text: "False"},
+                ];
+
+                const wasPickupUpdatedDropdown = createAndInsertDropdown("wasPickupUpdatedDropdown", "Pickup Updated:", wasPickupUpdated);
                 const styleDropdown = createAndInsertDropdown("styleDropdown", "Message Style:", styleOptions);
+
                 extraDropdownsContainer.appendChild(styleDropdown);
+                extraDropdownsContainer.appendChild(wasPickupUpdatedDropdown);
 
-                // Add event listeners to the additional dropdowns to update the message when their values change
                 styleDropdown.addEventListener("change", updateMessage);
+                wasPickupUpdatedDropdown.addEventListener("change", updateMessage);
 
-                // Update the message initially based on the default selected values
                 updateMessage();
             }
 
             if (selectedOptionValue.trim() === "New Dropoff") {
                 const styleOptions = [
                     { value: "1", text: "Regular"},
-                    { value: "2", text: "Lack of availability"},
+                    { value: "2", text: "Lacks Availability"},
                 ];
 
                 const styleDropdown = createAndInsertDropdown("styleDropdown", "Message Style:", styleOptions);
+
                 extraDropdownsContainer.appendChild(styleDropdown);
 
-                // Add event listeners to the additional dropdowns to update the message when their values change
                 styleDropdown.addEventListener("change", updateMessage);
 
-                // Update the message initially based on the default selected values
                 updateMessage();
             }
 
             if (selectedOptionValue.trim() === "Late Pickup Notice") {
                 const isAvail = [
-                    { value: "1", text: "true"},
-                    { value: "2", text: "false"},
+                    { value: "1", text: "True"},
+                    { value: "2", text: "False"},
                 ];
 
-                const availDropdown = createAndInsertDropdown("availDropdown", "Style", isAvail);
+                const availDropdown = createAndInsertDropdown("availDropdown", "Is Equipment Available?", isAvail);
+
                 extraDropdownsContainer.appendChild(availDropdown);
 
-                // Add event listeners to the additional dropdowns to update the message when their values change
                 availDropdown.addEventListener("change", updateMessage);
 
-                // Update the message initially based on the default selected values
                 updateMessage();
             }
 
@@ -736,29 +749,28 @@ ${MessageEnd}`;
                 ];
 
                 const cancelDropdown = createAndInsertDropdown("styleDropdown", "Cancelation Reason", cancelReasons);
+
                 extraDropdownsContainer.appendChild(cancelDropdown);
 
-                // Add event listeners to the additional dropdowns to update the message when their values change
                 cancelDropdown.addEventListener("change", updateMessage);
 
-                // Update the message initially based on the default selected values
                 updateMessage();
             }
 
             if (selectedOptionValue.trim() === "High Demand") {
-//                 const rentalType = [
-//                     { value: "1", text: "#2 - No Triangle"},
-//                     { value: "2", text: "#3 - Yellow Triangle"},
-//                     { value: "3", text: "#4 - Red Triangle"},
-//                 ];
+                //                 const rentalType = [
+                //                     { value: "1", text: "#2 - No Triangle"},
+                //                     { value: "2", text: "#3 - Yellow Triangle"},
+                //                     { value: "3", text: "#4 - Red Triangle"},
+                //                 ];
 
-//                 const rentalTypeDropdown = createAndInsertDropdown("styleDropdown", "Rental Type", rentalType);
-//                 extraDropdownsContainer.appendChild(rentalTypeDropdown);
+                //                 const rentalTypeDropdown = createAndInsertDropdown("styleDropdown", "Rental Type", rentalType);
+                //                 extraDropdownsContainer.appendChild(rentalTypeDropdown);
 
-//                 // Add event listeners to the additional dropdowns to update the message when their values change
-//                 rentalTypeDropdown.addEventListener("change", updateMessage);
+                //                 // Add event listeners to the additional dropdowns to update the message when their values change
+                //                 rentalTypeDropdown.addEventListener("change", updateMessage);
 
-//                 // Update the message initially based on the default selected values
+                //                 // Update the message initially based on the default selected values
                 updateMessage();
             }
         }
@@ -855,7 +867,7 @@ function isMessageTextForumVisibleInterval() {
     }
 
     addScriptVersion("Dynamic Messages: ", MessageTemplateVersion)
-    
+
     setInterval(() => {
         if (isMessageTextForumVisible()) {
             MessageTextForumVisible();
