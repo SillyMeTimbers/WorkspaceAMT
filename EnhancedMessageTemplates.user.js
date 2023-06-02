@@ -236,10 +236,7 @@ ${MessageEnd}`;
 
     "New Dropoff": {
         func: function(cxFirstName, cxLastName, resNumber, MonthText, DayNumber, Year, Hour, Minute, Day, pAMPM, city, state, street, zipcode, businessName, phone) {
-            return `U-Haul Reservation: #${resNumber} : ${cxLastName}
-Unfortunately, your drop has been changed to the nearest location accepting your size equipment. You can drop your equipment off at ${businessName}, ${street}, ${state} ${zipcode} on ${Day}, ${MonthText} ${DayNumber}, ${Year} at ${Hour}:${Minute} ${pAMPM}.
-We apologize for any inconveniences this may cause for you, if you have any questions or have already returned your U-Haul Equipment, please call U-Haul Regional Scheduling Office.
-${MessageEnd}`;
+            return `loading...`;
         },
 
         overrideOriginalMessage: true,
@@ -272,10 +269,7 @@ ${MessageEnd}`;
 
     "Late Pickup Notice": {
         func: function(cxFirstName, cxLastName, resNumber, MonthText, DayNumber, Year, Hour, Minute, Day, pAMPM, city, state, street, zipcode, businessName, phone) {
-            return `U-Haul Reservation: #${resNumber} : ${cxLastName}
-Your reservation is at risk of cancelation; Reservation Scheduled for ${businessName} in ${city}, ${state} ${zipcode} on ${Day}, ${MonthText} ${DayNumber}, ${Year} at ${Hour}:${Minute} ${pAMPM}.
-Has not yet been picked up and is at risk of being canceled. If you already picked up this equipment or need to reschedule, please call U-Haul Regional Scheduling Office.
-${MessageEnd}`;
+            return `loading...`;
         },
 
         overrideOriginalMessage: true,
@@ -495,14 +489,14 @@ ${MessageEnd}`;
                     const style = styleDropdown.options[styleDropdown.selectedIndex].text;
 
                     if (style === "Regular") {
-                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
-Your pick up has been updated! You can find your equipment available to pickup at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
-If you have any questions or concerns regarding your new pick up location, please call U-Haul Regional Scheduling Office.
+                        NewMsg = `U-Haul Reservation; New Pickup : #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+${wasPickupUpdated ? 'Your pick up location has been updated! ' : ''}You can find your equipment available to pickup at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
+If you have any questions regarding this location, please contact our office directly using the number below.
 ${MessageEnd}`;
                     } else if (style === "Lack of availability") {
-                        NewMsg = `U-Haul Reservation: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
-We regret to inform you that your pick-up location has been updated due to equipment availability. Your equipment will be ready for pick-up at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
-We apologize for any inconvenience caused by this change. If you require assistance, need information on alternative equipment sizes, or wish to reschedule, do not hesitate to contact the U-Haul Regional Scheduling Office.
+                        NewMsg = `U-Haul Reservation; New Pickup : #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+We're sorry for the inconvenience, but due to equipment availability at this time, your pickup location has been changed. Your equipment will be ready for pick-up at ${dynamicValues.pickupBusinessName}, ${dynamicValues.pickupStreet}, ${dynamicValues.pickupCity} ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}.
+We apologize for any disruptions this may cause. If you need further assistance, are interested in alternative equipment sizes, or wish to reschedule, please contact our office directly using the number below.
 ${MessageEnd}`;
                     }
 
@@ -550,27 +544,23 @@ ${MessageEnd}`;
             
             // LATE PICKUP NOTICE
             if (CurrentSelector == "Late Pickup Notice") {
-                const styleDropdown = document.querySelector("#styleDropdown");
-                if (styleDropdown) {
+                const isEquipAvailDropdown = document.querySelector("#availDropdown");
+
+                if (isEquipAvailDropdown) {
+                    const Dropdown = isEquipAvailDropdown.options[isEquipAvailDropdown.selectedIndex].text;
+                    const isAvail = Boolean(Dropdown);
                     let NewMsg = "";
                     const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
-                    const style = styleDropdown.options[styleDropdown.selectedIndex].text;
 
-                    if (style === "Regular") { 
-                       NewMsg = `U-Haul Reservation; ACTION REQUIRED: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
-Our records indicate your rental has not yet been picked up and is a risk of being canceled. This reservation was scheduled at ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute}${dynamicValues.pAMPM}.
-If you have already picked up this equipment or wish to reschedule to a later date/time, you can call us at the number below.
+                    NewMsg = `U-Haul Reservation; Late Notice : Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+Our records indicate your rental has not yet been started and may be at risk of cancellation. ${isAvail ? '' : 'Unfortunately, the equipment you reserved is no longer available at your current location.'} 
+This notice is in regard to your reservation at ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
+If you have already started a rental or wish to reschedule to a later date/time, please reach us using the phone number below.
 ${MessageEnd}`;
-                    } else if (style === "Not Avail") {
-                        NewMsg = `U-Haul Reservation; ACTION REQUIRED: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
-Our records indicate your rental has not yet been picked up and is a risk of being canceled. This reservation was scheduled at ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode} on ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute}${dynamicValues.pAMPM}.
-If you have not picked up your equipment from the location provided above they no longer have the equipment available, If you wish to continue with the reservation you can reschedule the reservation by calling the number below.
-${MessageEnd}`;
-                    }
 
                     if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
-                        const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
-                        HiddenMsg.value = NewMsg
+                       const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
+                       HiddenMsg.value = NewMsg
                     }
                 }
             }
@@ -617,8 +607,8 @@ ${MessageEnd}`;
             
             // HIGH DEMAND
             if (CurrentSelector == "High Demand") {
-                    let NewMsg = "";
-                    const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
+                let NewMsg = "";
+                const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
                 
                 NewMsg = `U-Haul High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 Thank you for choosing U-Haul, you are receiving this notice as we are experiencing a high-volume of incoming reservations into ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
@@ -627,49 +617,10 @@ If we aren't able to confirm these details prior to ${dynamicValues.pickupMonthN
 As a reminder, the mode, date and location that you are choosing is a prefence and further changes may need to be made to accommodate your reservation.
 ${MessageEnd}`;
                 
-                    if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
-                        const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
-                        HiddenMsg.value = NewMsg
-                    }
-                
-               // const styleDropdown = document.querySelector("#styleDropdown");
-//                 if (styleDropdown) {
-//                     let NewMsg = "";
-//                     const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
-//                     const style = styleDropdown.options[styleDropdown.selectedIndex].text;
-
-//                     if (style === "#2 - No Triangle") {
-//                         NewMsg = `U-Haul Reservation High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-// You are receiving this notice in regard to your rental reserved for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}. At this time we are experiencing delays with incoming equipment in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
-// We will be contacting you 48 Hours Prior to your rental to provide you with a pickup address for this reservation. If you do not receive any Calls, Text Messages, or Emails within 24 hours of ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}
-// Contact U-Haul Scheduling to confirm a pickup address has been assigned. If you have any further questions or concerns regarding the reservation and would like to speak with a representative contact us using the number below.
-// ${MessageEnd}`;
-                        
-//                         NewMsg = `U-Haul High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
-// Thank you for choosing U-Haul, you are receiving this notice as we are experiencing a high-volume of incoming reservations into ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
-// We ask you reach out to us at your earliest availability. We would like to collect more information on what flexibility you have with the Date/Time, Distance, Equipment Size.
-// If we aren't able to confirm these details prior to ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} unwanted changes may be made during the scheduling process.
-// As a reminder, the mode, date and location that you are choosing is a prefence and further changes may need to be made to accommodate your reservation.
-// ${MessageEnd}`;
-//                     } else if (style === "#3 - Yellow Triangle") {
-//                         NewMsg = `U-Haul Reservation High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-// You are receiving this notice in regard to your rental reserved for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}. At this time we are experiencing high shortages with the size equipment you had reserved in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
-// We will be contacting you 48 Hours Prior to your rental to provide you with a pickup address for this reservation. If we do not have a nearby location available for you to pickup from we will discuss alternative options such as the Pickup Date/Time and or Size of the equipment. If you do not receive any Calls, Text Messages, or Emails within 24 hours of ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}
-// Contact U-Haul Scheduling to confirm a pickup address has been assigned. If you have any further questions or concerns regarding the reservation and would like to speak with a representative contact us using the number below.
-// ${MessageEnd}`;
-//                     } else if (style === "#4 - Red Triangle") {
-//                         NewMsg = `U-Haul Reservation High Demand Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxLastName}
-// You are receiving this notice in regard to your rental reserved for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear}. At this time we are experiencing high shortages with the size equipment you had reserved in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
-// We are wanting to inform you the size equipment you have reserved may not be available at a nearby location and you may need to travel to a further location. We will attempt to reach you 48 Hours prior to the date of your rental to discuss what equipment we have available for your rental, If you do not receive any Calls, Text Messages, or Emails within 24 hours of ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}
-// Contact U-Haul Scheduling to confirm a pickup address has been assigned. If you have any further questions or concerns regarding the reservation and would like to speak with a representative contact us using the number below.
-// ${MessageEnd}`;
-//                     }
-
-//                     if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
-//                         const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
-//                         HiddenMsg.value = NewMsg
-//                     }
-//                 }
+                if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
+                    const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
+                    HiddenMsg.value = NewMsg
+                }
             }
         }
 
@@ -762,16 +713,16 @@ ${MessageEnd}`;
             }
 
             if (selectedOptionValue.trim() === "Late Pickup Notice") {
-                const cancelReasons = [
-                    { value: "1", text: "Regular"},
-                    { value: "2", text: "Not Avail"},
+                const isAvail = [
+                    { value: "1", text: "true"},
+                    { value: "2", text: "false"},
                 ];
 
-                const cancelDropdown = createAndInsertDropdown("styleDropdown", "Style", cancelReasons);
-                extraDropdownsContainer.appendChild(cancelDropdown);
+                const availDropdown = createAndInsertDropdown("availDropdown", "Style", isAvail);
+                extraDropdownsContainer.appendChild(availDropdown);
 
                 // Add event listeners to the additional dropdowns to update the message when their values change
-                cancelDropdown.addEventListener("change", updateMessage);
+                availDropdown.addEventListener("change", updateMessage);
 
                 // Update the message initially based on the default selected values
                 updateMessage();
