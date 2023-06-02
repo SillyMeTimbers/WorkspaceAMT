@@ -33,7 +33,7 @@ const PermissionsList = {
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
             "HideUncoveredNotDispatch": true,
-            "ReservationSearch:" true,
+            "ReservationSearch": true,
         },
     },
 
