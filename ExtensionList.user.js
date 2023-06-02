@@ -8,6 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
+const ExtensionListVersion = "1"
 async function extensionButtonWaitForElement(selector, timeout = 10000) {
     const startTime = Date.now();
 
@@ -334,6 +335,17 @@ function createExtensionButton() {
 
 // Function to continuously check
 function shouldAddExtensionListButton() {
+    function addScriptVersion(scriptName, version) {
+        let scriptVersionElement = document.createElement('div');
+        scriptVersionElement.style.display = 'none'; // Make it hidden
+        scriptVersionElement.classList.add('script-version'); // So we can find it later
+        scriptVersionElement.dataset.name = scriptName; // Store the script name
+        scriptVersionElement.dataset.version = version; // Store the version
+        document.body.appendChild(scriptVersionElement);
+    }
+
+    addScriptVersion("Extension List", ExtensionListVersion)
+    
     setInterval(() => {
         const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > li.has-tip")
         const ExtensionButton = document.querySelector("#Header > nav > section > ul.left > li.extension-button")
