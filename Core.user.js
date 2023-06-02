@@ -18,6 +18,7 @@ const Redirects = [
   "EnhancedMessageTemplates",
   "HideUncoveredNotDispatch",
   "ReservationSearch",
+  "VersionManager",
 ];
 
 const PermissionsList = {
@@ -34,6 +35,7 @@ const PermissionsList = {
             "EnhancedMessageTemplates": true,
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
+            "VersionManager": true,
         },
     },
 
@@ -49,6 +51,8 @@ const PermissionsList = {
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
             "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
         },
     },
 
@@ -64,6 +68,8 @@ const PermissionsList = {
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
             "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
         },
     },
 
@@ -79,6 +85,8 @@ const PermissionsList = {
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
             "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
         },
     },
 
@@ -94,6 +102,8 @@ const PermissionsList = {
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
             "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
         },
     },
     
@@ -109,6 +119,8 @@ const PermissionsList = {
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
             "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
         },
     },
     
@@ -124,6 +136,8 @@ const PermissionsList = {
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
             "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
         },
     },
     
@@ -139,6 +153,8 @@ const PermissionsList = {
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
             "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
         },
     },
 };
