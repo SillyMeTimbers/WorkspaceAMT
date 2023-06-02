@@ -8,7 +8,6 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-console.log("Started [View In POS - Overdue]")
 
 // Function to check if the OverdueSearchResultsDiv is visible
 function isOverdueSearchResultsDivVisible() {
