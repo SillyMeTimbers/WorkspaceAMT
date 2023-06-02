@@ -418,7 +418,7 @@ function isExpectedInTableWrapperVisibleChecker() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Expected-In Buttons", MessageTemplateVersion)
+    addScriptVersion("Expected-In Buttons", VerifyReturnVersion)
     
     setInterval(() => {
         ExpectedInBody = document.querySelector("#ExpectedInTable > tbody");
