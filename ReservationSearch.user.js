@@ -116,8 +116,6 @@ function RunResSearch() {
 
 // Function to continuously check
 function IsResSearchVis() {
-    console.log("Running [Topbar Alert]")
-
     setInterval(() => {
         if (isReservationPanelOpen()) {
             RunResSearch()
