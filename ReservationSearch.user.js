@@ -103,13 +103,17 @@ function RunResSearch() {
         PhoneNumberTextBox.addEventListener('input', function() {
             formatPhoneNumber(this);
             assignPhoneNumber(this);
-            console.log(this)
         });
 
         PhoneNumberTextBox.addEventListener('change', function() {
             formatPhoneNumber(this);
             assignPhoneNumber(this);
-            console.log(this)
+        });
+
+        PhoneNumberTextBox.addEventListener('keypress', function(keyInput) {
+            if (keyInput.which === 13) {
+                $("#form0 > section > div > div.row > div:nth-child(2) > button.save.right").click();
+            }
         });
     }
 }
@@ -126,7 +130,7 @@ function IsResSearchVis() {
     }
 
     addScriptVersion("Reservation Lookup", "1")
-    
+
     setInterval(() => {
         if (isReservationPanelOpen()) {
             RunResSearch()
