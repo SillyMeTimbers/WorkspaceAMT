@@ -171,9 +171,7 @@ const PermissionsList = {
     const userPermissions = PermissionsList[userName];
     const branch = userPermissions.Branch.Live ? 'Live' : 'Experimental';
     const githubURL = `https://raw.githubusercontent.com/SillyMeTimbers/WorkspaceAMT/${branch}/`;
-    console.log(`Permissions for ${userName}`)
-    console.log(userPermissions)
-    
+
     for (const redirect of Redirects) {
       if (userPermissions.Access[redirect]) {
         const url = `${githubURL}${redirect}.user.js?time=${timeString}`;
