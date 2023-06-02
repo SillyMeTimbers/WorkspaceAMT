@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-console.log("Started [Expected-In Buttons]")
+const VerifyReturnVersion = "1"
 
 // Styles
 function injectCSS(css) {
@@ -409,8 +409,17 @@ function ExpectedInNotesVisible() {
 }
 
 function isExpectedInTableWrapperVisibleChecker() {
-    console.log("Running [Expected-In Buttons]")
+    function addScriptVersion(scriptName, version) {
+        let scriptVersionElement = document.createElement('div');
+        scriptVersionElement.style.display = 'none'; // Make it hidden
+        scriptVersionElement.classList.add('script-version'); // So we can find it later
+        scriptVersionElement.dataset.name = scriptName; // Store the script name
+        scriptVersionElement.dataset.version = version; // Store the version
+        document.body.appendChild(scriptVersionElement);
+    }
 
+    addScriptVersion("Expected-In Buttons", MessageTemplateVersion)
+    
     setInterval(() => {
         ExpectedInBody = document.querySelector("#ExpectedInTable > tbody");
 
