@@ -27,8 +27,7 @@ function NextFieldResSearch(n, t) {
 )}
 
 function RunResSearch() {
-    if (ResSearchLastVisible === false && !document.getElementById("newPhoneSelector")) {
-        ResSearchLastVisible = true
+    if (!document.getElementById("newPhoneSelector")) {
         console.log("panel active")
         const OldPhoneNumberSelector = document.querySelector("#RSFormHide > div:nth-child(1) > div:nth-child(4)");
         OldPhoneNumberSelector.style.display = "none";
@@ -78,17 +77,10 @@ function RunResSearch() {
                 console.log("AreaPrefix at 3")
                 $("#RSDateFrom, #RSDateTo").prop("disabled", true);
                 UpdateBoolsForSearch(true);
-                console.log("disable")
             } else {
                 $("#RSDateFrom, #RSDateTo").prop("disabled", false);
                 UpdateBoolsForSearch(false);
-                console.log("enable")
             }
-
-            console.log("-------------------------")
-            console.log(AreaCode.value)
-            console.log(AreaPrefix.value)
-            console.log(AreaSuffix.value)
         }
 
         // Apply Visuals
@@ -129,13 +121,13 @@ function IsResSearchVis() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Reservation Lookup", "2")
+    addScriptVersion("Reservation Lookup", "3")
 
     setInterval(() => {
         if (isReservationPanelOpen()) {
             RunResSearch()
         }
-    }, 100); // Check every 100ms
+    }, 50); // Check every 100ms
 }
 
 // Start checking the Reservation Popup visibility
