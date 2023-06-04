@@ -586,19 +586,19 @@ ${MessageEnd}`;
                     const style = styleDropdown.options[styleDropdown.selectedIndex].value;
 
                     if (style === "1") {
-                        NewMsg = `U-Haul Reservation; CANCELATION NOTICE: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+                        NewMsg = `U-Haul Reservation; Cancelation Notice : Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
 We hope to see you back soon! If you change your mind in the near future, you can call us at the number below to make new arrangements.
 ${MessageEnd}`;
                     } else if (style === "2") {
-                        NewMsg = `U-Haul Reservation; CANCELATION NOTICE: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
-Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
-We hope we didn't miss your arrival, our records indicate the reservation has not yet been picked up. If you believe this was a mistake & you are still in-need of this equipment, you can call us at the number below to make new arrangements.
+                        NewMsg = `U-Haul Reservation; Cancelation Notice : Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+We hope we didn't miss your arrival, our records indicate the reservation has not yet been picked up. In result your reservation at ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} has automatically been canceled.
+If you believe this was a mistake & you are still in-need of this equipment, you can call us at the number below to make new arrangements.
 ${MessageEnd}`;
                     } else if (style === "3") {
-                        NewMsg = `U-Haul Reservation; CANCELATION NOTICE: Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+                        NewMsg = `U-Haul Reservation; Cancelation Notice : Reservation #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${dynamicValues.pickupBusinessName} in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState} ${dynamicValues.pickupZipcode}.
-Our records indicate multiple reservations were created. In result, this reservation has been canceled. If you believe this was a mistake & you are in need of multiple equipment of the same class, you can call us at the number below to make new arrangements.
+Our records indicate multiple reservations were created. In result, reservation ${dynamicValues.resNumber} has been canceled. If you believe this was a mistake & you are in need of multiple equipment of the same class, you can call us at the number below to make new arrangements.
 ${MessageEnd}`;
                     }
 
@@ -624,7 +624,6 @@ We ask you to reach out to us at your earliest availability. We would like to co
 If we aren't able to confirm these details prior to ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} unwanted changes may be made during the scheduling process.
 As a reminder, the mode, date, and location that you are choosing is a preference and further changes may need to be made to accommodate your reservation.
 ${MessageEnd}`;
-
                 if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
                     const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
                     HiddenMsg.value = NewMsg
