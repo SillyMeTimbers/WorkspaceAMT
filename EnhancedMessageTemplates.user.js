@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
-const MessageTemplateVersion = "2"
+const MessageTemplateVersion = "4"
 function getDynamicValuesForTemplate(templateName) {
     function processName(name, capitalizeWords, lowercaseWords) {
         lowercaseWords = lowercaseWords || [];
