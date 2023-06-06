@@ -622,7 +622,7 @@ ${MessageEnd}`;
 You are receiving this notice as we are experiencing a high volume of incoming reservations into ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
 We ask you to reach out to us at your earliest availability. We would like to collect more information on what flexibility you have with the Date/Time, Distance, and Equipment Size.
 If we aren't able to confirm these details prior to ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} unwanted changes may be made during the scheduling process.
-As a reminder, the mode, date, and location that you are choosing is a preference and further changes may need to be made to accommodate your reservation.
+As a reminder, the model, date, and location that you are choosing is a preference and further changes may need to be made to accommodate your reservation.
 ${MessageEnd}`;
                 if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
                     const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
