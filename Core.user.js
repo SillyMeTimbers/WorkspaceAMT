@@ -39,22 +39,22 @@ const PermissionsList = {
         },
     },
 
-//     "Emily Bertrand": {
-//         Branch: {
-//             Live: true,
-//         },
-//         Access: {
-//             "ExtensionList": true,
-//             "ExpNotes_VerifyTime": true,
-//             "TopBarAlert": true,
-//             "OverdueOpenInPOS": true,
-//             "SendDropoffButtons": true,
-//             "EnhancedMessageTemplates": true,
-//             "HideUncoveredNotDispatch": true,
-//             "ReservationSearch": true,
-//             "VersionManager": true,
-//         },
-//     },
+    "Emily Bertrand": {
+        Branch: {
+            Live: false,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": true,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+        },
+    },
 
     "Melissa Wise": {
         Branch: {
