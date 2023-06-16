@@ -174,6 +174,23 @@ const PermissionsList = {
             "VersionManager": true,
         },
     },
+  
+    "Matthew Glenn": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+        },
+   },
 };
 
 (async function() {
