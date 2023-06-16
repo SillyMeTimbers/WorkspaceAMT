@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const VerifyReturnVersion = "3"
+const VerifyReturnVersion = "4"
 
 // Styles
 function injectCSS(css) {
@@ -229,7 +229,7 @@ async function processVerifyReturnContracts() {
 
         const submitButton = document.getElementById('expected-in-datetime-submit');
         if (submitButton) {
-            submitButton.click();
+          //  submitButton.click();
         }
 
         await waitForElement("#toast-container", 10000);
@@ -251,7 +251,7 @@ async function processVerifyReturnContracts() {
         const cancelButton = document.getElementById('expected-in-datetime-cancel');
         if (cancelButton) {
             Failed++;
-            cancelButton.click();
+           // cancelButton.click();
         }
     }
 
