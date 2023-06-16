@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const VerifyReturnVersion = "2"
+const VerifyReturnVersion = "3"
 
 // Styles
 function injectCSS(css) {
@@ -216,6 +216,7 @@ async function processVerifyReturnContracts() {
     const ContractList = VerifyReturn_ContractsNotVerified()
     let ClockTime_Start;
     let Sorted = 0;
+    let Failed = 0;
 
     ClockTime_Start = Date.now()
 
@@ -249,6 +250,7 @@ async function processVerifyReturnContracts() {
 
         const cancelButton = document.getElementById('expected-in-datetime-cancel');
         if (cancelButton) {
+            Failed++;
             cancelButton.click();
         }
     }
@@ -262,9 +264,8 @@ async function processVerifyReturnContracts() {
     if (RefreshExpectedInButton) {
         RefreshExpectedInButton.click();
     }
-
     await waitForElementToDisappear("#loadingDiv", 10000)
-    ShowToastrMessage(`Sent verfiy Time/Date to ${Sorted} Expected-In Contracts, Finished In - ${getDurationBetweenDates(ClockTime_Start, ClockTime_Finish)}`, "Verify Return Time/Date Finished", !0)
+    ShowToastrMessage(`Sorted: ${Sorted} | Succeeded: ${Sorted-Failed} | Failed: ${Failed} | Finished In: ${getDurationBetweenDates(ClockTime_Start, ClockTime_Finish)}`, "Verify Return Time/Date Finished", !0)
     VerifyReturn_PauseUpdating = false;
 }
 
