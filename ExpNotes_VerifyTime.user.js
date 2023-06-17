@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const VerifyReturnVersion = "4"
+const VerifyReturnVersion = "5"
 
 // Styles
 function injectCSS(css) {
@@ -80,7 +80,6 @@ const isExpectedInTableWrapperVisible = () => {
 
 const updateButtonLabel = (button, text, List = [], overrideAmount, timeRemaining) => {
     if (!(button instanceof HTMLElement)) {
-        console.log("button is not an HTMLElement or is null!");
         return;
     }
 
@@ -194,7 +193,7 @@ const VerifyReturn_ContractsNotVerified = () => {
 
                     ExpectedInBody.querySelector(`tr[data-contractid="${VerifyReturnContractID}"]`).classList.add("noVerify");
                     if (!VerifyReturn_ProcessedContracts.has(VerifyReturnContractID)) {
-                     VerifyReturn_ProcessedContracts.add(VerifyReturnContractID)
+                        VerifyReturn_ProcessedContracts.add(VerifyReturnContractID)
                     }
                 } else {
                     ExpectedInBody.querySelector(`tr[data-contractid="${VerifyReturnContractID}"]`).classList.remove("noVerify");
@@ -232,12 +231,21 @@ async function processVerifyReturnContracts() {
             submitButton.click();
         }
 
-        await waitForElement("#toast-container", 10000);
+        const Toast = await waitForElement("#toast-container", 2000);
         await wait(400);
-        const toastSelector = "#toast-container > div > button";
-        const button = document.querySelector(toastSelector);
-        if (button) {
-            button.click();
+
+        if (Toast.querySelector(".toast-info")) {
+            const toastSelector = document.querySelector("#toast-container > div > button");
+            toastSelector.click()
+        } else if (Toast.querySelector(".toast-error")) {
+            const toastSelector = document.querySelector("#toast-container > div > button");
+            Failed++
+            toastSelector.click()
+        }
+
+        const cancelButton = await waitForElement("expected-in-datetime-cancel", 100)
+        if (cancelButton) {
+            cancelButton.click();
         }
 
         Sorted++;
@@ -245,14 +253,8 @@ async function processVerifyReturnContracts() {
         updateButtonLabel(VerifyReturn_Button, "Unverified Return Time/Date", VerifyReturn_ContractIdList, VerifyReturn_ContractIdList.length - Sorted, EstTimeRemaining);
 
         // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
-        await waitForElementToDisappear(toastSelector, 10000);
-        await wait(1000);
-
-        const cancelButton = document.getElementById('expected-in-datetime-cancel');
-        if (cancelButton) {
-            Failed++;
-            cancelButton.click();
-        }
+        await waitForElementToDisappear(`#${Toast.id}`, 10000);
+        await wait(300);
     }
 
     VerifyReturn_ProcessedContracts.clear()
@@ -303,7 +305,7 @@ function ExpectedInNotes_ContractsWithoutNotes() {
             const ExpInUBOX = ExpInContent.includes("UBox") || ExpInContent.includes("DB") || ExpInContent.includes("UB");
 
             if (ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`)) {
-                    if (!ExpInNote || (ExpInNote && ExpInNote.textContent.trim() === "" || ExpInNote.textContent.trim().length < 1) && ExpectedInNotes_Sorted < maxProcessAmount) {
+                if (!ExpInNote || (ExpInNote && ExpInNote.textContent.trim() === "" || ExpInNote.textContent.trim().length < 1) && ExpectedInNotes_Sorted < maxProcessAmount) {
                     ExpectedInNotes_TempList.push([ExpInContractID, ExpInUBOX])
                     ExpectedInNotes_Sorted++;
                     ExpectedInBody.querySelector(`tr[data-contractid="${ExpInContractID}"]`).classList.add("noNote");
@@ -425,8 +427,6 @@ function isExpectedInTableWrapperVisibleChecker() {
         ExpectedInBody = document.querySelector("#ExpectedInTable > tbody");
 
         if (isExpectedInTableWrapperVisible()) {
-            console.log("Executed [Expected-In Buttons]")
-
             ExpectedInNotes_ContractsWithoutNotes();
             ExpectedInNotesVisible();
 
