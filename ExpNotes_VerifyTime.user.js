@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const VerifyReturnVersion = "8"
+const VerifyReturnVersion = "9"
 
 // Styles
 function injectCSS(css) {
