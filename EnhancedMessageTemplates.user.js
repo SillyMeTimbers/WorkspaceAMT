@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
-const MessageTemplateVersion = "8"
+const MessageTemplateVersion = "9"
 function getDynamicValuesForTemplate(templateName) {
     function processName(name, capitalizeWords, lowercaseWords) {
         lowercaseWords = lowercaseWords || [];
@@ -734,6 +734,12 @@ ${MessageEnd}`;
                 if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
                     const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
                     HiddenMsg.value = NewMsg
+                    
+                        AddedNote = {
+                            Note: `Text Sent to Customer - Message Type: High Demand Notice, Preferred Date: ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}`,
+                            ExpectedIn: false,
+                            Working: true,
+                        }
                 }
             }
         }
@@ -864,6 +870,10 @@ ${MessageEnd}`;
 
                 cancelDropdown.addEventListener("change", updateMessage);
 
+                updateMessage();
+            }
+            
+            if (selectedOptionValue.trim() === "High Demand") {
                 updateMessage();
             }
         }
