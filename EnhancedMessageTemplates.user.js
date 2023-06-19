@@ -276,6 +276,7 @@ ${MessageEnd}`;
         overrideOriginalMessage: true,
 
         shouldRun: function () {
+            const spanElement = document.querySelector('span.custom.checkbox.disabled');
             if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked')) {
                 return true
             }
@@ -293,6 +294,7 @@ ${MessageEnd}`;
         displayName: `Cancelation Notice`,
 
         shouldRun: function () {
+            const spanElement = document.querySelector('span.custom.checkbox.disabled');
             if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked')) {
                 return true
             }
