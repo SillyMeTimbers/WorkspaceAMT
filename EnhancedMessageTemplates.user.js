@@ -560,7 +560,7 @@ ${MessageEnd}`;
                         HiddenMsg.value = NewMsg
 
                         AddedNote = {
-                            Note: `Text Sent to Customer - Message Type: Equipment Change, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}, Changed from: "${oldEquip}" to ${newEquip} `,
+                            Note: `Text Sent to Customer - Message Type: Equipment Change, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}, Changed from: "${oldEquip}" to ${newEquip} `,
                             ExpectedIn: false,
                             Working: true,
                         }
@@ -600,7 +600,7 @@ ${MessageEnd}`;
                         HiddenMsg.value = NewMsg
 
                         AddedNote = {
-                            Note: `Text Sent to Customer - Message Type: New Pickup, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}`,
+                            Note: `Text Sent to Customer - Message Type: New Pickup, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}`,
                             ExpectedIn: false,
                             Working: true,
                         }
@@ -664,7 +664,7 @@ ${MessageEnd}`;
                         HiddenMsg.value = NewMsg
 
                         AddedNote = {
-                            Note: `Text Sent to Customer - Message Type: Late Pickup, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}`,
+                            Note: `Text Sent to Customer - Message Type: Late Pickup, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}`,
                             ExpectedIn: false,
                             Working: true,
                         }
@@ -706,7 +706,7 @@ ${MessageEnd}`;
                         HiddenMsg.value = NewMsg
 
                         AddedNote = {
-                            Note: `Text Sent to Customer - Message Type: Cancelation Notice, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}, Reason: ${styleDropdown.options[styleDropdown.selectedIndex].text}`,
+                            Note: `Text Sent to Customer - Message Type: Cancelation Notice, Assigned Location: ${dynamicValues.Entity}, Previously Scheduled Date: ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}, Reason: ${styleDropdown.options[styleDropdown.selectedIndex].text}`,
                             ExpectedIn: false,
                             Working: true,
                         }
