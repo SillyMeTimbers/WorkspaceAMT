@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const VerifyReturnVersion = "5"
+const VerifyReturnVersion = "6"
 
 // Styles
 function injectCSS(css) {
@@ -231,16 +231,20 @@ async function processVerifyReturnContracts() {
             submitButton.click();
         }
 
-        const Toast = await waitForElement("#toast-container", 2000);
+        const Toast = await waitForElement("#toast-container", 4000);
         await wait(400);
 
-        if (Toast.querySelector(".toast-info")) {
-            const toastSelector = document.querySelector("#toast-container > div > button");
-            toastSelector.click()
-        } else if (Toast.querySelector(".toast-error")) {
-            const toastSelector = document.querySelector("#toast-container > div > button");
-            Failed++
-            toastSelector.click()
+        if (Toast) {
+            if (Toast.querySelector(".toast-info")) {
+                const toastSelector = document.querySelector("#toast-container > div > button");
+                toastSelector.click()
+            } else if (Toast.querySelector(".toast-error")) {
+                const toastSelector = document.querySelector("#toast-container > div > button");
+                Failed++
+                toastSelector.click()
+            }
+        } else {
+            console.log("Toast no load ;(")
         }
 
         const cancelButton = await waitForElement("expected-in-datetime-cancel", 100)
