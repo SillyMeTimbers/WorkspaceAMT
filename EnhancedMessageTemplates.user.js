@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
-const MessageTemplateVersion = "6"
+const MessageTemplateVersion = "7"
 function getDynamicValuesForTemplate(templateName) {
     function processName(name, capitalizeWords, lowercaseWords) {
         lowercaseWords = lowercaseWords || [];
@@ -276,7 +276,7 @@ ${MessageEnd}`;
         overrideOriginalMessage: true,
 
         shouldRun: function () {
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate")) {
+            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked')) {
                 return true
             }
 
@@ -293,7 +293,7 @@ ${MessageEnd}`;
         displayName: `Cancelation Notice`,
 
         shouldRun: function () {
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate")) {
+            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked')) {
                 return true
             }
 
@@ -361,7 +361,7 @@ ${MessageEnd}`;
 
         shouldRun: function () {
             const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate")) {
+            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && !spanElement.classList.contains('checked')) {
                 return true
             }
 
@@ -560,7 +560,7 @@ ${MessageEnd}`;
                         HiddenMsg.value = NewMsg
 
                         AddedNote = {
-                            Note: `Equipment Change | Text Sent to Customer - Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}, Changed from: "${oldEquip}" to ${newEquip} `,
+                            Note: `Text Sent to Customer - Message Type: Equipment Change, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}, Changed from: "${oldEquip}" to ${newEquip} `,
                             ExpectedIn: false,
                             Working: true,
                         }
@@ -600,7 +600,7 @@ ${MessageEnd}`;
                         HiddenMsg.value = NewMsg
 
                         AddedNote = {
-                            Note: `New Pickup | Text Sent to Customer - Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}`,
+                            Note: `Text Sent to Customer - Message Type: New Pickup, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}`,
                             ExpectedIn: false,
                             Working: true,
                         }
@@ -664,7 +664,7 @@ ${MessageEnd}`;
                         HiddenMsg.value = NewMsg
 
                         AddedNote = {
-                            Note: `Late Pickup Notice | Text Sent to Customer - Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}`,
+                            Note: `Text Sent to Customer - Message Type: Late Pickup, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}`,
                             ExpectedIn: false,
                             Working: true,
                         }
@@ -706,7 +706,7 @@ ${MessageEnd}`;
                         HiddenMsg.value = NewMsg
 
                         AddedNote = {
-                            Note: `Cancelation Notice | Text Sent to Customer - Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}, Reason: ${styleDropdown.options[styleDropdown.selectedIndex].text}`,
+                            Note: `Text Sent to Customer - Message Type: Cancelation Notice, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}, Reason: ${styleDropdown.options[styleDropdown.selectedIndex].text}`,
                             ExpectedIn: false,
                             Working: true,
                         }
