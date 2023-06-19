@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const VerifyReturnVersion = "7"
+const VerifyReturnVersion = "8"
 
 // Styles
 function injectCSS(css) {
@@ -258,6 +258,7 @@ async function processVerifyReturnContracts() {
 
         // Add a delay between each iteration to allow the UI to update and to avoid overwhelming the server with requests
         if (Toast) {
+           console.log("active waiting for disappear")
            await waitForElementToDisappear(`#${Toast.id}`, 10000);
         }
         await wait(300);
