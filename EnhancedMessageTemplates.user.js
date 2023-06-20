@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
-const MessageTemplateVersion = "9"
+const MessageTemplateVersion = "10"
 function getDynamicValuesForTemplate(templateName) {
     function processName(name, capitalizeWords, lowercaseWords) {
         lowercaseWords = lowercaseWords || [];
@@ -514,7 +514,10 @@ function MessageTextForumVisible() {
                         const Working = AddedNote.Working
                         const NoteURL = `QuickNotes=&ContractNote.Note=${SelectedNote}&ContractNote.DownloadNote=false&ContractNote.WorkingNote=${Working}&ContractNote.SpecialInstructionNote=false&ContractNote.ExpectedInNote=${ExpectedIn}&ContractNote.ExpectedInNote=false&ContractNote.IsForOverdueEquipment=False&ContractNote.IsForOverdueRemoval=False&ContractNote.IsForReceivedOrDispatchedContract=False&ContractNote.IsFromExpectedIn=True&ContractNote.DenialType=None`
                         SubmitNote(`/${URL_Split[3]}/Reservations/AddNewContractNote`, NoteURL);
-                        document.querySelector("#saveReservation").click()
+
+                         setTimeout(function () {
+                            document.querySelector("#saveReservation").click()
+                        }, 2000);
                     }
                 }
 
