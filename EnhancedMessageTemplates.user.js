@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
-const MessageTemplateVersion = "10"
+const MessageTemplateVersion = "11"
 function getDynamicValuesForTemplate(templateName) {
     function processName(name, capitalizeWords, lowercaseWords) {
         lowercaseWords = lowercaseWords || [];
@@ -740,9 +740,8 @@ ${MessageEnd}`;
                         }
                 }
             }
-        }
 
-
+            
             // HIGH DEMAND
             if (CurrentSelector == "High Demand") {
                 let NewMsg = "";
