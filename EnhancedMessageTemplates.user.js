@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
-const MessageTemplateVersion = "11"
+const MessageTemplateVersion = "12"
 function getDynamicValuesForTemplate(templateName) {
     function processName(name, capitalizeWords, lowercaseWords) {
         lowercaseWords = lowercaseWords || [];
@@ -892,6 +892,10 @@ ${MessageEnd}`;
 
                 cancelDropdown.addEventListener("change", updateMessage);
 
+                updateMessage();
+            }
+
+           if (selectedOptionValue.trim() === "Low Availability ") {
                 updateMessage();
             }
             
