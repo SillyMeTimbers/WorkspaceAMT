@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
-const MessageTemplateVersion = "12"
+const MessageTemplateVersion = "13"
 function getDynamicValuesForTemplate(templateName) {
     function processName(name, capitalizeWords, lowercaseWords) {
         lowercaseWords = lowercaseWords || [];
@@ -823,7 +823,7 @@ ${MessageEnd}`;
                 availabilityIssueDropdown.addEventListener("change", updateMessage);
                 locationChangedDropdown.addEventListener("change", updateMessage);
 
-                updateMessage();
+             //   updateMessage();
             }
 
             if (selectedOptionValue.trim() === "New Pickup") {
@@ -846,7 +846,7 @@ ${MessageEnd}`;
                 styleDropdown.addEventListener("change", updateMessage);
                 wasPickupUpdatedDropdown.addEventListener("change", updateMessage);
 
-                updateMessage();
+              //  updateMessage();
             }
 
             if (selectedOptionValue.trim() === "New Dropoff") {
@@ -861,7 +861,7 @@ ${MessageEnd}`;
 
                 styleDropdown.addEventListener("change", updateMessage);
 
-                updateMessage();
+             //   updateMessage();
             }
 
             if (selectedOptionValue.trim() === "Late Pickup Notice") {
@@ -876,7 +876,7 @@ ${MessageEnd}`;
 
                 availDropdown.addEventListener("change", updateMessage);
 
-                updateMessage();
+             //   updateMessage();
             }
 
             if (selectedOptionValue.trim() === "Cancelation Notice") {
@@ -892,16 +892,17 @@ ${MessageEnd}`;
 
                 cancelDropdown.addEventListener("change", updateMessage);
 
-                updateMessage();
+             //   updateMessage();
             }
 
-           if (selectedOptionValue.trim() === "Low Availability ") {
-                updateMessage();
-            }
+           // if (selectedOptionValue.trim() === "Low Availability ") {
+           //      updateMessage();
+           //  }
             
-            if (selectedOptionValue.trim() === "High Demand") {
-                updateMessage();
-            }
+            // if (selectedOptionValue.trim() === "High Demand") {
+            //     updateMessage();
+            // }
+            updateMessage();
         }
 
         // Add an event listener to the main message template dropdown
