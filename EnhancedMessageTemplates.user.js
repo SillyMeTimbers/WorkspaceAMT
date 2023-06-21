@@ -536,7 +536,6 @@ function MessageTextForumVisible() {
         }
 
         function updateMessage() {
-            // EQUIPMENT CHANGE
             AddedNote = {
                 Note: ``,
                 ExpectedIn: false,
@@ -720,7 +719,28 @@ ${MessageEnd}`;
             }
 
 
+            // LOW AVAILABILITY
+            if (CurrentSelector == "Low Availability ") {
+                let NewMsg = "";
+                const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
 
+                NewMsg = `U-Haul Reservation; Low Availability Notice: #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+We are contacting you to advise that we are experiencing delays with incoming equipment into your preferred city scheduled for ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM} located in ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}.
+You are receiving this notice informing you that you will need to reschedule your reservation for a different size of equipment and/or a different date/time.
+We appreciate your patience and hope to hear from you soon to discuss alternative availability.
+${MessageEnd}`;
+                if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
+                    const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
+                    HiddenMsg.value = NewMsg
+                    
+                        AddedNote = {
+                            Note: `Text Sent to Customer - Message Type: Low Availability Notice, Preferred Date: ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}`,
+                            ExpectedIn: false,
+                            Working: true,
+                        }
+                }
+            }
+        }
 
 
             // HIGH DEMAND
