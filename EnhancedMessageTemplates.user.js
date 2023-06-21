@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
-const MessageTemplateVersion = "13"
+const MessageTemplateVersion = "14"
 function getDynamicValuesForTemplate(templateName) {
     function processName(name, capitalizeWords, lowercaseWords) {
         lowercaseWords = lowercaseWords || [];
@@ -719,6 +719,34 @@ ${MessageEnd}`;
             }
 
 
+            // STORAGE OFFER
+            if (CurrentSelector == "Storage Offer") {
+                const styleDropdown = document.querySelector("#styleDropdown");
+                if (styleDropdown) {
+                    let NewMsg = "";
+                    const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
+                    const Dropdown = styleDropdown.options[styleDropdown.selectedIndex].text;
+                    const isWestPalmCenter = stringToBoolean(Dropdown);
+
+                    NewMsg = `CONGRATULATIONS, ${dynamicValues.cxFirstName.toUpperCase()}!
+                    As a special thank you for choosing U-Haul we are offering you 1 FREE MONTH OF STORAGE! We offer Drive up Storage, 24/7 Secured Inside Units & Climate Controlled Storage. NO DEPOSIT & Individually alarmed room
+                    with 24-Hour Access & MORE! To take advantage of this offer contact (561) 638-9428 and use your reference number ${dynamicValues.resNumber} and we will be able to assist you with getting a unit setup ${isWestPalmCenter ? 'at U-Haul Moving & Storage Of West Palm Beach, 2805 Vista Pkwy West Palm Beach, FL 33411!' : 'in or nearby ${city}!'}
+                    We hope to hear from you soon and welcome to you ${dynamicValues.pickupCity}, ${dynamicValues.pickupState}
+                    ${MessageEnd}`;
+
+                    if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
+                        const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
+                        HiddenMsg.value = NewMsg
+
+                        AddedNote = {
+                            Note: `Text Sent to Customer - Message Type: Storage Offer`,
+                            ExpectedIn: true,
+                            Working: false,
+                        }
+                    }
+                }
+            }
+
             // LOW AVAILABILITY
             if (CurrentSelector == "Low Availability ") {
                 let NewMsg = "";
@@ -871,6 +899,21 @@ ${MessageEnd}`;
                 ];
 
                 const availDropdown = createAndInsertDropdown("availDropdown", "Is Equipment Available?", isAvail);
+
+                extraDropdownsContainer.appendChild(availDropdown);
+
+                availDropdown.addEventListener("change", updateMessage);
+
+             //   updateMessage();
+            }
+
+            if (selectedOptionValue.trim() === "Storage Offer") {
+                const isAvail = [
+                    { value: "1", text: "True" },
+                    { value: "2", text: "False" },
+                ];
+
+                const availDropdown = createAndInsertDropdown("availDropdown", "Return Nearby 781073?", isAvail);
 
                 extraDropdownsContainer.appendChild(availDropdown);
 
