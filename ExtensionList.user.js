@@ -8,6 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
+const ExtensionListVersion = "1"
 async function extensionButtonWaitForElement(selector, timeout = 10000) {
     const startTime = Date.now();
 
@@ -220,13 +221,13 @@ async function ExtensionListHandler() {
                 "RM - Michelle Asker": [false, "781304", "321-372-4360"],
                 "RM - Melissa Wise": [false, "781305", "321-431-3142"],
                 "RM - Julianna Mayes": [false, "781306", "321-844-2473"],
-                "RM - Wilson Burgos": [false, "781311", "321-795-0117"],
+                //"RM - Wilson Burgos": [false, "781311", "321-795-0117"],
                 "RM - Sheryse McKenzie": [false, "781312", "321-890-5774"],
                 "RM - Joshua McCart": [false, "781313", "321-652-0094"],
                 "RM - Nyla Whitty": [false, "781316", "321-451-6460"],
-                "Unassigned Desk": [false, "781317"],
                 "RM - Matthew Glenn": [false, ""],
-                "RM - Daviena Wallace": [false, ""],
+                "RM - Amber Ruiz": [false, "781317"],
+                "RM - Lisay Magee": [false, "781311"],
             },
 
             "MCO 781 AFM Extensions": {
@@ -268,7 +269,7 @@ async function ExtensionListHandler() {
                 "Customer Service": [true, "620911", "800-789-3638"],
                 "Manager On Duty (MOD) - Sales & Center Support - Warn Transfer Required": [false, "500190"],
                 "Manager On Duty (MOD) - Customer Service - Warn Transfer Required": [false, "502190"],
-                "Roadside Assistance": [true, "620902", "800-528-0355"],
+                "Roadside Assistance": [true, "620901", "800-528-0355"],
                 "Truckshare 24/7, Customer Return or Live Verify Assistance": [true, "502901"],
                 "Equipment Distribution": [false, "", "866-323-4348", "Option 1"],
             },
@@ -334,6 +335,17 @@ function createExtensionButton() {
 
 // Function to continuously check
 function shouldAddExtensionListButton() {
+    function addScriptVersion(scriptName, version) {
+        let scriptVersionElement = document.createElement('div');
+        scriptVersionElement.style.display = 'none'; // Make it hidden
+        scriptVersionElement.classList.add('script-version'); // So we can find it later
+        scriptVersionElement.dataset.name = scriptName; // Store the script name
+        scriptVersionElement.dataset.version = version; // Store the version
+        document.body.appendChild(scriptVersionElement);
+    }
+
+    addScriptVersion("Extension List", ExtensionListVersion)
+    
     setInterval(() => {
         const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > li.has-tip")
         const ExtensionButton = document.querySelector("#Header > nav > section > ul.left > li.extension-button")
