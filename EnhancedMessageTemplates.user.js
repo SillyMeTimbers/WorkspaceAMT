@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
-const MessageTemplateVersion = "15"
+const MessageTemplateVersion = "16"
 function getDynamicValuesForTemplate(templateName) {
     function processName(name, capitalizeWords, lowercaseWords) {
         lowercaseWords = lowercaseWords || [];
@@ -157,6 +157,18 @@ function getDynamicValuesForTemplate(templateName) {
 let CurrentSelector = "";
 let MessageTemplateLastVisible = false;
 const MessageTemplates = {
+    "UBox Delivery": {
+        func: function (cxFirstName, cxLastName, resNumber, MonthText, DayNumber, Year, Hour, Minute, Day, pAMPM, city, state, street, zipcode, businessName, phone) {
+            return `loading...`;
+        },
+
+        overrideOriginalMessage: true,
+
+        shouldRun: function () {
+            return true
+        }
+    },
+    
     "Storage Offer": {
         func: function (cxFirstName, cxLastName, resNumber, MonthText, DayNumber, Year, Hour, Minute, Day, pAMPM, city, state, street, zipcode, businessName, phone) {
             return `CONGRATULATIONS, ${cxFirstName.toUpperCase()}!
@@ -541,6 +553,41 @@ function MessageTextForumVisible() {
                 ExpectedIn: false,
                 Working: false,
             }
+            // UBOX Delivery
+            if (CurrentSelector == "UBox Delivery") {
+                const styleDropdown = document.querySelector("#styleDropdown");
+                
+                if (styleDropdown) {
+                    let NewMsg = "";
+                    const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
+                    const style = styleDropdown.options[styleDropdown.selectedIndex].text;
+                    const isDelivery = stringToBoolean(style)
+                    
+                    if (style === "true") {
+                        NewMsg = `U-Box Reservation : #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+We are attempting to reach you in regards to an upcoming U-Box Delivery, in order schedule your delivery we would need to first confirm your timeframes for the delivery.
+please call us back as soon as possible or your delivery may be at risk of being rescheduled for the next available date, you can reach us using the number provided below.
+${MessageEnd}`;
+                    } else if (style === "false") {
+                        NewMsg = `U-Box Reservation : #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
+We are attempting to reach you in regards to an upcoming U-Box Pickup, in order schedule your pickup we would need to first confirm your timeframes for the pickup.
+please call us back as soon as possible or your pickup may be at risk of being rescheduled for the next available date, you can reach us using the number provided below.
+${MessageEnd}`;
+                    }
+
+                    if (document.getElementById(`${CurrentSelector}:DynamicTemplate`)) {
+                        const HiddenMsg = document.getElementById(`${CurrentSelector}:DynamicTemplate`)
+                        HiddenMsg.value = NewMsg
+
+                        AddedNote = {
+                            Note: `U-Box Timeframe Confirmation Request - Type: ${isDelivery ? 'Delivery' : 'Pickup'}`,
+                            ExpectedIn: false,
+                            Working: true,
+                        }
+                    }
+                }
+            }
+            
             if (CurrentSelector == "Equipment Change") {
                 const newEquip1 = document.querySelector("#newEquip");
                 const oldEquip1 = document.querySelector("#oldEquip");
@@ -854,6 +901,19 @@ ${MessageEnd}`;
                 //   updateMessage();
             }
 
+            if (selectedOptionValue.trim() === "UBox Delivery") {
+                const styleOptions = [
+                    { value: "1", text: "true" },
+                    { value: "2", text: "false" },
+                ];
+
+                const styleDropdown = createAndInsertDropdown("styleDropdown", "Are we delivering the boxes?", styleOptions);
+                extraDropdownsContainer.appendChild(styleDropdown);
+                styleDropdown.addEventListener("change", updateMessage);
+
+                //  updateMessage();
+            }
+            
             if (selectedOptionValue.trim() === "New Pickup") {
                 const styleOptions = [
                     { value: "1", text: "Regular" },
