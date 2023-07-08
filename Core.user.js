@@ -19,6 +19,7 @@ const Redirects = [
   "HideUncoveredNotDispatch",
   "ReservationSearch",
   "VersionManager",
+  "NoteFormatter",
 ];
 
 const PermissionsList = {
@@ -36,6 +37,7 @@ const PermissionsList = {
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
             "VersionManager": true,
+            "NoteFormatter": true,
         },
     },
 
