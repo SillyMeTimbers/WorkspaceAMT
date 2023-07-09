@@ -611,7 +611,7 @@ ${MessageEnd}`;
                         HiddenMsg.value = NewMsg
 
                         AddedNote = {
-                            Note: `Text Sent to Customer - Message Type: Equipment Change, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}, Changed from: "${oldEquip}" to ${newEquip} `,
+                            Note: `Text Sent to Customer - Message Type: Equipment Change, Assigned Location: ${dynamicValues.Entity}, Scheduled Date: ${dynamicValues.pickupDay}, ${dynamicValues.pickupMonthNum} ${dynamicValues.pickupDayNum}, ${dynamicValues.pickupYear} at ${dynamicValues.pickupHour}:${dynamicValues.pickupMinute} ${dynamicValues.pAMPM}, Changed from: "${oldEquip}" to ""${newEquip}"`,
                             ExpectedIn: false,
                             Working: true,
                         }
