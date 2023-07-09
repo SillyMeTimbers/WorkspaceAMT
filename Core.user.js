@@ -55,6 +55,7 @@ const PermissionsList = {
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
             "VersionManager": true,
+            "NoteFormatter": true,
         },
     },
 
@@ -72,6 +73,7 @@ const PermissionsList = {
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
             "VersionManager": true,
+            "NoteFormatter": true,
         },
     },
 
