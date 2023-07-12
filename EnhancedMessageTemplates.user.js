@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 const MessageEnd = "U-Haul Co. Palm Bay, FL 561-638-9428";
-const MessageTemplateVersion = "16"
+const MessageTemplateVersion = "18"
 function getDynamicValuesForTemplate(templateName) {
     function processName(name, capitalizeWords, lowercaseWords) {
         lowercaseWords = lowercaseWords || [];
@@ -168,7 +168,7 @@ const MessageTemplates = {
             return true
         }
     },
-    
+
     "Storage Offer": {
         func: function (cxFirstName, cxLastName, resNumber, MonthText, DayNumber, Year, Hour, Minute, Day, pAMPM, city, state, street, zipcode, businessName, phone) {
             return `CONGRATULATIONS, ${cxFirstName.toUpperCase()}!
@@ -457,6 +457,8 @@ function SubmitNote(n, t) {
             if (!n) {
                 toastr.error("Could not load.", "An error has occurred:");
             }
+
+            ReloadCurrentReservation()
         },
         error: function (n) {
             HideLoadingDiv();
@@ -526,10 +528,6 @@ function MessageTextForumVisible() {
                         const Working = AddedNote.Working
                         const NoteURL = `QuickNotes=&ContractNote.Note=${SelectedNote}&ContractNote.DownloadNote=false&ContractNote.WorkingNote=${Working}&ContractNote.SpecialInstructionNote=false&ContractNote.ExpectedInNote=${ExpectedIn}&ContractNote.ExpectedInNote=false&ContractNote.IsForOverdueEquipment=False&ContractNote.IsForOverdueRemoval=False&ContractNote.IsForReceivedOrDispatchedContract=False&ContractNote.IsFromExpectedIn=True&ContractNote.DenialType=None`
                         SubmitNote(`/${URL_Split[3]}/Reservations/AddNewContractNote`, NoteURL);
-
-                        setTimeout(function () {
-                            document.querySelector("#saveReservation").click()
-                        }, 2000);
                     }
                 }
 
@@ -556,13 +554,13 @@ function MessageTextForumVisible() {
             // UBOX Delivery
             if (CurrentSelector == "UBox Delivery") {
                 const styleDropdown = document.querySelector("#styleDropdown");
-                
+
                 if (styleDropdown) {
                     let NewMsg = "";
                     const dynamicValues = getDynamicValuesForTemplate(CurrentSelector);
                     const style = styleDropdown.options[styleDropdown.selectedIndex].text;
                     const isDelivery = stringToBoolean(style)
-                    
+
                     if (style === "true") {
                         NewMsg = `U-Box Reservation : #${dynamicValues.resNumber} : ${dynamicValues.cxFirstName} ${dynamicValues.cxLastName}
 We are attempting to reach you in regards to an upcoming U-Box Delivery, in order schedule your delivery we would need to first confirm your timeframes for the delivery.
@@ -587,7 +585,7 @@ ${MessageEnd}`;
                     }
                 }
             }
-            
+
             if (CurrentSelector == "Equipment Change") {
                 const newEquip1 = document.querySelector("#newEquip");
                 const oldEquip1 = document.querySelector("#oldEquip");
@@ -913,7 +911,7 @@ ${MessageEnd}`;
 
                 //  updateMessage();
             }
-            
+
             if (selectedOptionValue.trim() === "New Pickup") {
                 const styleOptions = [
                     { value: "1", text: "Regular" },
