@@ -39,7 +39,7 @@ function formatText(inputText) {
       const trimmedTitle = title.trim();
       const trimmedValue = value.trim();
 
-      if (trimmedTitle === 'Previously Scheduled Date' || trimmedTitle === 'Scheduled Date') {
+      if (trimmedTitle === 'Previously Scheduled Date' || trimmedTitle === 'Scheduled Date' || trimmedTitle === 'Preferred Date') {
         lines.push(`${trimmedTitle}: ${[trimmedValue, inputParts[i + 1], inputParts[i + 2]].join(', ')}`);
         i += 2;
       } else if (trimmedTitle === 'Assigned Location') {
