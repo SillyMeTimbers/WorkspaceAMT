@@ -84,7 +84,7 @@ function resCheckIfNotesTabVis() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Reservation Notes", "1")
+    addScriptVersion("Reservation Notes", "2")
 
     setInterval(() => {
         if (isNoteTabVis()) {
