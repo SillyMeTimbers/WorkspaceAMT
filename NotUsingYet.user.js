@@ -9,6 +9,28 @@
 // ==/UserScript==
 let MessageTemplateLastVisible = false;
 
+const MsgTemplates = {
+    "StorageOffer": {
+        Display: "Storage Offer",
+        MsgTemplate: `Woohooo storage offers`,
+        NoteTemplate: `And notes?? Interesting!!`,
+
+        Params: function () {
+            return true
+        },
+    },
+
+    "Ubox": {
+        Display: "Ubox Notice",
+        MsgTemplate: `Woohooo ubox offers`,
+        NoteTemplate: `And even more notes?? Interesting!!`,
+
+        Params: function () {
+            return true
+        },
+    },
+}
+
 function isMessageTextForumVisible() {
     const textSubmitForm = document.querySelector("#textMessageArea");
     if (
@@ -47,11 +69,10 @@ function MessageTextForumVisible() {
         if (MessagePopup) {
             document.querySelector("Body > #SecondaryPopup").style.borderRadius = '10px';
 
-            setTimeout(() => {
-                const nMessagePopup = document.querySelector("Body > #SecondaryPopup > #textSubmitForm")
-                nMessagePopup.innerHTML = `` // Reset Content
+            const nMessagePopup = document.querySelector("Body > #SecondaryPopup > #textSubmitForm")
+            nMessagePopup.innerHTML = `` // Reset Content
 
-                const Html_Content = `
+            const Html_Content = `
                 <input id="ContractID" name="ContractID" type="hidden" value="${document.querySelector("#ContractId").value}">
                 <input id="textFromView" name="ViewMode" type="hidden" value="Cover">
             
@@ -66,7 +87,7 @@ function MessageTextForumVisible() {
                 
                         <li class="templatesplit"></li>
 
-                        <label class="template-label">
+                        <label class="msgList" id="mainTemplateList">
                             Create Template:
                 
                             <select id="customCustomerContactTemplateDropdown" name="GetCustomCustomerContactTemplate" class="hidden-field">
@@ -145,9 +166,9 @@ function MessageTextForumVisible() {
                     </div>
                 </div>                
             `
-                nMessagePopup.innerHTML = Html_Content;
+            nMessagePopup.innerHTML = Html_Content;
 
-                var css = `
+            var css = `
                 .header {
                     border-top-right-radius: 5px;
                     border-top-left-radius: 5px;
@@ -195,7 +216,7 @@ function MessageTextForumVisible() {
                     margin-top: 0px !important;
                 }                                      
             
-                .template-label {
+                .msgList {
                     margin-bottom: 20px;
                 }
                 
@@ -275,17 +296,29 @@ function MessageTextForumVisible() {
                     }
                 }                         
                 `,
-                    head = document.head || document.getElementsByTagName('head')[0],
-                    style = document.createElement('style');
+                head = document.head || document.getElementsByTagName('head')[0],
+                style = document.createElement('style');
 
-                head.appendChild(style);
-                style.type = 'text/css';
-                if (style.styleSheet) {
-                    style.styleSheet.cssText = css;
-                } else {
-                    style.appendChild(document.createTextNode(css));
-                }
-            }, 100);
+            head.appendChild(style);
+            style.type = 'text/css';
+            if (style.styleSheet) {
+                style.styleSheet.cssText = css;
+            } else {
+                style.appendChild(document.createTextNode(css));
+            }
+
+            for (const MsgName in MsgTemplates) {
+                const MsgData = MsgTemplates[MsgName]
+                const MsgDisplayName = MsgData["Display"]
+
+                console.log(MsgDisplayName)
+
+                // Create Options
+                const MsgHiddenValue = new Option(MsgName)
+                MsgHiddenValue.value = MsgData.MsgTemplate
+                MsgHiddenValue.id = `${MsgName}:HiddenValue`
+                document.querySelector("#mainTemplateList > #customCustomerContactTemplateDropdown").appendChild(MsgHiddenValue)
+            };
         } else {
             console.log("no load ;(")
         }
