@@ -29,6 +29,26 @@ const MsgTemplates = {
             return true
         },
     },
+
+    "ParrellUniverse": {
+        Display: "Pow Pow",
+        MsgTemplate: `ugh people`,
+        NoteTemplate: `changed from yadada to another boop`,
+
+        Params: function () {
+            return false
+        },
+    },
+
+    "EquipmentChange": {
+        Display: "Equipment Change",
+        MsgTemplate: `Woohooo i no longer have your WANTED equipment so i changed it loolll`,
+        NoteTemplate: `changed from yadada to another boop`,
+
+        Params: function () {
+            return true
+        },
+    },
 }
 
 function isMessageTextForumVisible() {
@@ -91,27 +111,15 @@ function MessageTextForumVisible() {
                             Create Template:
                 
                             <select id="customCustomerContactTemplateDropdown" name="GetCustomCustomerContactTemplate" class="hidden-field">
-                                <option value="This is an option">Testing Option 1</option>
-                                <option value="This is an option">Testing Option 2</option>
-                                <option value="This is an option">Testing Option 3</option>
-                                <option value="This is an option">Testing Option 4</option>
-                                <option value="This is an option">Testing Option 5</option>
-                                <option value="This is an option">Testing Option 6</option>
-                                <option value="This is an option">Testing Option 7</option>
+
                             </select>
 
                             <div class="custom dropdown msgcorner">
                                 <a href="#" class="current">Testing Option 1</a>
                                 <a href="#" class="selector"></a>
 
-                                <ul class="msgdropdown">
-                                    <li class="selected">Testing Option 1</li>
-                                    <li class>Testing Option 2</li>
-                                    <li class>Testing Option 3</li>
-                                    <li class>Testing Option 4</li>
-                                    <li class>Testing Option 5</li>
-                                    <li class>Testing Option 6</li>
-                                    <li class>Testing Option 7</li>
+                                <ul class="msgdropdown" id="customCustomerContactList">
+
                                 </ul>
                             </div>
                         </label>
@@ -120,7 +128,7 @@ function MessageTextForumVisible() {
                             <label class="template-label">
                                 Option 1:
                 
-                                <select id="customCustomerContactTemplateDropdown" name="GetCustomCustomerContactTemplate" class="hidden-field">
+                                <select id="customCustomerContactTemplateDropdown mainDropdown" name="GetCustomCustomerContactTemplate" class="hidden-field">
                                     <option value="This is an option">Testing Option 1</option>
                                     <option value="This is an option">Testing Option 2</option>
                                     <option value="This is an option">Testing Option 3</option>
@@ -146,8 +154,8 @@ function MessageTextForumVisible() {
                                 </div>
                             </label>
                         </div>
-
-                        <button type="button" class="right msgcorner templateadd" onclick="">Add Template</button>
+                    
+                        <button type="button" class="right msgcorner templateadd" onclick="AppendCustomCustomerContactTemplate($('#mainDropdown'), $('#textMessageArea'))">Add Template</button>
                     </div>
                 
                     <div class="msgright">
@@ -307,18 +315,44 @@ function MessageTextForumVisible() {
                 style.appendChild(document.createTextNode(css));
             }
 
+            const imageSrc = "https://cdn.discordapp.com/attachments/962895897434394674/1090722644254535760/DynamicMessageColorSlightlyThicker.png";
+
+            function updateCurrentAnchorText() {
+                const list = document.querySelector("#mainTemplateList #customCustomerContactList");
+                const currentAnchor = document.querySelector("#textSubmitForm .current");
+
+                if (list && currentAnchor) {
+                    const firstListItem = list.querySelector("li:first-child");
+
+                    if (firstListItem) {
+                        firstListItem.click()
+                        firstListItem.classList.add("selected"); // Add the "selected" class to the first list item
+                        const firstListItemText = firstListItem.textContent;
+                        currentAnchor.textContent = firstListItemText;
+                    }
+                }
+            } 
+
             for (const MsgName in MsgTemplates) {
                 const MsgData = MsgTemplates[MsgName]
                 const MsgDisplayName = MsgData["Display"]
 
                 console.log(MsgDisplayName)
-
-                // Create Options
-                const MsgHiddenValue = new Option(MsgName)
-                MsgHiddenValue.value = MsgData.MsgTemplate
-                MsgHiddenValue.id = `${MsgName}:HiddenValue`
-                document.querySelector("#mainTemplateList > #customCustomerContactTemplateDropdown").appendChild(MsgHiddenValue)
+                if (MsgData.Params()) {
+                    // Create Options
+                    const MsgHiddenValue = new Option(MsgName)
+                    MsgHiddenValue.value = "hey"
+                    MsgHiddenValue.id = `${MsgName}:HiddenValue`
+                    MsgHiddenValue.innerHTML = `<img src="${imageSrc}" alt="Dynamic" width="16" height="16" style="vertical-align: middle; margin-right: 5px;"> <span style="color: #2A517C;">${MsgData.Display}</span>`;
+                    document.querySelector("#mainTemplateList > #customCustomerContactTemplateDropdown").appendChild(MsgHiddenValue)
+                
+                    const MsgOption = document.createElement("li");
+                    MsgOption.innerHTML = `<img src="${imageSrc}" alt="Dynamic" width="16" height="16" style="vertical-align: middle; margin-right: 5px;"> <span style="color: #2A517C;">${MsgData.Display}</span>`;
+                    document.querySelector("#mainTemplateList > div > #customCustomerContactList").appendChild(MsgOption)
+                }
             };
+
+            updateCurrentAnchorText();
         } else {
             console.log("no load ;(")
         }
