@@ -22,7 +22,7 @@ const MsgTemplates = {
                 const isAvail = stringToBoolean(SubOptions.isAvail.SelectedValue)
 
                 return `Reservation; Late Pickup Reminder : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Our records indicate your rental has not yet been started and may be at risk of cancelation. ${isAvail ? 'If you would like to reschedule your reservation located at ' : `Unfortunely the equipment is no longer available at ${ResInfo.businessName} and would need to be relocated, `} ${isAvail ? `${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} for a different date/time please contact us using the number provided below` : 'we ask you call us at your earliest convience using the number below to discuss alternative solutions'}.
+Our records indicate your rental has not yet been started and may be at risk of cancelation. ${isAvail ? 'If you would like to reschedule your reservation located at ' : `Unfortunately the equipment is no longer available at ${ResInfo.businessName} and would need to be relocated, `} ${isAvail ? `${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}, for a different date/time please contact us using the number provided below` : 'we ask you call us at your earliest convenience using the number below to discuss alternative solutions'}.
 ${ResInfo.MCOEnd}`
             }
 
@@ -1331,7 +1331,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages V2", "4")
+    addScriptVersion("Dynamic Messages V2", "5")
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {
