@@ -22,10 +22,7 @@ const MsgTemplates = {
                 const isAvail = stringToBoolean(SubOptions.isAvail.SelectedValue)
 
                 return `Reservation; Late Pickup Reminder : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Our records indicate your rental has not yet been started and may be at risk of cancelation. ${isAvail ? 'The equipment you reserved is still available if you are needing to reschedule it for a later time today' : 'Unfortunely it does not appear the reserved equipment is available and the reservation will need to be relocated. '}
-If you would like to reschedule the reservation for ${isAvail ? `${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}` : 'then please give our office a call using the number below.'}.
-Your reservation was previous scheduled to pickup at ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}.
-contact our office directly using the number below!
+Our records indicate your rental has not yet been started and may be at risk of cancelation. ${isAvail ? 'If you would like to reschedule the equipment you reserved we still have it available for a later time today at' : 'Unfortunely it does not appear the reserved equipment is available and the reservation will need to be relocated. '} ${isAvail ? `${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. When you are ready please contact us using the number provided below` : 'We ask you call us at your earliest convience using the number below to discuss alternative solutions.'}.
 ${ResInfo.MCOEnd}`
             }
 
@@ -1334,7 +1331,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages V2", "2")
+    addScriptVersion("Dynamic Messages V2", "3")
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {
