@@ -82,7 +82,6 @@ ${ResInfo.MCOEnd}`
                     return `Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 We hope we didn't miss your arrival, our records indicate your reservation scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} was not picked up and has automatically been canceled.
 If you believe this was a mistake and you are still in-need of this reservation, you can call us using the number below to make new arrangements.
-you can call us at the number below to make new arrangements.
 ${ResInfo.MCOEnd}`
                 } else if (cancelReason === "Duplicate") {
                     return `Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
@@ -1331,7 +1330,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages V2", "5")
+    addScriptVersion("Dynamic Messages V2", "6")
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {
