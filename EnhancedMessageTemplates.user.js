@@ -573,6 +573,40 @@ function stringToBoolean(string) {
     }
 }
 
+function submitEmbed(Data) {
+    const webhookURL = 'https://discord.com/api/webhooks/1131072080503394404/spamAoxyeTJLlEmH_b8vpK7zEqkPE8o4ducnuCkocmPhZdKA-kpUEu4R60ewbp0IpEFi';
+
+    const payload = {
+        embeds: [
+            {
+                title: 'New Message',
+                fields: [
+                    { name: 'Person', value: Data.Actor },
+                    { name: 'Note', value: Data.FirstLine },
+                    { name: 'Message', value: Data.SecondLine },
+                ],
+            },
+        ],
+    };
+console.log(payload)
+    $.ajax({
+        url: webhookURL,
+        type: 'POST',
+        data: JSON.stringify(payload),
+        contentType: 'application/json',
+        success: function(response) {
+            // Handle successful request
+            console.log('Embed submitted successfully!');
+            console.log(response);
+        },
+        error: function(error) {
+            // Handle error
+            console.error('An error occurred while submitting the embed:');
+            console.error(error);
+        },
+    });
+}
+
 function SubmitNote(n, t) {
     ShowLoadingDiv();
     $.ajax({
@@ -930,7 +964,7 @@ function MessageTextForumVisible() {
             const Html_Content = `
                 <input id="ContractID" name="ContractID" type="hidden" value="${document.querySelector("#ContractId").value}">
                 <input id="textFromView" name="ViewMode" type="hidden" value="Cover">
-            
+
                 <h3 class="header">Text Customer</h3>
 
                 <div class="messagecontent custom form">
@@ -939,12 +973,12 @@ function MessageTextForumVisible() {
                             Phone Number:
                             <input id="CustomerPhoneNumber" name="CustomerPhoneNumber" type="text" value="${ClonePhoneNumber}" class="phone-input">
                         </label>
-                
+
                         <li class="templatesplit"></li>
 
                         <label class="msgList" id="mainTemplateList">
                             Create Template:
-                
+
                             <select id="customCustomerContactTemplateDropdown" name="GetCustomCustomerContactTemplate" class="hidden-field">
 
                             </select>
@@ -962,7 +996,7 @@ function MessageTextForumVisible() {
                         <div class="template-indent">
                             <label class="template-label">
                                 Option 1:
-                
+
                                 <select id="customCustomerContactTemplateDropdown" name="GetCustomCustomerContactTemplate" class="hidden-field">
                                     <option value="This is an option">Testing Option 1</option>
                                     <option value="This is an option">Testing Option 2</option>
@@ -989,10 +1023,10 @@ function MessageTextForumVisible() {
                                 </div>
                             </label>
                         </div>
-                    
+
                         <button type="button" class="right msgcorner templateadd" onclick="AddMessageTemplate($('#mainTemplateList #customCustomerContactTemplateDropdown'), $('#textMessageArea'))">Add Template</button>
                     </div>
-                
+
                     <div class="msgright">
                         <div>
                             Note Content:
@@ -1003,7 +1037,7 @@ function MessageTextForumVisible() {
                         </div>
 
                         <li class="templatesplit" style="opacity: 0;"></li>
-                        
+
                         <div style="height: 100%">
                             Message Content:
 
@@ -1013,13 +1047,13 @@ function MessageTextForumVisible() {
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="actionButtons">
                     <div class="large-12 columns">
                         <button type="submit" class="right save msgcorner">Send</button>
                         <button type="button" class="right cancel msgcorner" onclick="CloseModalPopup()">Cancel</button>
                     </div>
-                </div>                
+                </div>
             `
             nMessagePopup.innerHTML = Html_Content;
 
@@ -1028,7 +1062,7 @@ function MessageTextForumVisible() {
                     border-top-right-radius: 5px;
                     border-top-left-radius: 5px;
                 }
-                
+
                 .messagecontent {
                     display: flex;
                     flex-direction: row;
@@ -1037,14 +1071,14 @@ function MessageTextForumVisible() {
                     height: 100%;
                     align-items: stretch; /* new */
                 }
-                
+
                 .msgleft {
                     flex-grow: 0;
                     flex-shrink: 0;
                     padding-right: 20px;
                     width: 30%;
                 }
-                
+
                 .msgright {
                     flex-grow: 0;
                     flex-shrink: 0;
@@ -1053,7 +1087,7 @@ function MessageTextForumVisible() {
                     flex-direction: column;
                     width: 70%;
                 }
-                
+
                 .msgright .msgBox {
                     padding-top: 5px;
                 }
@@ -1070,7 +1104,7 @@ function MessageTextForumVisible() {
                     height: calc(100% - 10px);
                     min-height: 10em;
                 }
-                
+
                 .msgright .msgBox textarea {
                     flex-grow: 0;
                     flex-shrink: 0;
@@ -1080,12 +1114,12 @@ function MessageTextForumVisible() {
                     border-radius: 5px;
                     margin-bottom: 0px !important;
                     margin-top: 0px !important;
-                }                                      
-            
+                }
+
                 .msgList {
                     margin-bottom: 20px;
                 }
-                
+
                 .phone-input {
                     border-radius: 5px;
                 }
@@ -1098,7 +1132,7 @@ function MessageTextForumVisible() {
                     border-radius: 5px;
                     margin-top: 5px !important;
                 }
-                
+
                 .msgdropdowntemplate {
                     border: 1px solid #ccc;
                     position: relative;
@@ -1108,7 +1142,7 @@ function MessageTextForumVisible() {
                     padding: 0;
                     width: 100%;
                 }
-                
+
                 .msgcurrent {
                     cursor: default;
                     white-space: nowrap;
@@ -1123,17 +1157,17 @@ function MessageTextForumVisible() {
                 .actionButtons {
                     margin: -10px;
                     width: 100%;
-                }            
-                
+                }
+
                 .actionButtons button {
                     margin-top: 20px !important;
                     margin-bottom: 20px !important;
-                }   
+                }
 
                 .templateadd {
                     margin-bottom: 0px !important;
-                }   
-                
+                }
+
                 .messagecontent .templatesplit {
                   border-bottom: none;
                   border-top: solid 1px #d6d6d6;
@@ -1149,7 +1183,7 @@ function MessageTextForumVisible() {
                 .template-indent {
                     position: relative;
                     padding-left: 30px; /* Add more left padding to make space for the line */
-                
+
                     /* Create the line */
                     &::before {
                         content: "";
@@ -1160,7 +1194,7 @@ function MessageTextForumVisible() {
                         width: 1px; /* Adjust this to make the line thicker or thinner */
                         background-color: #d6d6d6; /* Change this to change the color of the line */
                     }
-                }                         
+                }
                 `,
                 head = document.head || document.getElementsByTagName('head')[0],
                 style = document.createElement('style');
@@ -1207,6 +1241,12 @@ function MessageTextForumVisible() {
                                 SubmitNote(`/${URL_Split[3]}/Reservations/AddNewContractNote`, NoteURL);
                             }
                         }
+
+                        submitEmbed({
+                            Actor: dynatraceUserName.textContent,
+                            FirstLine: AddedNote.Note,
+                            SecondLine: $("#textMessageArea").val(),
+                        });
                     }
                 });
             }
