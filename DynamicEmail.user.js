@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         [Experimental] Custom Message Template V2
+// @name         [Experimental] Custom Email Template V1
 // @namespace    http://tampermonkey.net/
 // @description  Custom template for message templates
 // @author       You
@@ -9,7 +9,6 @@
 // ==/UserScript==
 let MessageTemplateLastVisible = false;
 let CSS_StyleSheetAdded = false;
-const TestingMode = false;
 
 const MsgTemplates = {
     "LatePickupNotice": {
@@ -56,7 +55,7 @@ ${ResInfo.MCOEnd}`
 
         Params: function () {
             const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked') && isReservationLatePickup() === true) {
+            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked')) {
                 return true
             }
 
@@ -76,15 +75,18 @@ ${ResInfo.MCOEnd}`
 
                 if (cancelReason === "Confirm") {
                     return `Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. We hope to see you back soon! If you change your mind in the near future, you can call us at the number below to make new arrangements.
+Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. We hope to see you back soon! If you change your mind in the near future,
+you can call us at the number below to make new arrangements.
 ${ResInfo.MCOEnd}`
                 } else if (cancelReason === "Late") {
                     return `Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-We hope we didn't miss your arrival, our records indicate your reservation scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} was not picked up and has automatically been canceled. If you believe this was a mistake and you are still in-need of this reservation, you can call us using the number below to make new arrangements.
+We hope we didn't miss your arrival, our records indicate your reservation scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} was not picked up and has automatically been canceled.
+If you believe this was a mistake and you are still in-need of this reservation, you can call us using the number below to make new arrangements.
 ${ResInfo.MCOEnd}`
                 } else if (cancelReason === "Duplicate") {
                     return `Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Your U-Haul Reservation was recently canceled, our records indicated multiple reservations may have been made. In result, reservation #${ResInfo.contractNumber} has been canceled. If you believe this was a mistake and are in need of multiple reservations, please call us using the number below to reinstate this reservation.
+Your U-Haul Reservation was recently canceled, our records indicated multiple reservations may have been made. In result, reservation #${ResInfo.contractNumber} has been canceled. If you believe this was a mistake and are in need of multiple reservations,
+please call us using the number below to reinstate this reservation.
 ${ResInfo.MCOEnd}`
                 }
             }
@@ -156,7 +158,9 @@ ${ResInfo.MCOEnd}`
                 }
 
                 return `CONGRATULATIONS, ${ResInfo.customerFirstName.toUpperCase()}!
-As a special thank you for choosing U-Haul, we are offering you 1 FREE MONTH OF STORAGE! We offer Drive up Storage, 24/7 Secured Inside Units & Climate Controlled Storage. NO DEPOSIT & Individually alarmed room with 24-Hour Access & MORE! To take advantage of this offer contact (561) 638-9428 and use your reference number ${ResInfo.contractNumber} and we will be able to assist you with getting a unit set up ${Nearby73 ? 'at U-Haul Moving & Storage Of West Palm Beach, 2805 Vista Pkwy West Palm Beach, FL 33411!' : `in or nearby ${ResInfo.city}!`} We hope to hear from you soon and welcome to you ${ResInfo.city}, ${ResInfo.state}
+As a special thank you for choosing U-Haul, we are offering you 1 FREE MONTH OF STORAGE! We offer Drive up Storage, 24/7 Secured Inside Units & Climate Controlled Storage. NO DEPOSIT & Individually alarmed room
+with 24-Hour Access & MORE! To take advantage of this offer contact (561) 638-9428 and use your reference number ${ResInfo.contractNumber} and we will be able to assist you with getting a unit set up ${Nearby73 ? 'at U-Haul Moving & Storage Of West Palm Beach, 2805 Vista Pkwy West Palm Beach, FL 33411!' : `in or nearby ${ResInfo.city}!`}
+We hope to hear from you soon and welcome to you ${ResInfo.city}, ${ResInfo.state}
 ${ResInfo.MCOEnd}`
             }
 
@@ -192,7 +196,8 @@ ${ResInfo.MCOEnd}`
 
             if (!SubOptions === false) {
                 return `Reservation; 24/7 Truckshare Reminder : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-You are receiving this message as your reservation scheduled for ${ResInfo.businessName} will not be open at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}, In order to proceed with the 24/7 Process you will need the U-Haul mobile app https://uhaul.com/s/6859554008, Additionally to learn more about the process you will find a full set of instructions as well a youtube guide to help you here http://uhaul.com/s/E4260B3676, If you have any questions please contact us using the number below.
+You are receiving this message as your reservation scheduled for ${ResInfo.businessName} will not be open at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}, In order to proceed with the 24/7 Process you will need the U-Haul mobile app
+https://uhaul.com/s/6859554008, Additionally to learn more about the process you will find a full set of instructions as well a youtube guide to help you here http://uhaul.com/s/E4260B3676, If you have any questions please contact us using the number below.
 ${ResInfo.MCOEnd}`
             }
 
@@ -233,7 +238,9 @@ ${ResInfo.MCOEnd}`
 
             if (!SubOptions === false) {
                 return `Reservation; High Demand Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-You are receiving this notice to advise you we are experiencing a high volume of incoming reservations into ${ResInfo.amtCity}, ${ResInfo.amtState}. We ask you to reach out to us at your earliest availability to discuss further flexibility you may have with the Date/Time, Distance, and Equipment Size. If we aren't able to confirm details prior to ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} unwanted changes may be made during the scheduling process. As a reminder, the model, date, and location that you are choosing is a preference and further changes may need to be made to accommodate your reservation.
+You are receiving this notice to advise you we are experiencing a high volume of incoming reservations into ${ResInfo.amtCity}, ${ResInfo.amtState}. We ask you to reach out to us at your earliest availability to discuss further flexibility you may have with the Date/Time, Distance, and Equipment Size.
+If we aren't able to confirm details prior to ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} unwanted changes may be made during the scheduling process.
+As a reminder, the model, date, and location that you are choosing is a preference and further changes may need to be made to accommodate your reservation.
 ${ResInfo.MCOEnd}`
             }
 
@@ -245,7 +252,7 @@ ${ResInfo.MCOEnd}`
             const SubOptions = getValInformation("HighDemand");
 
             return {
-                Text: `Text Sent to Customer - Message Type: High Demand Notice, Preferred Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}, Preferred City: ${ResInfo.amtCity}`,
+                Text: `Text Sent to Customer - Message Type: High Demand Notice, Preferred Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}, Preferred City: ${ResInfo.city}`,
                 ExpectedIn: false,
                 Working: true,
             }
@@ -273,7 +280,9 @@ ${ResInfo.MCOEnd}`
 
             if (!SubOptions === false) {
                 return `Reservation; Low Availability Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-You are receiving this notice to advise you we are experiencing delays with incoming equipment into your preferred city scheduled for ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}. We are informing you that you will need to reschedule your reservation for a different date/time or select a larger/smaller size of equipment. We will be in contact with you soon to discuss alternative availability. you can contact our office directly using the number below!
+You are receiving this notice to advise you we are experiencing delays with incoming equipment into your preferred city scheduled for ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}.
+We are informing you that you will need to reschedule your reservation for a different date/time or select a larger/smaller size of equipment. We will be in contact with you soon to discuss alternative availability.
+you can contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
             }
 
@@ -330,7 +339,8 @@ ${ResInfo.MCOEnd}`
                 const freeUpgrade = stringToBoolean(SubOptions.FreeUpgrade.SelectedValue)
 
                 return `Reservation; Equipment Changed : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Hi ${ResInfo.customerFirstName}, Your U-Haul reservation has been updated. The "${PreviousEquipment}" has been updated to a "${NewEquipment}". ${freeUpgrade ? 'We would like to remind you this change will not incur any additional charges to the rental' : 'Please note, this change may incur additional charges to the rental'}. ${locChangedValue ? `Additionally, your pick-up address has been updated, please go to ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup at ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you would like to speak with your new location you can reach them at ${ResInfo.businessPhoneNumber} or for further information we` : 'We'} recommend reviewing these changes on uhaul.com/orders or if you would like to speak a person you can reach us directly using the number below!
+The equipment you reserved has been updated. ${(locChangedValue ? 'Due to scheduling changes at your assigned location, the requested' : 'The requested')} "${PreviousEquipment}" has been updated to "${NewEquipment}"${freeUpgrade ? ', additionally this change will not have an effect on the rate of your rental' : ', the rate of the equipment has been changed'}.
+If you have other equipment reserved, they will not appear in this message. Please review your reservation at uhaul.com/orders for complete details or contact the number listed below for further information regarding this change.
 ${ResInfo.MCOEnd}`
             }
 
@@ -456,11 +466,15 @@ ${ResInfo.MCOEnd}`
 
                 if (!lowAvail) {
                     return `Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled at' : 'Your pick-up address has been updated, please go to'} ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
+${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled at ' : 'Your pick-up address has been updated, please go to '} ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}.
+Your reservation is scheduled for pickup at ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or
+contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
                 } else {
                     return `Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-We apologize for the inconvenience, but due to scheduling issues at this time, your pickup has been changed. Your equipment will be ready for pick-up at ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
+We apologize for the inconvience, but due to scheduling issues at this time your pickup has been changed. Your equipment will be ready for pick-up at ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}.
+Your reservation is scheduled for pickup at ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or
+contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
                 }
             }
@@ -512,73 +526,6 @@ ${ResInfo.MCOEnd}`
         },
     },
 
-    "NewDropoff": {
-        Display: "NewDropoff",
-
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("NewDropoff");
-
-            if (!SubOptions === false) {
-                const reminderMessage = stringToBoolean(SubOptions.DropoffConfirmation.SelectedValue)
-                const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
-
-                if (!lowAvail) {
-                    return `Reservation; New Dropoff : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled to return at' : 'Your return address has been updated, please return to'} ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your rental is due back in on ${ResInfo.returndayText}, ${ResInfo.returnmonthNumber} ${ResInfo.returndayNumber}, ${ResInfo.returnyear} at ${ResInfo.returnhour}:${ResInfo.returnminute} ${ResInfo.returnAMPM}. If you are returning after hours please use your mobile device to verify your equipment return by going to https://www.uhaul.com/Orders/OrderDetail.aspx?resid=${ResInfo.contractNumber}&ln=${ResInfo.customerLastName} or you can choose to have us verify it for you the next day for a $20 convenience fee.
-${ResInfo.MCOEnd}`
-                } else {
-                    return `dont use this setting haven't made a script for it yet thanks :)`
-                }
-            }
-
-            return `Failed to create message :(`
-        },
-
-        NoteTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("NewDropoff");
-            const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
-
-            return {
-                Text: `Text Sent to Customer - Message Type: New Dropoff, Assigned Location: ${ResInfo.Entity}, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}`,
-                ExpectedIn: true,
-                Working: false,
-            }
-        },
-
-        Dropdown: ["NewDropoff", {
-            "DropoffConfirmation": {
-                DisplayText: "Reminder",
-                DefaultOption: true,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
-            },
-
-            "LowAvail": {
-                DisplayText: "Low Availability (Suggested for 15+ Miles)",
-                DefaultOption: false,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
-            },
-        }],
-
-        Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.querySelector("#DispatchDate")) {
-                return true
-            }
-
-            return false
-        },
-    },
-
     "CustomMessage": {
         Display: "CustomMessage",
 
@@ -612,38 +559,6 @@ ${ResInfo.MCOEnd}`
     },
 }
 
-function isReservationLatePickup() {
-    const preferredPickupDateElements = document.querySelectorAll("#Contract_PreferredPickupDate");
-    const rawPreferredPickupDate = Array.from(preferredPickupDateElements).find((element) => element.value).value;
-
-    const hour = document.querySelector("#Contract_PreferredPickupHour").value;
-    const minute = document.querySelector("#Contract_PreferredPickupMinute").value.padStart(2, "0");
-    const ampm = document.querySelector("#Contract_PreferredPickupAmPm").value
-
-    // Create a Date object for the pickup date.
-    let scheduledPickupTime = new Date(rawPreferredPickupDate);
-
-    // Adjust the hours and minutes based on the user's input.
-    scheduledPickupTime.setHours(hour % 12 + (ampm.toUpperCase() === 'PM' ? 12 : 0));
-    scheduledPickupTime.setMinutes(minute);
-
-    // Get the current time.
-    let currentTime = new Date();
-
-    console.log(currentTime);
-    console.log(scheduledPickupTime);
-
-    // Calculate the difference between the current time and the scheduled pickup time.
-    let timeDifferenceInMinutes = (currentTime - scheduledPickupTime) / (1000 * 60);
-
-    // Check if the difference is more than 15 minutes.
-    if (timeDifferenceInMinutes > 15) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 function stringToBoolean(string) {
     switch (string.toLowerCase().trim()) {
         case "true": return true;
@@ -660,7 +575,7 @@ function submitEmbed(Data) {
     const payload = {
         embeds: [
             {
-                title: 'New Message',
+                title: 'New Email',
                 fields: [
                     { name: 'Person', value: Data.Actor },
                     { name: 'Note', value: Data.FirstLine },
@@ -669,18 +584,18 @@ function submitEmbed(Data) {
             },
         ],
     };
-    console.log(payload)
+console.log(payload)
     $.ajax({
         url: webhookURL,
         type: 'POST',
         data: JSON.stringify(payload),
         contentType: 'application/json',
-        success: function (response) {
+        success: function(response) {
             // Handle successful request
             console.log('Embed submitted successfully!');
             console.log(response);
         },
-        error: function (error) {
+        error: function(error) {
             // Handle error
             console.error('An error occurred while submitting the embed:');
             console.error(error);
@@ -802,7 +717,7 @@ function createSubDropdown(id, data) {
 }
 
 function isMessageTextForumVisible() {
-    const textSubmitForm = document.querySelector("#textMessageArea");
+    const textSubmitForm = document.querySelector("#emailSubmitForm");
     if (
         textSubmitForm &&
         textSubmitForm.offsetWidth > 0 &&
@@ -909,7 +824,6 @@ function getResInformation() {
     const capitalizeWords = ["LLC", "INC", "PSL"];
     const lowercaseWords = ["of", "the"];
 
-    // Pickup
     const preferredPickupDateElements = document.querySelectorAll("#Contract_PreferredPickupDate");
     const rawPreferredPickupDate = Array.from(preferredPickupDateElements).find((element) => element.value).value;
     const formattedPreferredPickupDate = formatDate(rawPreferredPickupDate);
@@ -918,27 +832,6 @@ function getResInformation() {
     const hour = document.querySelector("#Contract_PreferredPickupHour").value;
     const minute = document.querySelector("#Contract_PreferredPickupMinute").value.padStart(2, "0");
     const ampm = document.querySelector("#Contract_PreferredPickupAmPm").value
-
-    // Return
-    const preferredReturnDateElements = document.querySelectorAll("#expectedReceiveDate");
-    let rawPreferredReturnDate;
-    let formattedPreferredReturnDate;
-    let returndayText, returnmonth, returndayNumber, returnyear;
-    let returndayPref;
-    let returnhour;
-    let returnminute;
-    let returnampm;
-
-    if (preferredReturnDateElements) {
-        console.log("hey :)")
-        rawPreferredReturnDate = Array.from(preferredReturnDateElements).find((element) => element.value).value;
-        formattedPreferredReturnDate = formatDate(rawPreferredReturnDate);
-        [returndayText, returnmonth, returndayNumber, returnyear] = formattedPreferredReturnDate.split(/[\s,]+/);
-        returndayPref = addOrdinalSuffix(returndayNumber);
-        returnhour = document.querySelector("#expectedHour").value;
-        returnminute = document.querySelector("#expectedMinute").value.padStart(2, "0");
-        returnampm = document.querySelector("#expectedAmPm").value;
-    }
 
     const locationDetails = document.querySelector("#mapLocationDetails > div.row > div:nth-child(2) > dl");
     const ddElements = locationDetails.querySelectorAll("dd");
@@ -971,20 +864,11 @@ function getResInformation() {
         minute, minute,
         AMPM: ampm,
 
-        // Return Date Information
-        returnmonthNumber: returnmonth,
-        returndayNumber: returndayPref,
-        returndayText: returndayText,
-        returnyear: returnyear,
-        returnhour: returnhour,
-        returnminute, returnminute,
-        returnAMPM: returnampm,
-
         // Business Information
         amtCity: processName(document.getElementById("FromCityValue").textContent.trim().split(",")[0].trim(), [], ['of', 'the']),
-        amtState: processName(document.getElementById("FromCityValue").textContent.trim().split(",")[1].trim(), [], ['of', 'the']).toUpperCase(),
+        amtState: processName(document.getElementById("FromCityValue").textContent.trim().split(",")[1].trim(), [], ['of', 'the']),
         city: city,
-        state: state.toUpperCase(),
+        state: state,
         street: street,
         zipcode: zipcode,
         businessName: businessName,
@@ -1053,7 +937,7 @@ function updateMessageTemplate() {
     for (const MsgName in MsgTemplates) {
         const MsgData = MsgTemplates[MsgName]
 
-        if (MsgData.Params() || TestingMode === true) {
+        if (MsgData.Params()) {
             const existingOption = document.querySelector(`#mainTemplateList > #customCustomerContactTemplateDropdown > #${MsgName}`)
             const MessageTemplate = MsgData.MsgTemplate()
             existingOption.value = MessageTemplate
@@ -1065,12 +949,12 @@ function MessageTextForumVisible() {
     if (MessageTemplateLastVisible === false) {
         MessageTemplateLastVisible = true;
 
-        const MessagePopup = waitForElement("Body > #SecondaryPopup > #textSubmitForm", 5000)
+        const MessagePopup = waitForElement("Body > #SecondaryPopup > #emailSubmitForm", 5000)
         if (MessagePopup) {
-            const ClonePhoneNumber = document.querySelector("#textSubmitForm label").textContent.trim().split(" ")[1]
+            //const ClonePhoneNumber = document.querySelector("#CustomerPhoneNumber").value
             document.querySelector("Body > #SecondaryPopup").style.borderRadius = '10px';
 
-            const nMessagePopup = document.querySelector("Body > #SecondaryPopup > #textSubmitForm")
+            const nMessagePopup = document.querySelector("Body > #SecondaryPopup > #emailSubmitForm")
             nMessagePopup.innerHTML = `` // Reset Content
 
             const Html_Content = `
@@ -1082,8 +966,13 @@ function MessageTextForumVisible() {
                 <div class="messagecontent custom form">
                     <div class="msgleft">
                         <label class="phonenumber-label">
-                            Phone Number:
-                            <input id="CustomerPhoneNumber" name="CustomerPhoneNumber" type="text" value="${ClonePhoneNumber}" disabled="true" class="phone-input">
+                            From:
+                            <input id="CustomerPhoneNumber" name="CustomerPhoneNumber" type="text" value="781_RM@uhaul.com" class="phone-input">
+                        </label>
+
+                        <label class="phonenumber-label">
+                            To:
+                            <input id="CustomerPhoneNumber" name="CustomerPhoneNumber" type="text" value="somerandoemail@gmail.com" class="phone-input">
                         </label>
 
                         <li class="templatesplit"></li>
@@ -1363,25 +1252,6 @@ function MessageTextForumVisible() {
                 });
             }
 
-            // Phone Number formatting
-            const phoneNumberInput = document.querySelector("#CustomerPhoneNumber");
-            function formatPhoneNumber(inputElement) {
-                let value = inputElement.value.replace(/\D/g, '');
-                if (value.length > 10) value = value.slice(0, 10); // Limit to 10 numerical characters
-
-                let formattedValue = '';
-                if (value.length > 0) formattedValue += '(' + value.slice(0, 3);
-                if (value.length > 3) formattedValue += ') ' + value.slice(3, 6);
-                if (value.length > 6) formattedValue += '-' + value.slice(6);
-                inputElement.value = formattedValue;
-            }
-
-            phoneNumberInput.addEventListener('input', function () {
-                formatPhoneNumber(this);
-            });
-
-            formatPhoneNumber(phoneNumberInput);
-
             function handleTemplateDropdownChange(event) {
                 const DropdownMenu = document.querySelector("#mainTemplateList .msgdropdown")
                 const Selected = DropdownMenu.querySelector(".selected").textContent.trim()
@@ -1417,7 +1287,7 @@ function MessageTextForumVisible() {
                 const MsgData = MsgTemplates[MsgName]
                 const MsgDisplayName = MsgData.Display
 
-                if (MsgData.Params() || TestingMode === true) {
+                if (MsgData.Params()) {
                     const MsgOption = document.createElement("li");
                     MsgOption.textContent = `${MsgDisplayName}`
                     MsgOption.id = `${MsgName}`
@@ -1446,7 +1316,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages V2", "7")
+    addScriptVersion("Dynamic Email V2", "1")
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {

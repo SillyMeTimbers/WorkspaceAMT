@@ -8,8 +8,6 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-console.log("Started [Topbar Alert]")
-
 const displayText = '($) Reservation is Prepaid/Paid'
 
 function isResPaid() {
@@ -80,7 +78,16 @@ function runWhenReservationPopupVisible() {
 
 // Function to continuously check
 function continuouslyCheckReservationPopupVisibility() {
-  console.log("Running [Topbar Alert]")
+     function addScriptVersion(scriptName, version) {
+        let scriptVersionElement = document.createElement('div');
+        scriptVersionElement.style.display = 'none'; // Make it hidden
+        scriptVersionElement.classList.add('script-version'); // So we can find it later
+        scriptVersionElement.dataset.name = scriptName; // Store the script name
+        scriptVersionElement.dataset.version = version; // Store the version
+        document.body.appendChild(scriptVersionElement);
+    }
+
+    addScriptVersion("Topbar Alert", "1")
   
   setInterval(() => {
     runWhenReservationPopupVisible();

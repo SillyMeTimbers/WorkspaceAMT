@@ -8,12 +8,35 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-console.log("Started [Hide 781008 Not Dispatched Contracts] Build #8")
+const NotDispatchCleaner = "3"
 let NotDispatchReportLastVisible = false;
 let NotDispatchSettings = {
     "UBOX": true,
     "Uncovered": false,
 }
+
+function NotDispatchinjectCSS(css) {
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+}
+
+const LatePickup = `
+    tr.latePU,
+    .wrapper > .row > .large-10 > section .item table tr.latePU {
+        background: #bd362f !important;
+    }
+    tr.latePU td,
+    .wrapper > .row > .large-10 > section .item table tr.latePU td {
+        color: #fff !important;
+    }
+    tr.latePU:hover,
+    .wrapper > .row > .large-10 > section .item table tr.latePU:hover {
+        background: #c9453e !important;
+    }
+`;
+NotDispatchinjectCSS(LatePickup);
 
 // Function to check if the OverdueSearchResultsDiv is visible
 function isNotDispatchReportVisible() {
@@ -73,7 +96,7 @@ function createCheckbox(id, name, text, defaultValue) {
     label.appendChild(span);
     label.setAttribute('id', `${id}_Holder`);
     label.style.width = "fit-content"
-    
+
     // Return the label element
     return label;
 }
@@ -94,6 +117,25 @@ function runWhenNotDispatchReport() {
     tbody.querySelectorAll("tr").forEach((tr) => {
         const locationId = tr.querySelector("td:nth-child(8)").textContent.trim();
         const EquipType = tr.querySelector("td:nth-child(7)").textContent.trim();
+
+        const dateString = tr.querySelector("td:nth-child(6)").textContent.trim();
+        const pickupTime = new Date(dateString);
+        const currentTime = new Date();  // this gets the current time
+
+        const differenceInMilliseconds = currentTime - pickupTime;
+        const differenceInMinutes = differenceInMilliseconds / (1000 * 60);
+
+        let isLate = false
+
+        if (differenceInMinutes > 60) {
+            console.log("Late");
+            tr.classList.add("latePU")
+            isLate = true
+        } else {
+            tr.classList.remove("latePU")
+            console.log("On Time");
+            isLate = false
+        }
 
         //  console.log(NotDispatchSettings.UBOX)
         const ignoreLocations = ['781008'];
@@ -120,7 +162,10 @@ function runWhenNotDispatchReport() {
         tr.classList.remove("odd")
         tr.classList.remove("even")
 
-        if (tr.style.display == "none") {
+        if (tr.style.display == "none" || tr.classList.contains("latePU") == true) {
+            if (tr.classList.contains("latePU") == true) {
+              FlipVal = !FlipVal
+            }
         } else {
             if (FlipVal == false) {
                 tr.style.background = "#f1f1f1";
@@ -137,6 +182,17 @@ function runWhenNotDispatchReport() {
 
 // Function to continuously check if the textSubmitForm is visible
 function isNotDispatchReportVisibleCheck() {
+    function addScriptVersion(scriptName, version) {
+        let scriptVersionElement = document.createElement('div');
+        scriptVersionElement.style.display = 'none'; // Make it hidden
+        scriptVersionElement.classList.add('script-version'); // So we can find it later
+        scriptVersionElement.dataset.name = scriptName; // Store the script name
+        scriptVersionElement.dataset.version = version; // Store the version
+        document.body.appendChild(scriptVersionElement);
+    }
+
+    addScriptVersion("Not Dispatch Organizer", NotDispatchCleaner)
+
     setInterval(() => {
         if (isNotDispatchReportVisible()) {
             runWhenNotDispatchReport();
