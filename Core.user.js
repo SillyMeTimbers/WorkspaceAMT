@@ -25,7 +25,7 @@ const Redirects = [
 const PermissionsList = {
     "Joshua Mccart": {
         Branch: {
-            Live: false,
+            Live: true,
         },
         Access: {
             "ExtensionList": true,
