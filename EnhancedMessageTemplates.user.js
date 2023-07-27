@@ -910,7 +910,7 @@ function getResInformation() {
     const lowercaseWords = ["of", "the"];
 
     // Pickup
-    const preferredPickupDateElements = document.querySelector("#Contract_PreferredPickupDate");
+    const preferredPickupDateElements = document.querySelectorAll("#Contract_PreferredPickupDate");
     const rawPreferredPickupDate = Array.from(preferredPickupDateElements).find((element) => element.value).value;
     const formattedPreferredPickupDate = formatDate(rawPreferredPickupDate);
     const [dayText, month, dayNumber, year] = formattedPreferredPickupDate.split(/[\s,]+/);
@@ -920,7 +920,7 @@ function getResInformation() {
     const ampm = document.querySelector("#Contract_PreferredPickupAmPm").value
 
     // Return
-    const preferredReturnDateElements = document.querySelector("#expectedReceiveDate");
+    const preferredReturnDateElements = document.querySelectorAll("#expectedReceiveDate");
     let rawPreferredReturnDate;
     let formattedPreferredReturnDate;
     let returndayText, returnmonth, returndayNumber, returnyear;
@@ -931,13 +931,17 @@ function getResInformation() {
 
     if (preferredReturnDateElements) {
         console.log("hey :)")
-        rawPreferredReturnDate = Array.from(preferredReturnDateElements).find((element) => element.value).value;
-        formattedPreferredReturnDate = formatDate(rawPreferredReturnDate);
-        [returndayText, returnmonth, returndayNumber, returnyear] = formattedPreferredReturnDate.split(/[\s,]+/);
-        returndayPref = addOrdinalSuffix(returndayNumber);
-        returnhour = document.querySelector("#expectedHour").value;
-        returnminute = document.querySelector("#expectedMinute").value.padStart(2, "0");
-        returnampm = document.querySelector("#expectedAmPm").value;
+        rawPreferredReturnDate = Array.from(preferredReturnDateElements).find((element) => element.value)
+
+        if (rawPreferredReturnDate) {
+            rawPreferredReturnDate = rawPreferredReturnDate.value
+            formattedPreferredReturnDate = formatDate(rawPreferredReturnDate);
+            [returndayText, returnmonth, returndayNumber, returnyear] = formattedPreferredReturnDate.split(/[\s,]+/);
+            returndayPref = addOrdinalSuffix(returndayNumber);
+            returnhour = document.querySelector("#expectedHour").value;
+            returnminute = document.querySelector("#expectedMinute").value.padStart(2, "0");
+            returnampm = document.querySelector("#expectedAmPm").value;
+        };
     }
 
     const locationDetails = document.querySelector("#mapLocationDetails > div.row > div:nth-child(2) > dl");
@@ -1446,7 +1450,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages V2", "7")
+    addScriptVersion("Dynamic Messages V2", "8")
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {
