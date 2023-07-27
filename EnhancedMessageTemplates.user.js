@@ -910,7 +910,7 @@ function getResInformation() {
     const lowercaseWords = ["of", "the"];
 
     // Pickup
-    const preferredPickupDateElements = document.querySelectorAll("#Contract_PreferredPickupDate");
+    const preferredPickupDateElements = document.querySelector("#Contract_PreferredPickupDate");
     const rawPreferredPickupDate = Array.from(preferredPickupDateElements).find((element) => element.value).value;
     const formattedPreferredPickupDate = formatDate(rawPreferredPickupDate);
     const [dayText, month, dayNumber, year] = formattedPreferredPickupDate.split(/[\s,]+/);
@@ -920,7 +920,7 @@ function getResInformation() {
     const ampm = document.querySelector("#Contract_PreferredPickupAmPm").value
 
     // Return
-    const preferredReturnDateElements = document.querySelectorAll("#expectedReceiveDate");
+    const preferredReturnDateElements = document.querySelector("#expectedReceiveDate");
     let rawPreferredReturnDate;
     let formattedPreferredReturnDate;
     let returndayText, returnmonth, returndayNumber, returnyear;
