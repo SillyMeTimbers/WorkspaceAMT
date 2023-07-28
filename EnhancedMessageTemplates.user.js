@@ -23,7 +23,7 @@ const MsgTemplates = {
                 const isAvail = stringToBoolean(SubOptions.isAvail.SelectedValue)
 
                 return `Reservation; Late Pickup Reminder : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Our records indicate your rental has not yet been started and may be at risk of cancelation. ${isAvail ? 'If you would like to reschedule your reservation located at ' : `Unfortunately the equipment is no longer available at ${ResInfo.businessName} and would need to be relocated, `} ${isAvail ? `${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}, for a different date/time please contact us using the number provided below` : 'we ask you call us at your earliest convenience using the number below to discuss alternative solutions'}.
+Our records indicate your rental has not yet been started and may be at risk of cancelation. ${isAvail ? 'If you would like to reschedule your reservation located at' : `Unfortunately, the equipment is no longer available at ${ResInfo.businessName} and would need to be relocated,`} ${isAvail ? `${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}, for a different date/time please contact us using the number provided below` : 'we ask you call us at your earliest convenience using the number below to discuss alternative solutions, we appreciate your business and hope to hear from you soon'}.
 ${ResInfo.MCOEnd}`
             }
 
@@ -76,15 +76,15 @@ ${ResInfo.MCOEnd}`
 
                 if (cancelReason === "Confirm") {
                     return `Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. We hope to see you back soon! If you change your mind in the near future, you can call us at the number below to make new arrangements.
+Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. If you change your mind in the near future, you can call us at the number below to make new arrangements.
 ${ResInfo.MCOEnd}`
                 } else if (cancelReason === "Late") {
                     return `Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-We hope we didn't miss your arrival, our records indicate your reservation scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} was not picked up and has automatically been canceled. If you believe this was a mistake and you are still in-need of this reservation, you can call us using the number below to make new arrangements.
+We hope we didn't miss your arrival, our records indicate your reservation scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} was not picked up and has automatically been canceled. If you believe this was a mistake and you are still in need of this reservation, you can call us using the number below to make new arrangements.
 ${ResInfo.MCOEnd}`
                 } else if (cancelReason === "Duplicate") {
                     return `Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Your U-Haul Reservation was recently canceled, our records indicated multiple reservations may have been made. In result, reservation #${ResInfo.contractNumber} has been canceled. If you believe this was a mistake and are in need of multiple reservations, please call us using the number below to reinstate this reservation.
+Your U-Haul Reservation was recently canceled, our records indicated multiple reservations may have been made. If you believe this was a mistake and are in need of multiple reservations, please call us using the number below to reinstate this reservation.
 ${ResInfo.MCOEnd}`
                 }
             }
@@ -151,7 +151,7 @@ ${ResInfo.MCOEnd}`
 
             if (!SubOptions === false) {
                 let Nearby73 = false
-                if (zipcode.includes(ResInfo.zipcode)) {
+                if (zipcode.includes(Number(ResInfo.zipcode)) {
                     Nearby73 = true
                 }
 
@@ -330,7 +330,7 @@ ${ResInfo.MCOEnd}`
                 const freeUpgrade = stringToBoolean(SubOptions.FreeUpgrade.SelectedValue)
 
                 return `Reservation; Equipment Changed : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Hi ${ResInfo.customerFirstName}, Your U-Haul reservation has been updated. The "${PreviousEquipment}" has been updated to a "${NewEquipment}". ${freeUpgrade ? 'We would like to remind you this change will not incur any additional charges to the rental' : 'Please note, this change may incur additional charges to the rental'}. ${locChangedValue ? `Additionally, your pick-up address has been updated, please go to ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup at ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you would like to speak with your new location you can reach them at ${ResInfo.businessPhoneNumber} or for further information we` : 'We'} recommend reviewing these changes on uhaul.com/orders or if you would like to speak a person you can reach us directly using the number below!
+Hi ${ResInfo.customerFirstName}, Your U-Haul reservation has been updated. The "${PreviousEquipment}" has been updated to a "${NewEquipment}". ${freeUpgrade ? 'We would like to remind you this change will not incur any additional charges to the rental' : 'Please note, this change may incur additional charges to the rental'}. ${locChangedValue ? `Additionally, your pick-up address has been updated, please go to ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup at ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you would like to speak with your new location you can reach them at ${ResInfo.businessPhoneNumber} or for further information we` : 'We'} recommend reviewing these changes on uhaul.com/orders or if you would like to speak to a person you can reach us directly using the number provided below!
 ${ResInfo.MCOEnd}`
             }
 
@@ -456,11 +456,11 @@ ${ResInfo.MCOEnd}`
 
                 if (!lowAvail) {
                     return `Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled at' : 'Your pick-up address has been updated, please go to'} ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
+${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled at' : 'Your pick-up address has been updated, please go to'} ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
                 } else {
                     return `Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-We apologize for the inconvenience, but due to scheduling issues at this time, your pickup has been changed. Your equipment will be ready for pick-up at ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
+We apologize for the inconvenience, but due to scheduling issues at this time, your pickup has been changed. Your equipment will be ready for pick-up at ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
                 }
             }
