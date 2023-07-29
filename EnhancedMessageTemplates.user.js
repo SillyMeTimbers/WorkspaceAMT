@@ -1450,7 +1450,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages V2", "10")
+    addScriptVersion("Dynamic Messages V2", "11")
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {
