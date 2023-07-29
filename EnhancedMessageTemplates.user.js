@@ -56,7 +56,7 @@ ${ResInfo.MCOEnd}`
 
         Params: function () {
             const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked') && isReservationLatePickup() === true) {
+            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked')) {
                 return true
             }
 
