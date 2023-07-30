@@ -195,8 +195,24 @@ const PermissionsList = {
             "VersionManager": true,
         },
    },
-};
 
+   "MAbigail Heister": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+        },
+   },
+};
 (async function() {
   'use strict';
   const UpdateVal = 1;
