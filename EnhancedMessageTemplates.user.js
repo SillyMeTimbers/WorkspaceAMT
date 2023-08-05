@@ -264,51 +264,51 @@ ${ResInfo.MCOEnd}`
 
             "Time": {
                 DisplayText: "Preferred Time",
-                DefaultOption: 1,
+                DefaultOption: "1",
                 Type: "Normal",
                 Options: [
-                    { value: 1, text: "Morning (7am - 12pm)" },
-                    { value: 2, text: "Afternoon (12pm - 6pm)" },
-                    { value: 3, text: "Evening (6pm-12pm" },
-                    { value: 4, text: "Anytime (7am - 7pm)" },
+                    { value: "1", text: "Morning (7am - 12pm)" },
+                    { value: "2", text: "Afternoon (12pm - 6pm)" },
+                    { value: "3", text: "Evening (6pm-12pm" },
+                    { value: "4", text: "Anytime (7am - 7pm)" },
                 ]
             }
 
            "Distance": {
                 DisplayText: "Flexible Distance",
-                DefaultOption: 1,
+                DefaultOption: "1",
                 Type: "Normal",
                 Options: [
-                    { value: 1, text: "0-5 Miles" },
-                    { value: 2, text: "5-10 Miles" },
-                    { value: 3, text: "10-20 Miles" },
-                    { value: 4, text: "20-30 Miles" },
-                    { value: 5, text: "30-50 Miles" },
-                    { value: 6, text: "50+ Miles" },
-                    { value: 7, text: "100+ Miles" },
+                    { value: "1", text: "0-5 Miles" },
+                    { value: "2", text: "5-10 Miles" },
+                    { value: "3", text: "10-20 Miles" },
+                    { value: "4", text: "20-30 Miles" },
+                    { value: "5", text: "30-50 Miles" },
+                    { value: "6", text: "50+ Miles" },
+                    { value: "7", text: "100+ Miles" },
                 ]
             }
 
            "EquipmentSize": {
                 DisplayText: "Flexible w/Equipment Size",
-                DefaultOption: 1,
+                DefaultOption: "1",
                 Type: "Normal",
                 Options: [
-                    { value: 1, text: "Must have preferred" },
-                    { value: 2, text: "Can go larger/smaller" },
-                    { value: 3, text: "Can go larger" },
-                    { value: 4, text: "Can go smaller" },
+                    { value: "1", text: "Must have preferred" },
+                    { value: "2", text: "Can go larger/smaller" },
+                    { value: "3", text: "Can go larger" },
+                    { value: "4", text: "Can go smaller" },
                 ]
             }
 
            "PaidMovers": {
                 DisplayText: "Has Paid Movers",
-                DefaultOption: 1,
+                DefaultOption: "1",
                 Type: "Normal",
                 Options: [
-                    { value: 1, text: "Yes" },
-                    { value: 2, text: "No" },
-                    { value: 3, text: "Unsure" },
+                    { value: "1", text: "Yes" },
+                    { value: "2", text: "No" },
+                    { value: "3", text: "Unsure" },
                 ]
             }
         }],
