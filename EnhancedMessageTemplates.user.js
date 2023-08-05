@@ -224,6 +224,105 @@ ${ResInfo.MCOEnd}`
         },
     },
 
+    "HighDemandConfirmation": {
+        Display: "HighDemandConfirmation",
+
+        MsgTemplate: function () {
+            const ResInfo = getResInformation();
+            const SubOptions = getValInformation("HighDemandConfirmation");
+
+            if (!SubOptions === false) {
+                return `Reservation; High Demand Confirmation : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Thank you for choosing U-Haul, we greatly appreciate you reaching out to us to provide us with further information regarding your move on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} in ${ResInfo.amtCity} ${ResInfo.amtState}. Please be expecting a call 72-48 hours prior to your reservation pickup date with information on your pickup address. If you do not receive this information from a Call, Text, or Email within 24 hours from the rental date please contact us immediately using the number below.
+${ResInfo.MCOEnd}`
+            }
+
+            return `Failed to create message :(`
+        },
+
+        NoteTemplate: function () {
+            const ResInfo = getResInformation();
+            const SubOptions = getValInformation("HighDemandConfirmation");
+
+            return {
+                Text: `High Demand Confirmation - Flexible Date: X, Preferred Time: X, Flexible Distance: X, Flexible Equipment Size: X, Split Rental: X, Paid Movers: X, Additional Notes: X`,
+                ExpectedIn: false,
+                Working: true,
+            }
+        },
+
+        Dropdown: ["HighDemandConfirmation", {
+            "Date": {
+                DisplayText: "Flexible w/Date",
+                DefaultOption: true,
+                Type: "Normal",
+                Options: [
+                    { value: true, text: "Yes" },
+                    { value: false, text: "No" },
+                ]
+            }
+
+            "Time": {
+                DisplayText: "Preferred Time",
+                DefaultOption: 1,
+                Type: "Normal",
+                Options: [
+                    { value: 1, text: "Morning (7am - 12pm)" },
+                    { value: 2, text: "Afternoon (12pm - 6pm)" },
+                    { value: 3, text: "Evening (6pm-12pm" },
+                    { value: 4, text: "Anytime (7am - 7pm)" },
+                ]
+            }
+
+           "Distance": {
+                DisplayText: "Flexible Distance",
+                DefaultOption: 1,
+                Type: "Normal",
+                Options: [
+                    { value: 1, text: "0-5 Miles" },
+                    { value: 2, text: "5-10 Miles" },
+                    { value: 3, text: "10-20 Miles" },
+                    { value: 4, text: "20-30 Miles" },
+                    { value: 5, text: "30-50 Miles" },
+                    { value: 6, text: "50+ Miles" },
+                    { value: 7, text: "100+ Miles" },
+                ]
+            }
+
+           "EquipmentSize": {
+                DisplayText: "Flexible w/Equipment Size",
+                DefaultOption: 1,
+                Type: "Normal",
+                Options: [
+                    { value: 1, text: "Must have preferred" },
+                    { value: 2, text: "Can go larger/smaller" },
+                    { value: 3, text: "Can go larger" },
+                    { value: 4, text: "Can go smaller" },
+                ]
+            }
+
+           "PaidMovers": {
+                DisplayText: "Has Paid Movers",
+                DefaultOption: 1,
+                Type: "Normal",
+                Options: [
+                    { value: 1, text: "Yes" },
+                    { value: 2, text: "No" },
+                    { value: 3, text: "Unsure" },
+                ]
+            }
+        }],
+
+        Params: function () {
+            const spanElement = document.querySelector('span.custom.checkbox.disabled');
+            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && !spanElement.classList.contains('checked')) {
+                return true
+            }
+
+            return false
+        },
+    },
+    
     "HighDemand": {
         Display: "HighDemand",
 
