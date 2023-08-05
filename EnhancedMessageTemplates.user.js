@@ -330,7 +330,7 @@ ${ResInfo.MCOEnd}`
                     { value: "2", text: "Do not split" },
                     { value: "3", text: "NoT-Applicable" },
                 ]
-            }
+            },
 
            "PaidMovers": {
                 DisplayText: "Has Paid Movers",
@@ -341,7 +341,7 @@ ${ResInfo.MCOEnd}`
                     { value: "2", text: "No" },
                     { value: "3", text: "Unsure" },
                 ]
-            }
+            },
         }],
 
         Params: function () {
