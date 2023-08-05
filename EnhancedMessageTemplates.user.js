@@ -244,21 +244,41 @@ ${ResInfo.MCOEnd}`
             const ResInfo = getResInformation();
             const SubOptions = getValInformation("HighDemandConfirmation");
 
-            return {
-                Text: `High Demand Confirmation - Flexible Date: X, Preferred Time: X, Flexible Distance: X, Flexible Equipment Size: X, Split Rental: X, Paid Movers: X, Additional Notes: X`,
-                ExpectedIn: false,
-                Working: true,
+            if (!SubOptions === false) {
+                if (SubOptions.NewEquipment.SelectedValue === "Blank") {
+                    NewEquipment = "unassigned"
+                } else {
+                    NewEquipment = SubOptions.NewEquipment.SelectedText.split(" - ")[1].trim()
+                }
+
+                const locChangedValue = stringToBoolean(SubOptions.LocChanged.SelectedValue)
+                const freeUpgrade = stringToBoolean(SubOptions.FreeUpgrade.SelectedValue)
+
+                const FlexDate = SubOptions.Date.SelectedText
+                const PrefTime = SubOptions.Time.SelectedText
+                const Distance = SubOptions.Distance.SelectedText
+                const EquipSize = SubOptions.EquipmentSize.SelectedText
+                const SplitContract = SubOptions.SplitContract.SelectedText
+                const PaidMovers = SubOptions.PaidMovers.SelectedText
+                
+                return {
+                    Text: `High Demand Confirmation - Flexible Date: ${FlexDate}, Preferred Time: ${PrefTime}, Flexible Distance: ${Distance}, Flexible Equipment Size: ${EquipSize}, Split Rental: ${SplitContract}, Paid Movers: ${PaidMovers}, Additional Notes: `,
+                    ExpectedIn: false,
+                    Working: true,
+                }
             }
         },
 
         Dropdown: ["HighDemandConfirmation", {
             "Date": {
                 DisplayText: "Flexible w/Date",
-                DefaultOption: true,
+                DefaultOption: "1",
                 Type: "Normal",
                 Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
+                    { value: "1", text: "Must have preferred" },
+                    { value: "2", text: "Can do a day before/after" },
+                    { value: "3", text: "Can do a day before" },
+                    { value: "3", text: "Can do a day after" },
                 ]
             },
 
@@ -300,6 +320,17 @@ ${ResInfo.MCOEnd}`
                     { value: "4", text: "Can go smaller" },
                 ]
             },
+
+           "SplitContract": {
+                DisplayText: "Split Contract",
+                DefaultOption: "1",
+                Type: "Normal",
+                Options: [
+                    { value: "1", text: "Can split" },
+                    { value: "2", text: "Do not split" },
+                    { value: "3", text: "NoT-Applicable" },
+                ]
+            }
 
            "PaidMovers": {
                 DisplayText: "Has Paid Movers",
@@ -1549,7 +1580,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages V2", "11")
+    addScriptVersion("Dynamic Messages V2", "12")
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {
