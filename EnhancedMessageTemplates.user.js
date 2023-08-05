@@ -245,15 +245,6 @@ ${ResInfo.MCOEnd}`
             const SubOptions = getValInformation("HighDemandConfirmation");
 
             if (!SubOptions === false) {
-                if (SubOptions.NewEquipment.SelectedValue === "Blank") {
-                    NewEquipment = "unassigned"
-                } else {
-                    NewEquipment = SubOptions.NewEquipment.SelectedText.split(" - ")[1].trim()
-                }
-
-                const locChangedValue = stringToBoolean(SubOptions.LocChanged.SelectedValue)
-                const freeUpgrade = stringToBoolean(SubOptions.FreeUpgrade.SelectedValue)
-
                 const FlexDate = SubOptions.Date.SelectedText
                 const PrefTime = SubOptions.Time.SelectedText
                 const Distance = SubOptions.Distance.SelectedText
