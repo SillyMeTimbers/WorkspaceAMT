@@ -260,7 +260,7 @@ ${ResInfo.MCOEnd}`
                     { value: true, text: "Yes" },
                     { value: false, text: "No" },
                 ]
-            }
+            },
 
             "Time": {
                 DisplayText: "Preferred Time",
@@ -272,7 +272,7 @@ ${ResInfo.MCOEnd}`
                     { value: "3", text: "Evening (6pm-12pm" },
                     { value: "4", text: "Anytime (7am - 7pm)" },
                 ]
-            }
+            },
 
            "Distance": {
                 DisplayText: "Flexible Distance",
@@ -287,7 +287,7 @@ ${ResInfo.MCOEnd}`
                     { value: "6", text: "50+ Miles" },
                     { value: "7", text: "100+ Miles" },
                 ]
-            }
+            },
 
            "EquipmentSize": {
                 DisplayText: "Flexible w/Equipment Size",
@@ -299,7 +299,7 @@ ${ResInfo.MCOEnd}`
                     { value: "3", text: "Can go larger" },
                     { value: "4", text: "Can go smaller" },
                 ]
-            }
+            },
 
            "PaidMovers": {
                 DisplayText: "Has Paid Movers",
