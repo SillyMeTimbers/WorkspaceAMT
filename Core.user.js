@@ -40,6 +40,178 @@ const PermissionsList = {
             "NoteFormatter": true,
         },
     },
+
+    "Emily Bertrand": {
+        Branch: {
+            Live: false,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": true,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+            "NoteFormatter": true,
+        },
+    },
+
+    "Melissa Wise": {
+        Branch: {
+            Live: false,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": true,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+            "NoteFormatter": true,
+        },
+    },
+
+    "Julianna Mayes": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+        },
+    },
+
+    "Michelle Asker": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": true,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+        },
+    },
+    
+    "Sheryse McKenzie": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+        },
+    },
+    
+    "Nyla Whitty": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+        },
+    },
+    
+    "Wilson Burgos": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+        },
+    },
+
+    "Amber Ruiz": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+        },
+    },
+  
+    "Matthew Glenn": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+        },
+   },
+
+   "MAbigail Heister": {
+        Branch: {
+            Live: true,
+        },
+        Access: {
+            "ExtensionList": true,
+            "ExpNotes_VerifyTime": false,
+            "TopBarAlert": true,
+            "OverdueOpenInPOS": true,
+            "SendDropoffButtons": true,
+            "EnhancedMessageTemplates": true,
+            "HideUncoveredNotDispatch": true,
+            "ReservationSearch": true,
+            "VersionManager": true,
+        },
+   },
 };
 
 (async function() {
