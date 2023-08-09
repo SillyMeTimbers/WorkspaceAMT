@@ -10,16 +10,6 @@
 // ==/UserScript==
 
 const Redirects = [
-  "ExtensionList",
-  "ExpNotes_VerifyTime",
-  "TopBarAlert",
-  "OverdueOpenInPOS",
-  "SendDropoffButtons",
-  "EnhancedMessageTemplates",
-  "HideUncoveredNotDispatch",
-  "ReservationSearch",
-  "VersionManager",
-  "NoteFormatter",
 ];
 
 const PermissionsList = {
@@ -213,6 +203,7 @@ const PermissionsList = {
         },
    },
 };
+
 (async function() {
   'use strict';
   const UpdateVal = 1;
