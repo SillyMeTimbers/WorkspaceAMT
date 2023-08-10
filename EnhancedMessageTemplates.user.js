@@ -1502,6 +1502,7 @@ function MessageTextForumVisible() {
                         const ResInfo = getResInformation();
                         const DataBreakdown = `Reservation #: ${ResInfo.contractNumber}
 Name: ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}
 Assigned Location: ${ResInfo.Entity}`
                         
                         submitEmbed({
@@ -1597,7 +1598,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages V2", "14")
+    addScriptVersion("Dynamic Messages V2", "15")
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {
