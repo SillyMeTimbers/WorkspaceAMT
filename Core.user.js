@@ -196,7 +196,7 @@ const PermissionsList = {
         },
    },
 
-   "MAbigail Heister": {
+   "Abigail Heister": {
         Branch: {
             Live: true,
         },
