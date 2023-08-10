@@ -1502,7 +1502,7 @@ function MessageTextForumVisible() {
                         const ResInfo = getResInformation();
                         const DataBreakdown = `Reservation #: ${ResInfo.contractNumber}
 Name: ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Assigned Location: ${resInfo.Entity}`
+Assigned Location: ${ResInfo.Entity}`
                         
                         submitEmbed({
                             Info: DataBreakdown,
