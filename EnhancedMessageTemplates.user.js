@@ -779,10 +779,6 @@ function isReservationLatePickup() {
 
     // Get the current time.
     let currentTime = new Date();
-
-    console.log(currentTime);
-    console.log(scheduledPickupTime);
-
     // Calculate the difference between the current time and the scheduled pickup time.
     let timeDifferenceInMinutes = (currentTime - scheduledPickupTime) / (1000 * 60);
 
@@ -812,6 +808,7 @@ function submitEmbed(Data) {
             {
                 title: 'New Message',
                 fields: [
+                    { name: 'Contract Info', value: Data.Info },
                     { name: 'Person', value: Data.Actor },
                     { name: 'Note', value: Data.FirstLine },
                     { name: 'Message', value: Data.SecondLine },
@@ -819,17 +816,12 @@ function submitEmbed(Data) {
             },
         ],
     };
-    console.log(payload)
+
     $.ajax({
         url: webhookURL,
         type: 'POST',
         data: JSON.stringify(payload),
         contentType: 'application/json',
-        success: function (response) {
-            // Handle successful request
-            console.log('Embed submitted successfully!');
-            console.log(response);
-        },
         error: function (error) {
             // Handle error
             console.error('An error occurred while submitting the embed:');
@@ -1080,7 +1072,6 @@ function getResInformation() {
     let returnampm;
 
     if (preferredReturnDateElements) {
-        console.log("hey :)")
         rawPreferredReturnDate = Array.from(preferredReturnDateElements).find((element) => element.value)
 
         if (rawPreferredReturnDate) {
@@ -1508,7 +1499,13 @@ function MessageTextForumVisible() {
                             }
                         }
 
+                        const ResInfo = getResInformation();
+                        const DataBreakdown = `Reservation #: ${ResInfo.contractNumber}
+Name: ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Assigned Location: ${resInfo.Entity}`
+                        
                         submitEmbed({
+                            Info: DataBreakdown,
                             Actor: dynatraceUserName.textContent,
                             FirstLine: AddedNote.Note,
                             SecondLine: $("#textMessageArea").val(),
@@ -1600,7 +1597,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages V2", "12")
+    addScriptVersion("Dynamic Messages V2", "13")
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {
