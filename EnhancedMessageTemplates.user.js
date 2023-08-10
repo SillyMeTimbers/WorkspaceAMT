@@ -708,11 +708,9 @@ ${ResInfo.MCOEnd}`
             const ResInfo = getResInformation();
             const SubOptions = getValInformation("EAlert");
 
-            if (!SubOptions === false) {
-                return `U-Haul Reservation; ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+            return `U-Haul Reservation; ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Your reservation has been flagged due to an unresolved issue with U-Haul on a previous contract you or someone associated with you previously had, to avoid complications with your rental call (877) 653-0490 before the day of your rental or before you leave to pickup your equipment.
 ${ResInfo.MCOEnd}`
-            }
 
             return `Failed to create message :(`
         },
@@ -740,11 +738,9 @@ ${ResInfo.MCOEnd}`
             const ResInfo = getResInformation();
             const SubOptions = getValInformation("CustomMessage");
 
-            if (!SubOptions === false) {
-                return `U-Haul Reservation; #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+            return `U-Haul Reservation; #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 ~
 ${ResInfo.MCOEnd}`
-            }
 
             return `Failed to create message :(`
         },
