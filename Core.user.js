@@ -38,7 +38,7 @@ const PermissionsList = {
             "ReservationSearch": true,
             "VersionManager": true,
             "NoteFormatter": true,
-        },e
+        },
     },
 
     "Emily Bertrand": {
