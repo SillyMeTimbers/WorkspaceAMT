@@ -38,7 +38,7 @@ const PermissionsList = {
             "ReservationSearch": true,
             "VersionManager": true,
             "NoteFormatter": true,
-        },
+        },e
     },
 
     "Emily Bertrand": {
@@ -211,6 +211,23 @@ const PermissionsList = {
             "ReservationSearch": true,
             "VersionManager": true,
         },
+   },
+
+   "Danielle Clifford": {
+      Branch: {
+          Live: true,
+      },
+      Access: {
+          "ExtensionList": true,
+          "ExpNotes_VerifyTime": false,
+          "TopBarAlert": true,
+          "OverdueOpenInPOS": true,
+          "SendDropoffButtons": true,
+          "EnhancedMessageTemplates": true,
+          "HideUncoveredNotDispatch": true,
+          "ReservationSearch": true,
+          "VersionManager": true,
+      },
    },
 };
 
