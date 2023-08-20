@@ -1229,6 +1229,15 @@ function getResInformation() {
     const businessName = processName(ddElements[0].innerText, capitalizeWords, lowercaseWords);
     const phoneNumber = findPhoneNumber(dtElements);
 
+    let DynamicTime;
+    let CurrentTime = new Date();
+
+    if (CurrentTime.getHours() < 12 {
+        DynamicTime = "Morning"
+    } else {
+        DynamicTime = "Afternoon"
+    }
+    
     return {
         // Contract Numbers
         rawContractNumber: document.querySelector("#ReservationPopup .whoseViewingStatus").getAttribute("data-contractid"),
@@ -1271,7 +1280,8 @@ function getResInformation() {
         Entity: $("#pickUpEntityChosen").val() || "Unassigned",
 
         // MCO Information
-        MCOEnd: "U-Haul Co. Palm Bay, FL (800) 649-2507"
+        MCOEnd: "U-Haul Co. Palm Bay, FL (800) 649-2507",
+        TimeOfDay: DynamicTime,
     }
 }
 
