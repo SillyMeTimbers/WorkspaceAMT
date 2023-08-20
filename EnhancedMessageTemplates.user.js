@@ -722,7 +722,7 @@ ${ResInfo.MCOEnd}`
 
             if (SubOptions) {
                 return {
-                    Text: `U-Box - Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDate.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}`,
+                    Text: `U-Box - Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDay.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}`,
                     ExpectedIn: false,
                     Working: true,
                 }
@@ -1732,7 +1732,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages V2", "16")
+    addScriptVersion("Dynamic Messages V2", "17")
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {
