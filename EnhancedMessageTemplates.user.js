@@ -1232,7 +1232,7 @@ function getResInformation() {
     let DynamicTime;
     let CurrentTime = new Date();
 
-    if (CurrentTime.getHours() < 12 {
+    if (CurrentTime.getHours() < 12) {
         DynamicTime = "Morning"
     } else {
         DynamicTime = "Afternoon"
