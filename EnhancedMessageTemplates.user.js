@@ -701,6 +701,140 @@ ${ResInfo.MCOEnd}`
         },
     },
 
+    "UBox": {
+        Display: "UBox",
+
+        MsgTemplate: function () {
+            const ResInfo = getResInformation();
+            const SubOptions = getValInformation("UBox");
+
+            if (SubOptions) {
+                return `U-Box Reservation; ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, we are reaching out to you in regard to a U-Box ${SubOptions.DeliveryType.SelectedText} ${SubOptions.DeliveryDay.SelectedText}. We have timeframes available if you are able to give us a call before ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText} or your ${SubOptions.DeliveryType.SelectedText} may be at risk of being rescheduled for the next available date, you can call us at (561) 638-9428 or if you are unable to reach us via phone you can contact us via email 781_RM@uhaul.com, we hope to hear from you soon!
+${ResInfo.MCOEnd}`   
+            }
+
+            return `Failed to create message :(`
+        },
+
+        NoteTemplate: function () {
+            const SubOptions = getValInformation("UBox");
+
+            if (SubOptions) {
+                return {
+                    Text: `U-Box - Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDate.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}`,
+                    ExpectedIn: false,
+                    Working: true,
+                }
+            }
+
+            return {
+                    Text: ``,
+                    ExpectedIn: false,
+                    Working: true,
+            }
+        },
+
+        Dropdown: ["UBox", {
+            "DeliveryType": {
+                DisplayText: "Delivery Type",
+                DefaultOption: true,
+                Type: "Normal",
+                Options: [
+                    { value: true, text: "dropoff" },
+                    { value: false, text: "pickup" },
+                ]
+            },
+
+            "DeliveryDay": {
+                DisplayText: "Delivery Date",
+                DefaultOption: "1",
+                Type: "Normal",
+                Options: [
+                    { value: "1", text: "today" },
+                    { value: "2", text: "tomorrow" },
+                ]
+            },
+
+            "DeliveryTimeStart": {
+                DisplayText: "Earliest Delivery Time",
+                DefaultOption: "1",
+                Type: "Normal",
+                Options: [
+                    { value: "1", text: "7:00 AM" },
+                    { value: "2", text: "8:00 AM" },
+                    { value: "3", text: "9:00 AM" },
+                    { value: "4", text: "10:00 AM" },
+                    { value: "5", text: "11:00 AM" },
+                    { value: "6", text: "12:00 PM" },
+                    { value: "7", text: "1:00 PM" },
+                    { value: "8", text: "2:00 PM" },
+                    { value: "9", text: "3:00 PM" },
+                    { value: "10", text: "4:00 PM" },
+                    { value: "11", text: "5:00 PM" },
+                    { value: "12", text: "6:00 PM" },
+                    { value: "13", text: "7:00 PM" },
+                ]
+            },
+
+            "DeliveryTimeEnd": {
+                DisplayText: "Latest Delivery Time",
+                DefaultOption: "1",
+                Type: "Normal",
+                Options: [
+                    { value: "1", text: "7:00 AM" },
+                    { value: "2", text: "8:00 AM" },
+                    { value: "3", text: "9:00 AM" },
+                    { value: "4", text: "10:00 AM" },
+                    { value: "5", text: "11:00 AM" },
+                    { value: "6", text: "12:00 PM" },
+                    { value: "7", text: "1:00 PM" },
+                    { value: "8", text: "2:00 PM" },
+                    { value: "9", text: "3:00 PM" },
+                    { value: "10", text: "4:00 PM" },
+                    { value: "11", text: "5:00 PM" },
+                    { value: "12", text: "6:00 PM" },
+                    { value: "13", text: "7:00 PM" },
+                ]
+            },
+
+            "CutoffDate": {
+                DisplayText: "Cutoff Date",
+                DefaultOption: "1",
+                Type: "Normal",
+                Options: [
+                    { value: "1", text: "today" },
+                    { value: "2", text: "tomorrow" },
+                ]
+            },
+            
+            "CutoffTime": {
+                DisplayText: "Cutoff Time",
+                DefaultOption: "1",
+                Type: "Normal",
+                Options: [
+                    { value: "1", text: "7:00 AM" },
+                    { value: "2", text: "8:00 AM" },
+                    { value: "3", text: "9:00 AM" },
+                    { value: "4", text: "10:00 AM" },
+                    { value: "5", text: "11:00 AM" },
+                    { value: "6", text: "12:00 PM" },
+                    { value: "7", text: "1:00 PM" },
+                    { value: "8", text: "2:00 PM" },
+                    { value: "9", text: "3:00 PM" },
+                    { value: "10", text: "4:00 PM" },
+                    { value: "11", text: "5:00 PM" },
+                    { value: "12", text: "6:00 PM" },
+                    { value: "13", text: "7:00 PM" },
+                ]
+            },
+        }],
+
+        Params: function () {
+            return true
+        },
+    },
+    
     "EAlert": {
         Display: "EAlert",
 
