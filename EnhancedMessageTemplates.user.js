@@ -1732,7 +1732,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages V2", "15")
+    addScriptVersion("Dynamic Messages V2", "16")
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {
