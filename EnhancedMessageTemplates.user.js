@@ -1081,9 +1081,9 @@ function createSubDropdown(id, data) {
 function getResStatus() {
     const spanElement = document.querySelector('span.custom.checkbox.disabled');
     let ReturnDetails = {
-        Dispatched = false,
-        Cancelled = false,
-        Covered = false,
+        Dispatched: false,
+        Cancelled: false,
+        Covered: false,
     }
 
     if (document.querySelector("#DispatchDate")) {
