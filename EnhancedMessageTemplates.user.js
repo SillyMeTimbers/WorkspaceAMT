@@ -165,7 +165,7 @@ ${ResInfo.MCOEnd}`
 
         NoteTemplate: function () {
             return {
-                Text: `Text Sent to Customer - Message Type: Storage Offer`,
+                Text: `Sent storage offer`,
                 ExpectedIn: true,
                 Working: false,
             }
@@ -1742,7 +1742,7 @@ function isMessageTextForumVisibleInterval() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Dynamic Messages V2", "18")
+    addScriptVersion("Dynamic Messages V2", "19")
 
     setInterval(() => {
         if (isMessageTextForumVisible()) {
