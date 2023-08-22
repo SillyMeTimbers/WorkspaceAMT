@@ -661,7 +661,6 @@ ${ResInfo.MCOEnd}`
         NoteTemplate: function () {
             const ResInfo = getResInformation();
             const SubOptions = getValInformation("NewDropoff");
-            const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
 
             return {
                 Text: `Text Sent to Customer - Message Type: New Dropoff, Assigned Location: ${ResInfo.Entity}, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}`,
