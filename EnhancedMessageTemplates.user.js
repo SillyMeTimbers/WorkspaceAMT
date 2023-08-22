@@ -643,14 +643,15 @@ ${ResInfo.MCOEnd}`
 
             if (!SubOptions === false) {
                 const reminderMessage = stringToBoolean(SubOptions.DropoffConfirmation.SelectedValue)
-                const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
+                const msgStyle = stringToBoolean(SubOptions.msgStyle.SelectedValue)
 
-                if (!lowAvail) {
+                if (!msgStyle) {
                     return `U-Haul Reservation; New Dropoff : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 ${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled to return at' : 'Your return address has been updated, please return to'} ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your rental is due back in on ${ResInfo.returndayText}, ${ResInfo.returnmonthNumber} ${ResInfo.returndayNumber}, ${ResInfo.returnyear} at ${ResInfo.returnhour}:${ResInfo.returnminute} ${ResInfo.returnAMPM}. If you are returning after hours please use your mobile device to verify your equipment return by going to https://www.uhaul.com/Orders/OrderDetail.aspx?resid=${ResInfo.contractNumber}&ln=${ResInfo.customerLastName} or you can choose to have us verify it for you the next day for a $20 convenience fee.
 ${ResInfo.MCOEnd}`
                 } else {
-                    return `dont use this setting haven't made a script for it yet thanks :)`
+                    return `Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, your U-Haul Return address has been updated to ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. You can reach this location at ${ResInfo.businessPhoneNumber}, if you have any questions please call the number listed below.
+${ResInfo.MCOEnd}`
                 }
             }
 
@@ -680,13 +681,13 @@ ${ResInfo.MCOEnd}`
                 ]
             },
 
-            "LowAvail": {
-                DisplayText: "Low Availability (Suggested for 15+ Miles)",
-                DefaultOption: false,
+            "msgStyle": {
+                DisplayText: "Format",
+                DefaultOption: true,
                 Type: "Normal",
                 Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
+                    { value: true, text: "Stylized" },
+                    { value: false, text: "Basic" },
                 ]
             },
         }],
