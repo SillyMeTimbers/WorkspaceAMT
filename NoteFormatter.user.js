@@ -71,6 +71,11 @@ function resNotesIsVis() {
             }
         });
     }
+
+    const NotesTab = document.querySelector(".notes-content")
+    if (NotesTab) {
+        document.querySelector(".notes-content").style.minHeight = "200px"
+    }
 }
 
 // Function to continuously check
