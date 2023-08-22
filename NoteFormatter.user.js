@@ -65,7 +65,7 @@ function resNotesIsVis() {
 
         listItems.forEach((li) => {
             const pTag = li.querySelector('p');
-            if (pTag && pTag.innerText.startsWith("Text Sent to Customer - ")) {
+            if (pTag && pTag.innerText.startsWith("Text Sent to Customer - ") || pTag && pTag.innerText.startsWith("High Demand Confirmation - ")) {
                 pTag.innerHTML = formatText(pTag.innerText);
                 pTag.classList.add('NoteFormatted');  // add 'updated' class
             }
@@ -84,7 +84,7 @@ function resCheckIfNotesTabVis() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Reservation Notes", "2")
+    addScriptVersion("Reservation Notes", "3")
 
     setInterval(() => {
         if (isNoteTabVis()) {
