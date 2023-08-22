@@ -1078,6 +1078,29 @@ function createSubDropdown(id, data) {
     return container;
 }
 
+function getResStatus() {
+    const spanElement = document.querySelector('span.custom.checkbox.disabled');
+    let ReturnDetails = {
+        Dispatched = false,
+        Cancelled = false,
+        Covered = false,
+    }
+
+    if (document.querySelector("#DispatchDate")) {
+        ReturnDetails.Dispatched = true
+    }
+
+    if (document.getElementById("cancelReservationLink")) {
+        ReturnDetails.Cancelled = true
+    }
+
+    if (spanElement && spanElement.classList.contains('checked')) {
+        ReturnDetails.Covered = true
+    }
+
+    return ReturnDetails
+}
+
 function isMessageTextForumVisible() {
     const textSubmitForm = document.querySelector("#textMessageArea");
     if (
