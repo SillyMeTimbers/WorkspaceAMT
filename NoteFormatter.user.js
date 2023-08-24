@@ -59,16 +59,16 @@ const startWithTable = {
   "Text Sent to Customer - ": (text, hasWorkingNoteClass) => {
     const { keyword, content } = formatText(text);
     if(hasWorkingNoteClass) {
-        return `<strong class="working-note">${keyword}</strong><br>${content}`;
+        return `<strong class="working-note">Type: </strong>${keyword}<br>${content}`;
     }
-    return `<strong>${keyword}</strong><br>${content}`;
+    return `<strong>Type: </strong>${keyword}<br>${content}`;
   },
   "High Demand Confirmation - ": (text, hasWorkingNoteClass) => {
     const { keyword, content } = formatText(text);
     if(hasWorkingNoteClass) {
-        return `<strong class="working-note">${keyword}</strong><br>${content}`;
+        return `<strong class="working-note">Type: </strong>${keyword}<br>${content}`;
     }
-    return `<strong>${keyword}</strong><br>${content}`;
+    return `<strong>Type: </strong>${keyword}<br>${content}`;
   },
 };
 
@@ -121,7 +121,7 @@ function resCheckIfNotesTabVis() {
 		document.body.appendChild(scriptVersionElement);
 	}
 
-	addScriptVersion("Reservation Notes", "4")
+	addScriptVersion("Reservation Notes", "3")
 
 	setInterval(() => {
 		if (isNoteTabVis()) {
