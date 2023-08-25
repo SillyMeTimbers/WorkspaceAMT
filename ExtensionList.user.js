@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const ExtensionListVersion = "1"
+const ExtensionListVersion = "2"
 async function extensionButtonWaitForElement(selector, timeout = 10000) {
     const startTime = Date.now();
 
@@ -225,9 +225,9 @@ async function ExtensionListHandler() {
                 "RM - Sheryse McKenzie": [false, "781312", "321-890-5774"],
                 "RM - Joshua McCart": [false, "781313", "321-652-0094"],
                 "RM - Nyla Whitty": [false, "781316", "321-451-6460"],
-                "RM - Matthew Glenn": [false, ""],
-                "RM - Amber Ruiz": [false, "781317"],
-                "RM - Lisay Magee": [false, "781311"],
+                "RM - Matthew Glenn": [false, "781311"],
+                "RM - Abigail Heister": [false, "781317"],
+                "RM - Danielle Clifford": [false, ""],
             },
 
             "MCO 781 AFM Extensions": {
