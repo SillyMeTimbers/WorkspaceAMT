@@ -1083,18 +1083,41 @@ function getResStatus() {
         Dispatched: false,
         Cancelled: false,
         Covered: false,
+        Truckshare: false,
+        IT_Rental: false,
     }
 
     if (document.querySelector("#DispatchDate")) {
-        ReturnDetails.Dispatched = true
+        ReturnDetails.Dispatched = true;
     }
 
-    if (document.getElementById("cancelReservationLink")) {
-        ReturnDetails.Cancelled = true
+    if (!document.getElementById("cancelReservationLink") && !ReturnDetails.Dispatched) {
+        ReturnDetails.Cancelled = true;
     }
 
     if (spanElement && spanElement.classList.contains('checked')) {
-        ReturnDetails.Covered = true
+        ReturnDetails.Covered = true;
+    }
+
+    const TruckshareEle = document.querySelector('span.custom.checkbox.disabled');
+    if (TruckshareEle && TruckshareEle.classList.contains('checked')) {
+        ReturnDetails.Truckshare = true;
+    }
+
+    if (!ReturnDetails.Dispatched) {
+        const RentalType = document.querySelector("#ReservationSummaryTab > div:nth-child(2) > div:nth-child(1) dd:nth-child(4)");
+        console.log(RentalType)
+        
+        if (RentalType && RentalType.textContent.trim().startsWith("InTown")) {
+            ReturnDetails.IT_Rental = true
+        }
+    } else {
+        const RentalType = document.querySelector("#ReservationSummaryTab > div:nth-child(3) > div:nth-child(1) dd:nth-child(4)");
+        console.log(RentalType)
+        
+        if (RentalType && RentalType.textContent.trim().startsWith("InTown")) {
+            ReturnDetails.IT_Rental = true
+        }
     }
 
     return ReturnDetails
