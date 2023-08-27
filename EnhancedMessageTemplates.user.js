@@ -46,11 +46,7 @@ ${ResInfo.MCOEnd}`
             "isAvail": {
                 DisplayText: "Equipment Available",
                 DefaultOption: true,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
+                Type: "Checkbox",
             },
         }],
 
@@ -251,7 +247,7 @@ ${ResInfo.MCOEnd}`
                 const EquipSize = SubOptions.EquipmentSize.SelectedText
                 const SplitContract = SubOptions.SplitContract.SelectedText
                 const PaidMovers = SubOptions.PaidMovers.SelectedText
-                
+
                 return {
                     Text: `High Demand Confirmation - Flexible Date: ${FlexDate}, Preferred Time: ${PrefTime}, Flexible Distance: ${Distance}, Flexible Equipment Size: ${EquipSize}, Split Rental: ${SplitContract}, Paid Movers: ${PaidMovers}, Additional Notes: `,
                     ExpectedIn: false,
@@ -286,7 +282,7 @@ ${ResInfo.MCOEnd}`
                 ]
             },
 
-           "Distance": {
+            "Distance": {
                 DisplayText: "Flexible Distance",
                 DefaultOption: "2",
                 Type: "Normal",
@@ -301,7 +297,7 @@ ${ResInfo.MCOEnd}`
                 ]
             },
 
-           "EquipmentSize": {
+            "EquipmentSize": {
                 DisplayText: "Flexible w/Equipment Size",
                 DefaultOption: "1",
                 Type: "Normal",
@@ -313,7 +309,7 @@ ${ResInfo.MCOEnd}`
                 ]
             },
 
-           "SplitContract": {
+            "SplitContract": {
                 DisplayText: "Split Contract",
                 DefaultOption: "2",
                 Type: "Normal",
@@ -324,7 +320,7 @@ ${ResInfo.MCOEnd}`
                 ]
             },
 
-           "PaidMovers": {
+            "PaidMovers": {
                 DisplayText: "Has Paid Movers",
                 DefaultOption: "2",
                 Type: "Normal",
@@ -345,7 +341,7 @@ ${ResInfo.MCOEnd}`
             return false
         },
     },
-    
+
     "HighDemand": {
         Display: "HighDemand",
 
@@ -538,21 +534,13 @@ ${ResInfo.MCOEnd}`
             "LocChanged": {
                 DisplayText: "Location Updated",
                 DefaultOption: false,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
+                Type: "Checkbox",
             },
 
             "FreeUpgrade": {
                 DisplayText: "Free Upgrade",
                 DefaultOption: true,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
+                Type: "Checkbox",
             }
         }],
 
@@ -575,7 +563,7 @@ ${ResInfo.MCOEnd}`
             if (!SubOptions === false) {
                 const reminderMessage = stringToBoolean(SubOptions.PickupConfirmation.SelectedValue)
                 const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
-
+                console.log(reminderMessage)
                 if (!lowAvail) {
                     return `U-Haul Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 ${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled at' : 'Your pick-up address has been updated, please go to'} ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
@@ -606,21 +594,13 @@ ${ResInfo.MCOEnd}`
             "PickupConfirmation": {
                 DisplayText: "Reminder",
                 DefaultOption: true,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
+                Type: "Checkbox",
             },
 
             "LowAvail": {
                 DisplayText: "Low Availability (Suggested for 15+ Miles)",
                 DefaultOption: false,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
+                Type: "Checkbox",
             },
         }],
 
@@ -673,11 +653,7 @@ ${ResInfo.MCOEnd}`
             "DropoffConfirmation": {
                 DisplayText: "Reminder",
                 DefaultOption: true,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
+                Type: "Checkbox",
             },
 
             "msgStyle": {
@@ -709,9 +685,9 @@ ${ResInfo.MCOEnd}`
             const SubOptions = getValInformation("UBox");
 
             if (SubOptions) {
-                return `U-Box Reservation; ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, we are reaching out to you in regard to a U-Box ${SubOptions.DeliveryType.SelectedText} ${SubOptions.DeliveryDay.SelectedText}. We have timeframes available if you are able to give us a call before ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText} or your ${SubOptions.DeliveryType.SelectedText} may be at risk of being rescheduled for the next available date, you can call us at (561) 638-9428 or if you are unable to reach us via phone you can contact us via email 781_RM@uhaul.com, we hope to hear from you soon!
-${ResInfo.MCOEnd}`   
+                return `U-Box Reservation; IMMEDIATE ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, you are receiving this notice in regards to a U-Box ${SubOptions.DeliveryType.SelectedText} on ${SubOptions.DeliveryDay.SelectedText}. We have timeframes available for the ${SubOptions.DeliveryType.SelectedText} and ask you call us to confirm before ${SubOptions.CutoffTime.SelectedText} on ${SubOptions.CutoffDate.SelectedText} or your ${SubOptions.DeliveryType.SelectedText} may be at risk of being rescheduled for the next available date, contact us at (561) 638-9428 or if our call volume is high you can also reach using our email 781_RM@uhaul.com and someone will reach out to you, we hope to hear from you soon!
+${ResInfo.MCOEnd}`
             }
 
             return `Failed to create message :(`
@@ -722,16 +698,16 @@ ${ResInfo.MCOEnd}`
 
             if (SubOptions) {
                 return {
-                    Text: `U-Box - Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDay.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}`,
+                    Text: `U-Box Timeframe Confirmation - Delivery Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDay.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}`,
                     ExpectedIn: false,
                     Working: true,
                 }
             }
 
             return {
-                    Text: ``,
-                    ExpectedIn: false,
-                    Working: true,
+                Text: ``,
+                ExpectedIn: false,
+                Working: true,
             }
         },
 
@@ -741,19 +717,14 @@ ${ResInfo.MCOEnd}`
                 DefaultOption: true,
                 Type: "Normal",
                 Options: [
-                    { value: true, text: "dropoff" },
-                    { value: false, text: "pickup" },
+                    { value: true, text: "Delivery" },
+                    { value: false, text: "Pickup" },
                 ]
             },
 
             "DeliveryDay": {
                 DisplayText: "Delivery Date",
-                DefaultOption: "1",
-                Type: "Normal",
-                Options: [
-                    { value: "1", text: "today" },
-                    { value: "2", text: "tomorrow" },
-                ]
+                Type: "DatePicker",
             },
 
             "DeliveryTimeStart": {
@@ -800,14 +771,9 @@ ${ResInfo.MCOEnd}`
 
             "CutoffDate": {
                 DisplayText: "Cutoff Date",
-                DefaultOption: "1",
-                Type: "Normal",
-                Options: [
-                    { value: "1", text: "today" },
-                    { value: "2", text: "tomorrow" },
-                ]
+                Type: "DatePicker",
             },
-            
+
             "CutoffTime": {
                 DisplayText: "Cutoff Time",
                 DefaultOption: "1",
@@ -834,7 +800,7 @@ ${ResInfo.MCOEnd}`
             return true
         },
     },
-    
+
     "EAlert": {
         Display: "EAlert",
 
@@ -864,7 +830,7 @@ ${ResInfo.MCOEnd}`
             return true
         },
     },
-    
+
     "CustomMessage": {
         Display: "CustomMessage",
 
@@ -1003,8 +969,113 @@ function createSubDropdown(id, data) {
 
         let label = document.createElement('label');
         label.className = "template-label";
-        label.textContent = `${data[key].DisplayText}:`;
 
+        // If the type is DatePicker, use the jQuery UI datepicker
+        if (data[key].Type === "DatePicker") {
+            label.textContent = `${data[key].DisplayText}:`;
+            let input = document.createElement('input');
+            input.type = "text";
+            input.className = "msgcorner dropdownpad customdatepicker"
+            input.id = selectId;
+            input.name = selectId;
+
+            let currentYear = new Date().getFullYear();
+            let nextYear = currentYear + 1;
+
+            $(input).datepicker({
+                dateFormat: "DD, MM d, yy",
+                minDate: 0,
+                yearRange: `${currentYear}:${nextYear}`,
+                changeYear: false,
+                changeMonth: true,
+                onSelect: function(dateText) {
+                    selectedValues[key] = {
+                        SelectedValue: dateText,
+                        SelectedText: dateText
+                    };
+                    updateMessageTemplate()
+                }
+            });
+
+            // Set default date to current date
+            $(input).datepicker("setDate", new Date());
+
+            label.appendChild(input);
+            container.appendChild(label);
+            continue;  // Skip the rest of the loop for this key and move to the next one
+        }
+
+        if (data[key].Type === "Checkbox") {
+            // Main container for the custom checkbox
+            let checkboxContainer = document.createElement('label');
+            checkboxContainer.className = 'customcheckbox checkbox offset-bottom-2';
+
+            // The actual input element
+            let input = document.createElement('input');
+            input.type = "checkbox";
+            input.className = "msgcorner dropdownpad customdatepicker";
+            input.id = selectId;
+            input.name = selectId;
+            input.value = data[key].DefaultOption;
+            input.checked = data[key].DefaultOption;
+            checkboxContainer.appendChild(input);
+
+            // Custom checkbox label text
+            let checkboxText = document.createElement('span');
+            checkboxText.textContent = data[key].DisplayText // use the DisplayText from data or a default value
+            checkboxContainer.appendChild(checkboxText);
+
+            // Custom checkbox visual element
+            let customCheckbox = document.createElement('span');
+            customCheckbox.className = 'custom checkbox'; // "checked" class will be added when the checkbox is checked
+            customCheckbox.style.top = "0px !important";
+            checkboxContainer.appendChild(customCheckbox);
+
+            if (data[key].DefaultOption) {
+                customCheckbox.classList.add('checked');
+                input.value = "true"
+                selectedValues[key] = {
+                    SelectedValue: "true",
+                    SelectedText: "true"
+                };
+            } else {
+                customCheckbox.classList.remove('checked');
+                input.value = "false"
+                selectedValues[key] = {
+                    SelectedValue: "false",
+                    SelectedText: "false"
+                };
+            }
+
+            // Change event for updating the selected values
+            $(input).change(function() {
+                if ($(this).is(':checked')) {
+                    customCheckbox.classList.add('checked');
+                    input.value = "true"
+                    selectedValues[key] = {
+                        SelectedValue: "true",
+                        SelectedText: "true"
+                    };
+                } else {
+                    customCheckbox.classList.remove('checked');
+                    input.value = "false"
+                    selectedValues[key] = {
+                        SelectedValue: "false",
+                        SelectedText: "false"
+                    };
+                }
+                updateMessageTemplate()
+            });
+
+            $(input).trigger('change');
+
+            label.appendChild(checkboxContainer);
+            container.appendChild(label);
+            continue;  // Skip the rest of the loop for this key and move to the next one
+        }
+
+        label.textContent = `${data[key].DisplayText}:`;
+        // For 'Normal' type, generate dropdowns
         let select = document.createElement('select');
         select.id = selectId;
         select.name = selectId;
@@ -1017,7 +1088,6 @@ function createSubDropdown(id, data) {
 
             if (option.value === data[key].DefaultOption) {
                 optionElement.selected = true;
-                // Store the selected value and text
                 selectedValues[key] = {
                     SelectedValue: option.value,
                     SelectedText: option.text
@@ -1064,7 +1134,6 @@ function createSubDropdown(id, data) {
         container.appendChild(label);
 
         // Add event listener to each select element
-
         select.addEventListener('change', (event) => {
             updateMessageTemplate()
         });
@@ -1107,14 +1176,14 @@ function getResStatus() {
     if (!ReturnDetails.Dispatched) {
         const RentalType = document.querySelector("#ReservationSummaryTab > div:nth-child(2) > div:nth-child(1) dd:nth-child(4)");
         console.log(RentalType)
-        
+
         if (RentalType && RentalType.textContent.trim().startsWith("InTown")) {
             ReturnDetails.IT_Rental = true
         }
     } else {
         const RentalType = document.querySelector("#ReservationSummaryTab > div:nth-child(3) > div:nth-child(1) dd:nth-child(4)");
         console.log(RentalType)
-        
+
         if (RentalType && RentalType.textContent.trim().startsWith("InTown")) {
             ReturnDetails.IT_Rental = true
         }
@@ -1283,7 +1352,7 @@ function getResInformation() {
     } else {
         DynamicTime = "Afternoon"
     }
-    
+
     return {
         // Contract Numbers
         rawContractNumber: document.querySelector("#ReservationPopup .whoseViewingStatus").getAttribute("data-contractid"),
@@ -1333,15 +1402,16 @@ function getResInformation() {
 
 function getValInformation(id) {
     if (!id) {
-        return false
+        return false;
     }
 
     const container = document.querySelector(`#${id}_DropdownContainer`);
     if (!container) {
-        return false
+        return false;
     }
 
     const selectElements = container.getElementsByTagName("select");
+    const inputElements = container.getElementsByTagName("input");
     const selectedValues = {};
 
     for (let i = 0; i < selectElements.length; i++) {
@@ -1354,6 +1424,19 @@ function getValInformation(id) {
             SelectedValue: selectedOption,
             SelectedText: selectedText
         };
+    }
+
+    for (let i = 0; i < inputElements.length; i++) {
+        const inputElement = inputElements[i];
+        const key = inputElement.name.replace(id, "");
+
+        // Checking if this input is a DatePicker, based on its class.
+        if (inputElement.classList.contains('customdatepicker')) {
+            selectedValues[key] = {
+                SelectedValue: inputElement.value,
+                SelectedText: inputElement.value
+            };
+        }
     }
 
     return selectedValues;
@@ -1504,7 +1587,7 @@ function MessageTextForumVisible() {
             `
             nMessagePopup.innerHTML = Html_Content;
 
-            var css = `
+                var css = `
                 .header {
                     border-top-right-radius: 5px;
                     border-top-left-radius: 5px;
@@ -1573,6 +1656,16 @@ function MessageTextForumVisible() {
 
                 .msgcorner {
                     border-radius: 5px;
+                }
+
+                .dropdownpad {
+                    margin-bottom: 1.6666666667em !important;
+                    border: 1px solid #ccc;
+                }
+
+                .customcheckbox {
+                    margin-top: 12px !important;
+                    height: 1em !important;
                 }
 
                 .msgdropdown {
@@ -1646,45 +1739,45 @@ function MessageTextForumVisible() {
                 head = document.head || document.getElementsByTagName('head')[0],
                 style = document.createElement('style');
 
-            if (!CSS_StyleSheetAdded) {
-                CSS_StyleSheetAdded = true;
+                if (!CSS_StyleSheetAdded) {
+                    CSS_StyleSheetAdded = true;
 
-                head.appendChild(style);
-                style.type = 'text/css';
-                if (style.styleSheet) {
-                    style.styleSheet.cssText = css;
-                } else {
-                    style.appendChild(document.createTextNode(css));
+                    head.appendChild(style);
+                    style.type = 'text/css';
+                    if (style.styleSheet) {
+                        style.styleSheet.cssText = css;
+                    } else {
+                        style.appendChild(document.createTextNode(css));
+                    }
                 }
-            }
 
-            const SaveButton = document.querySelector(".actionButtons .save")
+                const SaveButton = document.querySelector(".actionButtons .save")
 
-            if (SaveButton) {
-                SaveButton.addEventListener("click", async function () {
-                    const MsgData = MsgTemplates[document.querySelector("#customCustomerContactList .selected").textContent]
-                    if (MsgData) {
-                        const Template = MsgData.NoteTemplate()
-                        const AddedNote = {
-                            Note: $("#noteMessageArea").val(),
-                            Working: Template.Working,
-                            ExpectedIn: Template.ExpectedIn,
-                        }
+                if (SaveButton) {
+                    SaveButton.addEventListener("click", async function () {
+                        const MsgData = MsgTemplates[document.querySelector("#customCustomerContactList .selected").textContent]
+                        if (MsgData) {
+                            const Template = MsgData.NoteTemplate()
+                            const AddedNote = {
+                                Note: $("#noteMessageArea").val(),
+                                Working: Template.Working,
+                                ExpectedIn: Template.ExpectedIn,
+                            }
 
-                        if ($("#noteMessageArea").val().length > 1) {
-                            const Toast = await waitForElement("#toast-container", 10000);
+                            if ($("#noteMessageArea").val().length > 1) {
+                                const Toast = await waitForElement("#toast-container", 10000);
 
-                            if (Toast.querySelector(".toast-info")) {
-                                const URL_Split = amtURL.baseURL.toString().split("/")
+                                if (Toast.querySelector(".toast-info")) {
+                                    const URL_Split = amtURL.baseURL.toString().split("/")
 
-                                function replaceSpacesWithPlus(str) {
-                                    return str.replace(/ /g, '+');
-                                }
+                                    function replaceSpacesWithPlus(str) {
+                                        return str.replace(/ /g, '+');
+                                    }
 
-                                const SelectedNote = replaceSpacesWithPlus(AddedNote.Note)
-                                const ExpectedIn = AddedNote.ExpectedIn
-                                const Working = AddedNote.Working
-                                const NoteURL = `QuickNotes=&ContractNote.Note=${SelectedNote}&ContractNote.DownloadNote=false&ContractNote.WorkingNote=${Working}&ContractNote.SpecialInstructionNote=false&ContractNote.ExpectedInNote=${ExpectedIn}&ContractNote.ExpectedInNote=false&ContractNote.IsForOverdueEquipment=False&ContractNote.IsForOverdueRemoval=False&ContractNote.IsForReceivedOrDispatchedContract=False&ContractNote.IsFromExpectedIn=True&ContractNote.DenialType=None`
+                                    const SelectedNote = replaceSpacesWithPlus(AddedNote.Note)
+                                    const ExpectedIn = AddedNote.ExpectedIn
+                                    const Working = AddedNote.Working
+                                    const NoteURL = `QuickNotes=&ContractNote.Note=${SelectedNote}&ContractNote.DownloadNote=false&ContractNote.WorkingNote=${Working}&ContractNote.SpecialInstructionNote=false&ContractNote.ExpectedInNote=${ExpectedIn}&ContractNote.ExpectedInNote=false&ContractNote.IsForOverdueEquipment=False&ContractNote.IsForOverdueRemoval=False&ContractNote.IsForReceivedOrDispatchedContract=False&ContractNote.IsFromExpectedIn=True&ContractNote.DenialType=None`
                                 SubmitNote(`/${URL_Split[3]}/Reservations/AddNewContractNote`, NoteURL);
                             }
                         }
@@ -1694,7 +1787,7 @@ function MessageTextForumVisible() {
 Name: ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}
 Assigned Location: ${ResInfo.Entity}`
-                        
+
                         submitEmbed({
                             Info: DataBreakdown,
                             Actor: dynatraceUserName.textContent,
@@ -1705,30 +1798,30 @@ Assigned Location: ${ResInfo.Entity}`
                 });
             }
 
-            // Phone Number formatting
-            const phoneNumberInput = document.querySelector("#CustomerPhoneNumber");
-            function formatPhoneNumber(inputElement) {
-                let value = inputElement.value.replace(/\D/g, '');
-                if (value.length > 10) value = value.slice(0, 10); // Limit to 10 numerical characters
+                // Phone Number formatting
+                const phoneNumberInput = document.querySelector("#CustomerPhoneNumber");
+                function formatPhoneNumber(inputElement) {
+                    let value = inputElement.value.replace(/\D/g, '');
+                    if (value.length > 10) value = value.slice(0, 10); // Limit to 10 numerical characters
 
-                let formattedValue = '';
-                if (value.length > 0) formattedValue += '(' + value.slice(0, 3);
-                if (value.length > 3) formattedValue += ') ' + value.slice(3, 6);
-                if (value.length > 6) formattedValue += '-' + value.slice(6);
-                inputElement.value = formattedValue;
-            }
+                    let formattedValue = '';
+                    if (value.length > 0) formattedValue += '(' + value.slice(0, 3);
+                    if (value.length > 3) formattedValue += ') ' + value.slice(3, 6);
+                    if (value.length > 6) formattedValue += '-' + value.slice(6);
+                    inputElement.value = formattedValue;
+                }
 
-            phoneNumberInput.addEventListener('input', function () {
-                formatPhoneNumber(this);
-            });
+                phoneNumberInput.addEventListener('input', function () {
+                    formatPhoneNumber(this);
+                });
 
-            formatPhoneNumber(phoneNumberInput);
+                formatPhoneNumber(phoneNumberInput);
 
-            function handleTemplateDropdownChange(event) {
-                const DropdownMenu = document.querySelector("#mainTemplateList .msgdropdown")
-                const Selected = DropdownMenu.querySelector(".selected").textContent.trim()
-                const SubMenu = document.querySelector(".template-indent")
-                SubMenu.innerHTML = ``
+                function handleTemplateDropdownChange(event) {
+                    const DropdownMenu = document.querySelector("#mainTemplateList .msgdropdown")
+                    const Selected = DropdownMenu.querySelector(".selected").textContent.trim()
+                    const SubMenu = document.querySelector(".template-indent")
+                    SubMenu.innerHTML = ``
 
                 if (MsgTemplates[Selected]) {
                     const NewDropdown = createSubDropdown(MsgTemplates[Selected].Dropdown[0], MsgTemplates[Selected].Dropdown[1])
@@ -1736,32 +1829,32 @@ Assigned Location: ${ResInfo.Entity}`
                 }
             }
 
-            const mainDropdownChange = document.querySelector("#mainTemplateList #customCustomerContactTemplateDropdown");
-            mainDropdownChange.addEventListener("change", handleTemplateDropdownChange);
+                const mainDropdownChange = document.querySelector("#mainTemplateList #customCustomerContactTemplateDropdown");
+                mainDropdownChange.addEventListener("change", handleTemplateDropdownChange);
 
-            function updateCurrentAnchorText() {
-                const list = document.querySelector("#mainTemplateList #customCustomerContactList");
-                const currentAnchor = document.querySelector("#textSubmitForm .current");
+                function updateCurrentAnchorText() {
+                    const list = document.querySelector("#mainTemplateList #customCustomerContactList");
+                    const currentAnchor = document.querySelector("#textSubmitForm .current");
 
-                if (list && currentAnchor) {
-                    const firstListItem = list.querySelector("li:first-child");
+                    if (list && currentAnchor) {
+                        const firstListItem = list.querySelector("li:first-child");
 
-                    if (firstListItem) {
-                        firstListItem.click()
-                        firstListItem.classList.add("selected"); // Add the "selected" class to the first list item
-                        const firstListItemText = firstListItem.textContent;
-                        currentAnchor.textContent = firstListItemText;
+                        if (firstListItem) {
+                            firstListItem.click()
+                            firstListItem.classList.add("selected"); // Add the "selected" class to the first list item
+                            const firstListItemText = firstListItem.textContent;
+                            currentAnchor.textContent = firstListItemText;
+                        }
                     }
                 }
-            }
 
-            for (const MsgName in MsgTemplates) {
-                const MsgData = MsgTemplates[MsgName]
-                const MsgDisplayName = MsgData.Display
+                for (const MsgName in MsgTemplates) {
+                    const MsgData = MsgTemplates[MsgName]
+                    const MsgDisplayName = MsgData.Display
 
-                if (MsgData.Params() || TestingMode === true) {
-                    const MsgOption = document.createElement("li");
-                    MsgOption.textContent = `${MsgDisplayName}`
+                    if (MsgData.Params() || TestingMode === true) {
+                        const MsgOption = document.createElement("li");
+                        MsgOption.textContent = `${MsgDisplayName}`
                     MsgOption.id = `${MsgName}`
                     document.querySelector("#mainTemplateList > div > #customCustomerContactList").appendChild(MsgOption)
 
@@ -1772,29 +1865,29 @@ Assigned Location: ${ResInfo.Entity}`
                 }
             };
 
-            updateCurrentAnchorText();
+                updateCurrentAnchorText();
+            }
         }
     }
-}
 
-// Function to continuously check if the textSubmitForm is visible
-function isMessageTextForumVisibleInterval() {
-    function addScriptVersion(scriptName, version) {
-        let scriptVersionElement = document.createElement('div');
-        scriptVersionElement.style.display = 'none'; // Make it hidden
-        scriptVersionElement.classList.add('script-version'); // So we can find it later
-        scriptVersionElement.dataset.name = scriptName; // Store the script name
-        scriptVersionElement.dataset.version = version; // Store the version
-        document.body.appendChild(scriptVersionElement);
+    // Function to continuously check if the textSubmitForm is visible
+    function isMessageTextForumVisibleInterval() {
+        function addScriptVersion(scriptName, version) {
+            let scriptVersionElement = document.createElement('div');
+            scriptVersionElement.style.display = 'none'; // Make it hidden
+            scriptVersionElement.classList.add('script-version'); // So we can find it later
+            scriptVersionElement.dataset.name = scriptName; // Store the script name
+            scriptVersionElement.dataset.version = version; // Store the version
+            document.body.appendChild(scriptVersionElement);
+        }
+
+        addScriptVersion("Dynamic Messages V2", "24")
+
+        setInterval(() => {
+            if (isMessageTextForumVisible()) {
+                MessageTextForumVisible();
+            }
+        }, 100); // Check every 100ms
     }
 
-    addScriptVersion("Dynamic Messages V2", "23")
-
-    setInterval(() => {
-        if (isMessageTextForumVisible()) {
-            MessageTextForumVisible();
-        }
-    }, 100); // Check every 100ms
-}
-
-isMessageTextForumVisibleInterval();
+    isMessageTextForumVisibleInterval();
