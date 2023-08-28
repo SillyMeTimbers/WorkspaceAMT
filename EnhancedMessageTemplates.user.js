@@ -187,9 +187,38 @@ ${ResInfo.MCOEnd}`
             const SubOptions = getValInformation("Truckshare");
 
             if (!SubOptions === false) {
-                return `U-Haul Reservation; 24/7 Truckshare Reminder : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-You are receiving this message as your reservation scheduled for ${ResInfo.businessName} will not be open at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}, In order to proceed with the 24/7 Process you will need the U-Haul mobile app https://uhaul.com/s/6859554008, Additionally to learn more about the process you will find a full set of instructions as well a youtube guide to help you here http://uhaul.com/s/E4260B3676, If you have any questions please contact us using the number below.
-${ResInfo.MCOEnd}`
+                const dispatchButton = stringToBoolean(SubOptions.Dispatch.SelectedValue)
+                const returnButton = stringToBoolean(SubOptions.Return.SelectedValue)
+                const giveMeLink = stringToBoolean(SubOptions.Basic.SelectedValue)
+
+                if (giveMeLink) {
+                    if (dispatchButton && returnButton) {
+                        return `How to Rent a Truck Using Truckshare 24/7: http://uhaul.com/s/E4260B3676
+How to Return a Truck using U-Haul Self Return: http://uhaul.com/s/32081D5DE9`
+                    } else if (dispatchButton) {
+                        return `How to Rent a Truck Using Truckshare 24/7: http://uhaul.com/s/E4260B3676`
+                    } else if (returnButton) {
+                        return `How to Return a Truck using U-Haul Self Return: http://uhaul.com/s/32081D5DE9` 
+                    } else {
+                        return `Select an option!`
+                    }
+                } else {
+                    if (dispatchButton && returnButton) {
+                        return `U-Haul Truckshare 24/7 Quick Links
+    In order to start your rental using our Truckshare 24/7 process visit http://uhaul.com/s/E4260B3676 and follow the instructions provided within the webpage, if you plan on returning using our 24/7 option please verify the location you've selected supports this feature, once verified visit http://uhaul.com/s/32081D5DE9 and follow instructions provided within the webpage. For further instructions or questions please contact (800) 468-4285.
+    ${ResInfo.MCOEnd}`
+                    } else if (dispatchButton) {
+                        return `U-Haul Truckshare 24/7 - How to Rent a Truck
+    In order to start your rental using our Truckshare 24/7 process visit http://uhaul.com/s/E4260B3676 and follow the instructions provided within the webpage, For further instructions or questions please contact (800) 468-4285.
+    ${ResInfo.MCOEnd}`
+                    } else if (returnButton) {
+                        return `U-Haul Truckshare 24/7 - How to Return a Truck
+    In order to Return your rental using our Truckshare 24/7 please verify the location you've selected to return supports this feature, once verified visit http://uhaul.com/s/32081D5DE9 and follow the instructions provided within the webpage, For further instructions or questions please contact (800) 468-4285.
+    ${ResInfo.MCOEnd}` 
+                    } else {
+                        return `Select an option!`
+                    }
+                }
             }
 
             return `Failed to create message :(`
@@ -200,13 +229,30 @@ ${ResInfo.MCOEnd}`
             const SubOptions = getValInformation("NewPickup");
 
             return {
-                Text: `Text Sent to Customer - Message Type: Truckshare Notice, Assigned Location: ${ResInfo.Entity}, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}, Notes: Location will not be open at customers preferred time.`,
+                Text: ``,
                 ExpectedIn: false,
                 Working: true,
             }
         },
 
         Dropdown: ["Truckshare", {
+            "Basic": {
+                DisplayText: "Just give me the links!",
+                DefaultOption: false,
+                Type: "Checkbox",
+            },
+            
+            "Dispatch": {
+                DisplayText: "Dispatch using Truckshare 24/7",
+                DefaultOption: false,
+                Type: "Checkbox",
+            },
+
+            "Return": {
+                DisplayText: "Return using Truckshare 24/7",
+                DefaultOption: false,
+                Type: "Checkbox",
+            },
         }],
 
         Params: function () {
@@ -1881,7 +1927,7 @@ Assigned Location: ${ResInfo.Entity}`
             document.body.appendChild(scriptVersionElement);
         }
 
-        addScriptVersion("Dynamic Messages V2", "24")
+        addScriptVersion("Dynamic Messages V2", "26")
 
         setInterval(() => {
             if (isMessageTextForumVisible()) {
