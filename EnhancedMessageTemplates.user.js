@@ -1928,7 +1928,7 @@ Assigned Location: ${ResInfo.Entity}`
             document.body.appendChild(scriptVersionElement);
         }
 
-        addScriptVersion("Dynamic Messages V2", "26")
+        addScriptVersion("Dynamic Messages V2", "27")
 
         setInterval(() => {
             if (isMessageTextForumVisible()) {
