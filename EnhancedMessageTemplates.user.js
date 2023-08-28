@@ -205,16 +205,16 @@ How to Return a Truck using U-Haul Self Return: http://uhaul.com/s/32081D5DE9`
                 } else {
                     if (dispatchButton && returnButton) {
                         return `U-Haul Truckshare 24/7 Quick Links
-    In order to start your rental using our Truckshare 24/7 process visit http://uhaul.com/s/E4260B3676 and follow the instructions provided within the webpage, if you plan on returning using our 24/7 option please verify the location you've selected supports this feature, once verified visit http://uhaul.com/s/32081D5DE9 and follow instructions provided within the webpage. For further instructions or questions please contact (800) 468-4285.
-    ${ResInfo.MCOEnd}`
+In order to start your rental using our Truckshare 24/7 process visit http://uhaul.com/s/E4260B3676 and follow the instructions provided within the webpage, if you plan on returning using our 24/7 option please verify the location you've selected supports this feature, once verified visit http://uhaul.com/s/32081D5DE9 and follow instructions provided within the webpage. For further instructions or questions please contact (800) 468-4285.
+${ResInfo.MCOEnd}`
                     } else if (dispatchButton) {
                         return `U-Haul Truckshare 24/7 - How to Rent a Truck
-    In order to start your rental using our Truckshare 24/7 process visit http://uhaul.com/s/E4260B3676 and follow the instructions provided within the webpage, For further instructions or questions please contact (800) 468-4285.
-    ${ResInfo.MCOEnd}`
+In order to start your rental using our Truckshare 24/7 process visit http://uhaul.com/s/E4260B3676 and follow the instructions provided within the webpage, For further instructions or questions please contact (800) 468-4285.
+${ResInfo.MCOEnd}`
                     } else if (returnButton) {
                         return `U-Haul Truckshare 24/7 - How to Return a Truck
-    In order to Return your rental using our Truckshare 24/7 please verify the location you've selected to return supports this feature, once verified visit http://uhaul.com/s/32081D5DE9 and follow the instructions provided within the webpage, For further instructions or questions please contact (800) 468-4285.
-    ${ResInfo.MCOEnd}` 
+In order to Return your rental using our Truckshare 24/7 please verify the location you've selected to return supports this feature, once verified visit http://uhaul.com/s/32081D5DE9 and follow the instructions provided within the webpage, For further instructions or questions please contact (800) 468-4285.
+${ResInfo.MCOEnd}` 
                     } else {
                         return `Select an option!`
                     }
