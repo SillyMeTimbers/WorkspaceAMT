@@ -51,8 +51,8 @@ ${ResInfo.MCOEnd}`
         }],
 
         Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked')) {
+            const ResStats = getResStatus()
+            if (!ResStats.Dispatched && !ResStats.Cancelled && ResStats.Covered) {
                 return true
             }
 
@@ -114,8 +114,8 @@ ${ResInfo.MCOEnd}`
         }],
 
         Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked')) {
+            const ResStats = getResStatus()
+            if (!ResStats.Dispatched) {
                 return true
             }
 
@@ -171,7 +171,8 @@ ${ResInfo.MCOEnd}`
         }],
 
         Params: function () {
-            if (document.querySelector("#DispatchDate")) {
+            const ResStats = getResStatus()
+            if (ResStats.Dispatched && !ResStats.IT_Rental) {
                 return true
             }
 
@@ -256,9 +257,8 @@ ${ResInfo.MCOEnd}`
         }],
 
         Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && document.querySelector("#ReservationSummaryTab > div:nth-child(1) > div.medium-6.large-7.columns > label > span.custom.checkbox.checked") && spanElement && spanElement.classList.contains('checked')) {
+            const ResStats = getResStatus()
+            if (!ResStats.Cancelled && ResStats.Covered || ResStats.Dispatched) {
                 return true
             }
 
@@ -379,8 +379,8 @@ ${ResInfo.MCOEnd}`
         }],
 
         Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && !spanElement.classList.contains('checked')) {
+            const ResStats = getResStatus()
+            if (!ResStats.Dispatched && !ResStats.Cancelled && !ResStats.Covered) {
                 return true
             }
 
@@ -419,8 +419,8 @@ ${ResInfo.MCOEnd}`
         }],
 
         Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && !spanElement.classList.contains('checked')) {
+            const ResStats = getResStatus()
+            if (!ResStats.Dispatched && !ResStats.Cancelled && !ResStats.Covered) {
                 return true
             }
 
@@ -459,8 +459,8 @@ ${ResInfo.MCOEnd}`
         }],
 
         Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && !spanElement.classList.contains('checked')) {
+            const ResStats = getResStatus()
+            if (!ResStats.Dispatched && !ResStats.Cancelled && !ResStats.Covered) {
                 return true
             }
 
@@ -591,7 +591,8 @@ ${ResInfo.MCOEnd}`
         }],
 
         Params: function () {
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate")) {
+            const ResStats = getResStatus()
+            if (!ResStats.Dispatched && !ResStats.Cancelled) {
                 return true
             }
 
@@ -651,8 +652,8 @@ ${ResInfo.MCOEnd}`
         }],
 
         Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked')) {
+            const ResStats = getResStatus()
+            if (!ResStats.Dispatched && !ResStats.Cancelled && ResStats.Covered) {
                 return true
             }
 
@@ -714,8 +715,8 @@ ${ResInfo.MCOEnd}`
         }],
 
         Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.querySelector("#DispatchDate")) {
+            const ResStats = getResStatus()
+            if (ResStats.Dispatched && !ResStats.Cancelled && !ResStats.IT_Rental) {
                 return true
             }
 
