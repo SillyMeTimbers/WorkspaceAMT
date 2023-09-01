@@ -37,7 +37,7 @@ ${ResInfo.MCOEnd}`
 			const isAvail = stringToBoolean(SubOptions.isAvail.SelectedValue)
 
 			return {
-				Text: `Text Sent to Customer - Message Type: Late Pickup, Equipment Available: ${isAvail}, Assigned Location: ${ResInfo.Entity}, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}`,
+				Text: `No Call/No Show, Res Scheduled for ${ResInfo.Entity} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. ${isAvail ? `` : `Scheduled equip is not avail`}`,
 				ExpectedIn: false,
 				Working: true,
 			}
@@ -101,7 +101,7 @@ ${ResInfo.MCOEnd}`
 			const cancelReason = SubOptions.cancelReason.SelectedValue
 
 			return {
-				Text: `Text Sent to Customer - Message Type: Cancelation Notice, Assigned Location: ${ResInfo.Entity}, Previously Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}`,
+				Text: `Cancelation Notice, Reason: ${cancelReason}`,
 				ExpectedIn: false,
 				Working: true,
 			}
@@ -230,7 +230,7 @@ ${ResInfo.MCOEnd}`
 			}
 
 			return `Failed to create message :(`
-        },
+        	},
 
 		NoteTemplate: function () {
 			const ResInfo = getResInformation();
@@ -265,7 +265,7 @@ ${ResInfo.MCOEnd}`
 
 		Params: function () {
 			const ResStats = getResStatus()
-			if (!ResStats.Cancelled && ResStats.Covered || ResStats.Dispatched) {
+			if (!ResStats.Cancelled && ResStats.Covered && ResStats.Truckshare || ResStats.Dispatched) {
 				return true
 			}
 
@@ -416,7 +416,7 @@ ${ResInfo.MCOEnd}`
 			const SubOptions = getValInformation("HighDemand");
 
 			return {
-				Text: `Text Sent to Customer - Message Type: High Demand Notice, Preferred Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}, Preferred City: ${ResInfo.amtCity}`,
+				Text: `high demand notice sent`,
 				ExpectedIn: false,
 				Working: true,
 			}
@@ -456,7 +456,7 @@ ${ResInfo.MCOEnd}`
 			const SubOptions = getValInformation("LowAvailability");
 
 			return {
-				Text: `Text Sent to Customer - Message Type: Low Avail, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}`,
+				Text: `low availability notice sent`,
 				ExpectedIn: false,
 				Working: true,
 			}
