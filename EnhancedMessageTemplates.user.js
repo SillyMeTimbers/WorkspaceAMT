@@ -885,6 +885,52 @@ ${ResInfo.MCOEnd}`
 		},
 	},
 
+	"Overdue": {
+		Display: "Overdue",
+
+		MsgTemplate: function () {
+			const ResInfo = getResInformation();
+			const SubOptions = getValInformation("Overdue");
+
+			return `Dear ${ResInfo.customerFirstName} ${ResInfo.customerLastName},
+We have attempted to reach you using the information you provided at the time of your rental, but have been unsuccessful. Our records indicate that your contract has not been completed.
+
+Contract Number: ${ResInfo.contractNumber}
+Rental Area: ${ResInfo.city}, ${ResInfo.state}
+Date Dispatched: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}
+
+If you have not returned and wish to extend for a longer period you will have to pay for previous days that were not charged as well the additional days you are wishing to extend until. If we do not hear from you U-Haul will be proceeding with our overdue process and further action will be taken.
+
+If you would like to speak to one of representatives directly, you may contact us at (800) 649-2507,
+Monday - Saturday 7:00 am - 7:00 pm EST and Sunday 9:00 am - 5:00 pm EST.
+
+Sincerely,
+U-Haul Equipment Recovery Department`
+
+	            return `Failed to create message :(`
+	        },
+
+		NoteTemplate: function () {
+			return {
+				Text: `Overdue text sent`,
+				ExpectedIn: false,
+				Working: true,
+			}
+		},
+
+		Dropdown: ["Overdue", {
+		}],
+
+		Params: function () {
+			const ResStats = getResStatus()
+			if (ResStats.Dispatched && ResStats.IT_Rental) {
+				return true
+			}
+			
+			return false
+		},
+	},
+	
 	"CustomMessage": {
 		Display: "CustomMessage",
 
@@ -1921,7 +1967,7 @@ function isMessageTextForumVisibleInterval() {
 		document.body.appendChild(scriptVersionElement);
 	}
 
-	addScriptVersion("Dynamic Messages V2", "30")
+	addScriptVersion("Dynamic Messages V2", "31")
 
 	setInterval(() => {
 		if (isMessageTextForumVisible()) {
