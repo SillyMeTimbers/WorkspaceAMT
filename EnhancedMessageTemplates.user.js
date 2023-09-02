@@ -923,7 +923,7 @@ U-Haul Equipment Recovery Department`
 
 		Params: function () {
 			const ResStats = getResStatus()
-			if (ResStats.Dispatched && ResStats.IT_Rental) {
+			if (ResStats.Dispatched) {
 				return true
 			}
 			
@@ -1967,7 +1967,7 @@ function isMessageTextForumVisibleInterval() {
 		document.body.appendChild(scriptVersionElement);
 	}
 
-	addScriptVersion("Dynamic Messages V2", "31")
+	addScriptVersion("Dynamic Messages V2", "32")
 
 	setInterval(() => {
 		if (isMessageTextForumVisible()) {
