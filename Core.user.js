@@ -20,6 +20,7 @@ const Redirects = [
   "ReservationSearch",
   "VersionManager",
   "NoteFormatter",
+  "betterPaymentInfo",
 ];
 
 const PermissionsList = {
@@ -38,6 +39,7 @@ const PermissionsList = {
             "ReservationSearch": true,
             "VersionManager": true,
             "NoteFormatter": true,
+            "betterPaymentInfo": true,
         },
     },
 
@@ -74,6 +76,7 @@ const PermissionsList = {
             "ReservationSearch": true,
             "VersionManager": true,
             "NoteFormatter": true,
+            "betterPaymentInfo": true,
         },
     },
 
