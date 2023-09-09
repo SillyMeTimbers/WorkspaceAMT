@@ -39,7 +39,7 @@ const PermissionsList = {
             "ReservationSearch": true,
             "VersionManager": true,
             "NoteFormatter": true,
-            "betterPaymentInfo": true,
+            "betterPaymentInfo": false,
         },
     },
 
