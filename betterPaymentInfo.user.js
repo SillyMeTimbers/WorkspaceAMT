@@ -38,7 +38,7 @@ function PaymentTabcalculateTax(amounts, countyTaxRate = 0.0) {
     let totalCost = originalTotal + taxAmount;
 
     return {
-        originalAmounts: amounts.map(amount => parseFloat(amount.toFixed(2))),
+        originalAmounts: parseFloat(originalTotal.toFixed(2)),
         taxAmount: parseFloat(taxAmount.toFixed(2)),
         totalCost: parseFloat(totalCost.toFixed(2))
     };
@@ -59,7 +59,7 @@ function updatePaymentScreen() {
                 <div class="medium-6 columns">
                     <fieldset>
                         <legend>
-                            Payment Breakdown (Sorta)
+                            Payment Breakdown (Pure Estimations)
                         </legend>
                         <dl class="inline">
                             <dt>Subtotal:</dt>
@@ -109,34 +109,63 @@ function updatePaymentScreen() {
             }
 
             // Scripts :)
-            const paymentHistoryDiv = document.querySelector("#paymentHistory")
-            paymentHistoryDiv.appendChild(PaymentHistory)
+			const paymentHistoryDiv = document.querySelector("#paymentHistory");
+			paymentHistoryDiv.appendChild(PaymentHistory);
 
-            $(PaymentHistory).find("tbody tr td:first-child").each(function() {
-                $(this).text(formatDate($(this).text()));
-            });
+			$(PaymentHistory).find("tbody tr td:first-child").each(function() {
+				$(this).text(formatDate($(this).text()));
+			});
 
-            let paymentCollected = 0
-            $(PaymentHistory).find("tbody tr td:nth-child(3)").each(function() {
-                console.log($(this).text())
-                paymentCollected = (Number(paymentCollected) + Number($(this).text())).toFixed(2)
-            });
+			let paymentCollected = 0;
+			$(PaymentHistory).find("tbody tr td:nth-child(3)").each(function() {
+				let amount = Number($(this).text().replace(/[^0-9.-]+/g, "")); // Ensuring only number remains
+				if (!isNaN(amount)) { // Check if it's a valid number
+					paymentCollected += amount;
+				}
+			});
 
-            let subTotal = 0;
-            $("#reservationEquipmentList tr").each(function() {
-                const RentalRate = $(this).find(".RentalRate").text().substring(1); // Removing the "$" sign
-                console.log($(this).find(".RentalRate").text());
-                console.log(RentalRate);
-                console.log(subTotal);
-                subTotal += Number(RentalRate); // Convert RentalRate to number and add to subTotal
-            });
+			let subTotal = 0;
+			$("#reservationEquipmentList tr").each(function() {
+				const RentalRate = Number($(this).find(".RentalRate").text().replace(/[^0-9.-]+/g, ""));
+				let RentalQuantity = Number($(this).find(".Quantity").text());
+				const Model = $(this).find(".Model").text().trim();
 
-            const amounts = [subTotal]
-            let calcTaxResults = PaymentTabcalculateTax(amounts, 0);
-            document.querySelector("#paymentMade").textContent = `$${paymentCollected}`;
-            document.querySelector("#paymentSubtotal").textContent = `$${subTotal.toFixed(2)}`;
-            document.querySelector("#paymentEstTaxes").textContent = `$${calcTaxResults.taxAmount.toFixed(2)}`;
-            document.querySelector("#paymentAmount").textContent = `$${calcTaxResults.totalCost.toFixed(2)}`;
+				if (Model === "PO") {
+					RentalQuantity = RentalQuantity / 12; // Adjust the quantity for "PO" model
+				}
+
+				if (!isNaN(RentalRate)) {
+					subTotal += (RentalRate * RentalQuantity);
+				}
+			});
+
+			let coverageTotal = 0
+			$("#coverageList fieldset").each(function() {
+				const CurrentSel = $(this);
+				const CurrentCoverage = CurrentSel.find(".inline dd:nth-child(2)").text().trim();
+				const FindCost = CurrentSel.find("#coverages");
+
+				// Search for the option that contains the CurrentCoverage text
+				const optionText = FindCost.find(`option:contains(${CurrentCoverage})`).text();
+
+				// Extract the price using a regular expression
+				let price = 0; // Default to 0
+				const priceMatch = optionText.match(/\$(\d+)/);
+				if (priceMatch) {
+					price = Number(priceMatch[1]);
+				}
+
+				coverageTotal += price
+			});
+
+			const amounts = [subTotal, coverageTotal];
+			let calcTaxResults = PaymentTabcalculateTax(amounts, 0);
+
+			// Displaying values with toFixed(2) for formatting
+			document.querySelector("#paymentMade").textContent = `$${paymentCollected.toFixed(2)}`;
+			document.querySelector("#paymentSubtotal").textContent = `$${calcTaxResults.originalAmounts.toFixed(2)}`;
+			document.querySelector("#paymentEstTaxes").textContent = `$${calcTaxResults.taxAmount.toFixed(2)}`;
+			document.querySelector("#paymentAmount").textContent = `$${calcTaxResults.totalCost.toFixed(2)}`;
         }
     }
 }
@@ -152,7 +181,7 @@ function runPaymentImprovement() {
         document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Improved Payment Screen", "2")
+    addScriptVersion("Improved Payment Screen", "6")
 
     setInterval(() => {
         updatePaymentScreen()
