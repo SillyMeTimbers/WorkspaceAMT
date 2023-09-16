@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const ExtensionListVersion = "2"
+const ExtensionListVersion = "3"
 async function extensionButtonWaitForElement(selector, timeout = 10000) {
     const startTime = Date.now();
 
@@ -216,7 +216,7 @@ async function ExtensionListHandler() {
         const data = {
             "Traffic Extensions": {
                 "TCM - Angel Vega": [true, "781301", "732-754-1721"],
-                "RDM - Rick Ruiz": [false, "781302", "321-960-8760"],
+                "RDM - Steve Kirkbride": [false, "781302", "321-837-9625"],
                 "RM - Emily Bertrand": [false, "781303", "586-381-3116"],
                 "RM - Michelle Asker": [false, "781304", "321-372-4360"],
                 "RM - Melissa Wise": [false, "781305", "321-431-3142"],
@@ -227,7 +227,7 @@ async function ExtensionListHandler() {
                 "RM - Nyla Whitty": [false, "781316", "321-451-6460"],
                 "RM - Matthew Glenn": [false, "781311"],
                 "RM - Abigail Heister": [false, "781317"],
-                "RM - Danielle Clifford": [false, ""],
+                "RM - Danielle Clifford": [false, "781317"],
             },
 
             "MCO 781 AFM Extensions": {
@@ -235,7 +235,7 @@ async function ExtensionListHandler() {
                 "AFM 002 - Muler Gonzalez": [false, "781002", "772-777-9750", "781002_afm@uhaul.com"],
                 "AFM 003 - Marcus Black": [false, "781003", "561-348-0108", "781003_afm@uhaul.com"],
                 "AFM 004 - Patricia Evans": [false, "781004", "321-805-7648", "781004_afm@uhaul.com"],
-                "AFM 005 - Andrew Hutker": [false, "781005", "321-848-4414", "781005_afm@uhaul.com"],
+                "AFM 005 - Rick Ruiz": [false, "781005", "321-960-8760", "781005_afm@uhaul.com"],
                 "AFM 006 - Emilio Ruiz": [false, "781006", "954-465-6830", "781006_afm@uhaul.com"],
             },
             
@@ -255,6 +255,7 @@ async function ExtensionListHandler() {
                 "Spanish Callback Team": [false, "621926", "800-664-5017"],
                 "College U-Boxes": [false, "621929"],
                 "U-Box Shipping": [true, "555100", "", "Option 3"],
+                "U-Box International Shipping": [true, "555405"],
                 "U-Box Support": [false, "620993"],
                 "U-Box Sales": [false, "621919", "877-468-4285"],
                 "Field Support / Center & Dealer Rate Line": [false, "621914", "800-248-4285"],
