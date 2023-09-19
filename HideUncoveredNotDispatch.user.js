@@ -106,11 +106,9 @@ function runWhenNotDispatchReport() {
     if (document.querySelector("#addUBOX_Holder") == null) {
         const IncludeUBOX = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Include U-Box', NotDispatchSettings.UBOX);
         document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUBOX);
-        console.log(IncludeUBOX.querySelector('input').checked);
-
+        
         const IncludeUncovered = createCheckbox('addUncovered', 'NotDispatchPanel.addUncovered', 'Include 781008', NotDispatchSettings.Uncovered);
         document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUncovered);
-        console.log(IncludeUncovered.querySelector('input').checked);
     }
 
     const tbody = document.querySelector("#NotDispatchedResults > tbody");
@@ -128,12 +126,10 @@ function runWhenNotDispatchReport() {
         let isLate = false
 
         if (differenceInMinutes > 60) {
-            console.log("Late");
             tr.classList.add("latePU")
             isLate = true
         } else {
             tr.classList.remove("latePU")
-            console.log("On Time");
             isLate = false
         }
 
