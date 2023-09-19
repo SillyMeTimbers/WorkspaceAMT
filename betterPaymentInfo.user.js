@@ -176,9 +176,7 @@ function updatePaymentScreen() {
 		}
 
 		let subTotal = 0;
-		console.log("starting loop")
 		$("#reservationEquipmentList:first tr").each(function() {
-			console.log($(this).html());
 			const RentalRate = Number($(this).find(".RentalRate").text().replace(/[^0-9.-]+/g, ""));
 			let RentalQuantity = Number($(this).find(".Quantity").text()) || 1;
 			const Model = $(this).find(".Model").text().trim();
@@ -192,7 +190,6 @@ function updatePaymentScreen() {
 
 			if (!isNaN(RentalRate)) {
 				subTotal += (RentalRate * RentalQuantity * daysToCharge); // Multiply by days to charge
-				console.log(`Rate: ${RentalRate}, Quantity: ${RentalQuantity}, Days: ${daysToCharge}`);
 			}
 		});
 
