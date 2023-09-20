@@ -21,6 +21,7 @@ const Redirects = [
   "VersionManager",
   "NoteFormatter",
   "betterPaymentInfo",
+  "betterHistoryPage",
 ];
 
 const PermissionsList = {
@@ -40,6 +41,7 @@ const PermissionsList = {
             "VersionManager": true,
             "NoteFormatter": true,
             "betterPaymentInfo": true,
+            "betterHistoryPage": true,
         },
     },
 
@@ -58,6 +60,8 @@ const PermissionsList = {
             "ReservationSearch": true,
             "VersionManager": true,
             "NoteFormatter": true,
+            "betterPaymentInfo": true,
+            "betterHistoryPage": true,
         },
     },
 
@@ -77,6 +81,7 @@ const PermissionsList = {
             "VersionManager": true,
             "NoteFormatter": true,
             "betterPaymentInfo": true,
+            "betterHistoryPage": true,
         },
     },
 
@@ -94,6 +99,8 @@ const PermissionsList = {
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
             "VersionManager": true,
+            "betterPaymentInfo": true,
+            "betterHistoryPage": true,
         },
     },
 
@@ -111,6 +118,8 @@ const PermissionsList = {
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
             "VersionManager": true,
+            "betterPaymentInfo": true,
+            "betterHistoryPage": true,
         },
     },
     
@@ -128,6 +137,8 @@ const PermissionsList = {
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
             "VersionManager": true,
+            "betterPaymentInfo": true,
+            "betterHistoryPage": true,
         },
     },
     
@@ -145,6 +156,8 @@ const PermissionsList = {
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
             "VersionManager": true,
+            "betterPaymentInfo": true,
+            "betterHistoryPage": true,
         },
     },
     
@@ -162,6 +175,8 @@ const PermissionsList = {
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
             "VersionManager": true,
+            "betterPaymentInfo": true,
+            "betterHistoryPage": true,
         },
     },
 
@@ -179,6 +194,8 @@ const PermissionsList = {
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
             "VersionManager": true,
+            "betterPaymentInfo": true,
+            "betterHistoryPage": true,
         },
     },
   
@@ -196,6 +213,8 @@ const PermissionsList = {
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
             "VersionManager": true,
+            "betterPaymentInfo": true,
+            "betterHistoryPage": true,
         },
    },
 
@@ -213,6 +232,8 @@ const PermissionsList = {
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
             "VersionManager": true,
+            "betterPaymentInfo": true,
+            "betterHistoryPage": true,
         },
    },
 
@@ -230,6 +251,8 @@ const PermissionsList = {
           "HideUncoveredNotDispatch": true,
           "ReservationSearch": true,
           "VersionManager": true,
+          "betterPaymentInfo": true,
+          "betterHistoryPage": true,
       },
    },
 };
