@@ -8,7 +8,7 @@
 // @grant        none
 // ==/UserScript==
 
-let paymentCSS_StyleSheetAdded = false
+let historyCSS_StyleSheetAdded = false
 function getOrdinal(n) {
 	var s = ["th", "st", "nd", "rd"],
 		v = n % 100;
@@ -77,8 +77,8 @@ function updateHistoryScreen() {
 			head = document.head || document.getElementsByTagName('head')[0],
 			style = document.createElement('style');
 
-		if (!paymentCSS_StyleSheetAdded) {
-			paymentCSS_StyleSheetAdded = true;
+		if (!historyCSS_StyleSheetAdded) {
+			historyCSS_StyleSheetAdded = true;
 
 			head.appendChild(style);
 			style.type = 'text/css';
@@ -123,7 +123,7 @@ function runPaymentImprovement() {
 		document.body.appendChild(scriptVersionElement);
 	}
 
-	addScriptVersion("Improved History Screen", "2")
+	addScriptVersion("Improved History Screen", "3")
 
 	setInterval(() => {
 		updateHistoryScreen()
