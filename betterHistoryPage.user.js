@@ -17,20 +17,24 @@ function getOrdinal(n) {
 
 function formatChange(text) {
 	// For date changes
-	const dateMatch = text.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}) to (\d{4}-\d{2}-\d{2} \d{2}:\d{2})/);
-	if (dateMatch) {
-		const oldDate = new Date(dateMatch[1]);
-		const newDate = new Date(dateMatch[2]);
-		const formattedNewDate = newDate.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
-		const formattedOldDate = oldDate.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
-		const eventType = text.startsWith('Pick up') ? 'Pick up' : 'Due date';
-		return { text: `${eventType} date/time changed to ${formattedNewDate}`, previous: `Previously: ${formattedOldDate}` };
+	if (text.startsWith("Due date/time changed") || text.startsWith("Pick up date/time changed") {
+		const dateMatch = text.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}) to (\d{4}-\d{2}-\d{2} \d{2}:\d{2})/);
+		if (dateMatch) {
+			const oldDate = new Date(dateMatch[1]);
+			const newDate = new Date(dateMatch[2]);
+			const formattedNewDate = newDate.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+			const formattedOldDate = oldDate.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+			const eventType = text.startsWith('Pick up') ? 'Pick up' : 'Due date';
+			return { text: `${eventType} date/time changed to ${formattedNewDate}`, previous: `Previously: ${formattedOldDate}` };
+		}
 	}
 
 	// For rate changes
-	const rateMatch = text.match(/changed from (\d+.\d{2}) to (\d+(?:\.\d{2})?)/);
-	if (rateMatch) {
-		return { text: `Rental rate changed to ${parseFloat(rateMatch[2]).toFixed(2)}`, previous: `Previously: ${parseFloat(rateMatch[1]).toFixed(2)}` };
+	if (text.startsWith("Rental rate changed")) {
+		const rateMatch = text.match(/changed from (\d+.\d{2}) to (\d+(?:\.\d{2})?)/);
+		if (rateMatch) {
+			return { text: `Rental rate changed to ${parseFloat(rateMatch[2]).toFixed(2)}`, previous: `Previously: ${parseFloat(rateMatch[1]).toFixed(2)}` };
+		}	
 	}
 
 	// Return the original text if no matches
@@ -123,7 +127,7 @@ function runPaymentImprovement() {
 		document.body.appendChild(scriptVersionElement);
 	}
 
-	addScriptVersion("Improved History Screen", "3")
+	addScriptVersion("Improved History Screen", "4")
 
 	setInterval(() => {
 		updateHistoryScreen()
