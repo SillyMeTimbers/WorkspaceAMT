@@ -17,7 +17,7 @@ function getOrdinal(n) {
 
 function formatChange(text) {
 	// For date changes
-	if (text.startsWith("Due date/time changed") || text.startsWith("Pick up date/time changed") {
+	if (text.startsWith("Due date/time changed") || text.startsWith("Pick up date/time changed")) {
 		const dateMatch = text.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}) to (\d{4}-\d{2}-\d{2} \d{2}:\d{2})/);
 		if (dateMatch) {
 			const oldDate = new Date(dateMatch[1]);
@@ -127,7 +127,7 @@ function runPaymentImprovement() {
 		document.body.appendChild(scriptVersionElement);
 	}
 
-	addScriptVersion("Improved History Screen", "4")
+	addScriptVersion("Improved History Screen", "5")
 
 	setInterval(() => {
 		updateHistoryScreen()
