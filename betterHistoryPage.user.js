@@ -67,18 +67,19 @@ function formatChange(text) {
   }
 
   // For Contract creation
-  const contractCreatedMatch = text.match(/^Contract created by\s+(\d+) on (\d{2}\/\d{2}\/\d{4}) (\d{2}:\d{2} (AM|PM))\.$/);
+  const contractCreatedMatch = text.match(/^Contract created by\s*(.*?)\s*on (\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2} (AM|PM))\.$/);
   if (contractCreatedMatch) {
-    const date = new Date(contractCreatedMatch[2] + ' ' + contractCreatedMatch[3]);
+    const creator = contractCreatedMatch[1] ? contractCreatedMatch[1].trim() : 'Unknown';
+    const date = new Date(contractCreatedMatch[2]);
     return {
-      text: `Contract created by ${contractCreatedMatch[1]} on ${date.toLocaleString('en-US', {
-        month: 'short',
-        day: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      })}`,
+      text: `Contract created by ${creator} on ${date.toLocaleString('en-US', {
+            month: 'short',
+            day: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        })}`,
       previous: ''
     };
   }
@@ -213,7 +214,7 @@ function formatChange(text) {
     const newHours = parseInt(rentalHoursMatch[2], 10);
     return {
       text: `Allowed Rental Period updated to ${formatHoursToDaysYears(newHours)}`,
-      previous: formatHoursToDaysYears(oldHours)
+      previous: `Previously: ${formatHoursToDaysYears(oldHours)}`
     };
   }
 
@@ -270,7 +271,6 @@ function formatChange(text) {
     previous: ''
   };
 }
-
 
 function updateHistoryScreen() {
 	const HistoryTableDirec = document.querySelector(`[data-slug="section7"]`);
@@ -357,7 +357,7 @@ function runPaymentImprovement() {
 		document.body.appendChild(scriptVersionElement);
 	}
 
-	addScriptVersion("Improved History Screen", "5")
+	addScriptVersion("Improved History Screen", "6")
 
 	setInterval(() => {
 		updateHistoryScreen()
