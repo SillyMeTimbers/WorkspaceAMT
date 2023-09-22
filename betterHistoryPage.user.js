@@ -357,7 +357,7 @@ function runPaymentImprovement() {
 		document.body.appendChild(scriptVersionElement);
 	}
 
-	addScriptVersion("Improved History Screen", "6")
+	addScriptVersion("Improved History Screen", "7")
 
 	setInterval(() => {
 		updateHistoryScreen()
