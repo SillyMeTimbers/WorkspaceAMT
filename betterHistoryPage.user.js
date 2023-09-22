@@ -340,7 +340,7 @@ function updateHistoryScreen() {
 					Response.text(formattedResponse.text);
 				}
 
-				$(this).attr("sorted", "true");
+				//$(this).attr("sorted", "true");
 			}
 		});
 	}
