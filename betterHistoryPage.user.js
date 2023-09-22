@@ -340,7 +340,7 @@ function updateHistoryScreen() {
 					Response.text(formattedResponse.text);
 				}
 
-				//$(this).attr("sorted", "true");
+				$(this).attr("sorted", "true");
 			}
 		});
 	}
@@ -357,7 +357,7 @@ function runPaymentImprovement() {
 		document.body.appendChild(scriptVersionElement);
 	}
 
-	addScriptVersion("Improved History Screen", "7")
+	addScriptVersion("Improved History Screen", "8")
 
 	setInterval(() => {
 		updateHistoryScreen()
