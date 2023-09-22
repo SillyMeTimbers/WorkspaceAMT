@@ -252,7 +252,7 @@ function formatChange(text) {
   if (reservedModelChangeMatch) {
     return {
       text: `Model ${reservedModelChangeMatch[1]} updated to ${reservedModelChangeMatch[2]}`,
-      previous: `Previously: ${reservedModelChangeMatch[1]}`
+      previous: ``
     };
   }
 
