@@ -617,7 +617,7 @@ ${ResInfo.MCOEnd}`
 			if (!SubOptions === false) {
 				const reminderMessage = stringToBoolean(SubOptions.PickupConfirmation.SelectedValue)
 				const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
-				console.log(reminderMessage)
+				
 				if (!lowAvail) {
 					return `U-Haul Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 ${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled at' : 'Your pick-up address has been updated, please go to'} ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
@@ -1275,14 +1275,12 @@ function getResStatus() {
 
 	if (!ReturnDetails.Dispatched) {
 		const RentalType = document.querySelector("#ReservationSummaryTab > div:nth-child(2) > div:nth-child(1) dd:nth-child(4)");
-		console.log(RentalType)
 
 		if (RentalType && RentalType.textContent.trim().startsWith("InTown")) {
 			ReturnDetails.IT_Rental = true
 		}
 	} else {
 		const RentalType = document.querySelector("#ReservationSummaryTab > div:nth-child(3) > div:nth-child(1) dd:nth-child(4)");
-		console.log(RentalType)
 
 		if (RentalType && RentalType.textContent.trim().startsWith("InTown")) {
 			ReturnDetails.IT_Rental = true
@@ -1370,7 +1368,6 @@ function getResInformation() {
 
 	function processAddress(pickupCityStateZip, pickupStreet) {
 		const addressComponents = pickupCityStateZip.split(", ");
-		console.log(addressComponents)
 		const city = addressComponents[0].split(" ").map(word => processName(word, [], ['of', 'the'])).join(" "); // Use processWord function here
 		const state = addressComponents[1].split(" ").join(" ");
 		const zipcode = addressComponents[2].trim();
@@ -1934,10 +1931,8 @@ Assigned Location: ${ResInfo.Entity}`
 			for (const MsgName in MsgTemplates) {
 				const MsgData = MsgTemplates[MsgName]
 				const MsgDisplayName = MsgData.Display
-
-				console.log(`attempting to add template ${MsgDisplayName}`);
+				
 				if (MsgData.Params() || TestingMode === true) {
-					console.log(`added ${MsgDisplayName}`);
 					const MsgOption = document.createElement("li");
 					MsgOption.textContent = `${MsgDisplayName}`
                     MsgOption.id = `${MsgName}`
@@ -1948,7 +1943,6 @@ Assigned Location: ${ResInfo.Entity}`
 					MsgHiddenValue.id = `${MsgName}`
                     document.querySelector("#mainTemplateList > #customCustomerContactTemplateDropdown").appendChild(MsgHiddenValue)
 				}
-				console.log(`--------------`);
 			};
 
 			updateCurrentAnchorText();
