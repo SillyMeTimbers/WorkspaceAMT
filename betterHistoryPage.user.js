@@ -385,11 +385,6 @@ function updateHistoryScreen() {
 			#noResults {
     			padding-top: 7px;
 			}
-
-			input::selection {
-				background: transparent;  // Make background of selection transparent
-				color: #aaa;  // Make text color of selection light
-			}
             `,
 			head = document.head || document.getElementsByTagName('head')[0],
 			style = document.createElement('style');
