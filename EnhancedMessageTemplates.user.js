@@ -1749,6 +1749,12 @@ function MessageTextForumVisible() {
                     height: 1em !important;
                 }
 
+	  	.checkbox.custom {
+                    top: 0px !important;
+                    height: 100%;
+		    width: 100%;
+                }
+
                 .msgdropdown {
                     /* border-radius: 5px; */
                     margin-top: 5px !important;
