@@ -1669,8 +1669,10 @@ function MessageTextForumVisible() {
 
 			var css = `
                 .header {
-                    border-top-right-radius: 5px;
+                    /*
+		    border-top-right-radius: 5px;
                     border-top-left-radius: 5px;
+		    */
                 }
 
                 .messagecontent {
@@ -1719,9 +1721,8 @@ function MessageTextForumVisible() {
                     flex-grow: 0;
                     flex-shrink: 0;
                     resize: none;
-                    border-radius: 5px;
+                    /* border-radius: 5px; */
                     height: 100%;
-                    border-radius: 5px;
                     margin-bottom: 0px !important;
                     margin-top: 0px !important;
                 }
@@ -1731,11 +1732,11 @@ function MessageTextForumVisible() {
                 }
 
                 .phone-input {
-                    border-radius: 5px;
+                    /* border-radius: 5px; */
                 }
 
                 .msgcorner {
-                    border-radius: 5px;
+                    /* border-radius: 5px; */
                 }
 
                 .dropdownpad {
@@ -1749,7 +1750,7 @@ function MessageTextForumVisible() {
                 }
 
                 .msgdropdown {
-                    border-radius: 5px;
+                    /* border-radius: 5px; */
                     margin-top: 5px !important;
                 }
 
