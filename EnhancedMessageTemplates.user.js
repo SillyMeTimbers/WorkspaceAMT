@@ -1749,7 +1749,7 @@ function MessageTextForumVisible() {
                     height: 1em !important;
                 }
 
-	  	.checkbox.custom {
+	  	.msgleft .checkbox.custom {
                     top: 0px !important;
                     height: 100%;
 		    width: 100%;
