@@ -1594,7 +1594,7 @@ function MessageTextForumVisible() {
 		const MessagePopup = waitForElement("Body > #SecondaryPopup > #textSubmitForm", 5000)
 		if (MessagePopup) {
 			const ClonePhoneNumber = document.querySelector("#textSubmitForm label").textContent.trim().split(" ")[1]
-			document.querySelector("Body > #SecondaryPopup").style.borderRadius = '10px';
+			//document.querySelector("Body > #SecondaryPopup").style.borderRadius = '10px';
 
 			const nMessagePopup = document.querySelector("Body > #SecondaryPopup > #textSubmitForm")
 			nMessagePopup.innerHTML = `` // Reset Content
