@@ -217,7 +217,7 @@ async function ExtensionListHandler() {
             "Traffic Extensions": {
                 "TCM - Angel Vega": [true, "781301", "732-754-1721"],
                 "RDM - Steve Kirkbride": [false, "781302", "321-837-9625"],
-                "RM - Emily Bertrand": [false, "781303", "586-381-3116"],
+                //"RM - Emily Bertrand": [false, "781303", "586-381-3116"],
                 "RM - Michelle Asker": [false, "781304", "321-372-4360"],
                 "RM - Melissa Wise": [false, "781305", "321-431-3142"],
                 "RM - Julianna Mayes": [false, "781306", "321-844-2473"],
