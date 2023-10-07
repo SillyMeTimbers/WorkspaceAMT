@@ -22,6 +22,7 @@ const Redirects = [
   "NoteFormatter",
   "betterPaymentInfo",
   "betterHistoryPage",
+  "autoUnrentedEquipment",
 ];
 
 const PermissionsList = {
@@ -42,6 +43,7 @@ const PermissionsList = {
             "NoteFormatter": true,
             "betterPaymentInfo": true,
             "betterHistoryPage": true,
+            "autoUnrentedEquipment": true,
         },
     },
 
