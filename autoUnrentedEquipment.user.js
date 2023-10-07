@@ -195,7 +195,7 @@ function UnrentedEquipVisible() {
 				displayLastUpdatedTime();
 
 				updateScrollStuff();
-				setTimeout(repeatFunction, 300 * 1000);
+				setTimeout(repeatFunction, 3600 * 1000); // every hour
 			});
 		}
 	}
