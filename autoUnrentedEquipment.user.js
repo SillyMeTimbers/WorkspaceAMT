@@ -61,26 +61,6 @@ function adjustMaxHeight(padding = 185) {
 	targetElement.style.maxHeight = window.innerHeight - padding + 'px';
 }
 
-function waitForElement(selector, callback, checkInterval = 100, timeout = 10000) {
-	let totalWait = 0;
-
-	const interval = setInterval(() => {
-		const element = document.querySelector(selector);
-
-		if (element) {
-			clearInterval(interval);
-			callback(element);
-		}
-
-		// If element is not found and timeout is reached, stop checking
-		totalWait += checkInterval;
-		if (totalWait >= timeout) {
-			clearInterval(interval);
-			console.error(`Timeout reached waiting for ${selector}`);
-		}
-	}, checkInterval);
-}
-
 function waitForElementToBeHidden(selector, callback, checkInterval = 100, timeout = 10000) {
 	let totalWait = 0;
 
