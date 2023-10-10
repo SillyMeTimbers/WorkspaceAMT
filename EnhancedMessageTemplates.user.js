@@ -1969,7 +1969,7 @@ U-Haul Equipment Recovery Department`
 			document.body.appendChild(scriptVersionElement);
 		}
 	
-		addScriptVersion("Dynamic Messages V2", "35")
+		addScriptVersion("Dynamic Messages V2", "36")
 	
 		setInterval(() => {
 			if (isMessageTextForumVisible()) {
