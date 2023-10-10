@@ -26,8 +26,8 @@
 					const isEAlert = stringToBoolean(SubOptions.isEAlert.SelectedValue)
 	
 					return `U-Haul Reservation; Late Pickup Reminder : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	Our records indicate your rental has not yet been started and may be at risk of cancelation. ${isAvail ? 'If you would like to reschedule your reservation located at' : `Unfortunately, the equipment is no longer available at ${ResInfo.businessName} and would need to be relocated,`} ${isAvail ? `${ResInfo.businessName}, for a different date/time please contact us using the number provided below` : 'we ask you call us at your earliest convenience using the number below to discuss alternative solutions, we appreciate your business and hope to hear from you soon'}${isEAlert ? `. Additionally, it appears your account has been flagged from a previous reservation you've had with U-Haul; to avoid any issues with U-Haul or if you've already experienced issues regarding an "E-Alert" associated with your account contact (877) 653-0490 before leaving for your pickup address` : ``}.
-	${ResInfo.MCOEnd}`
+Our records indicate your rental has not yet been started and may be at risk of cancelation. ${isAvail ? 'If you would like to reschedule your reservation located at' : `Unfortunately, the equipment is no longer available at ${ResInfo.businessName} and would need to be relocated,`} ${isAvail ? `${ResInfo.businessName}, for a different date/time please contact us using the number provided below` : 'we ask you call us at your earliest convenience using the number below to discuss alternative solutions, we appreciate your business and hope to hear from you soon'}${isEAlert ? `. Additionally, it appears your account has been flagged from a previous reservation you've had with U-Haul; to avoid any issues with U-Haul or if you've already experienced issues regarding an "E-Alert" associated with your account contact (877) 653-0490 before leaving for your pickup address` : ``}.
+${ResInfo.MCOEnd}`
 	            }
 	
 				return `Failed to create message :(`
@@ -81,16 +81,16 @@
 	
 					if (cancelReason === "Confirm") {
 						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. If you change your mind in the near future, you can call us at the number below to make new arrangements.
-	${ResInfo.MCOEnd}`
+Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. If you change your mind in the near future, you can call us at the number below to make new arrangements.
+${ResInfo.MCOEnd}`
 	                } else if (cancelReason === "Late") {
 						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	We hope we didn't miss your arrival, our records indicate your reservation scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} was not picked up and has automatically been canceled. If you believe this was a mistake and you are still in need of this reservation, you can call us using the number below to make new arrangements.
-	${ResInfo.MCOEnd}`
+We hope we didn't miss your arrival, our records indicate your reservation scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} was not picked up and has automatically been canceled. If you believe this was a mistake and you are still in need of this reservation, you can call us using the number below to make new arrangements.
+${ResInfo.MCOEnd}`
 	                } else if (cancelReason === "Duplicate") {
 						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	Your U-Haul Reservation was recently canceled, our records indicated multiple reservations may have been made. If you believe this was a mistake and are in need of multiple reservations, please call us using the number below to reinstate this reservation.
-	${ResInfo.MCOEnd}`
+Your U-Haul Reservation was recently canceled, our records indicated multiple reservations may have been made. If you believe this was a mistake and are in need of multiple reservations, please call us using the number below to reinstate this reservation.
+${ResInfo.MCOEnd}`
 	                }
 				}
 	
@@ -161,8 +161,8 @@
 					}
 	
 					return `CONGRATULATIONS, ${ResInfo.customerFirstName.toUpperCase()}!
-	As a special thank you for choosing U-Haul, we are offering you 1 FREE MONTH OF STORAGE! We offer Drive up Storage, 24/7 Secured Inside Units & Climate Controlled Storage. NO DEPOSIT & Individually alarmed room with 24-Hour Access & MORE! To take advantage of this offer contact (561) 638-9428 and use your reference number ${ResInfo.contractNumber} and we will be able to assist you with getting a unit set up ${Nearby73 ? 'at U-Haul Moving & Storage Of West Palm Beach, 2805 Vista Pkwy West Palm Beach, FL 33411!' : `in or nearby ${ResInfo.city}!`} We hope to hear from you soon and welcome to you ${ResInfo.city}, ${ResInfo.state}
-	${ResInfo.MCOEnd}`
+As a special thank you for choosing U-Haul, we are offering you 1 FREE MONTH OF STORAGE! We offer Drive up Storage, 24/7 Secured Inside Units & Climate Controlled Storage. NO DEPOSIT & Individually alarmed room with 24-Hour Access & MORE! To take advantage of this offer contact (561) 638-9428 and use your reference number ${ResInfo.contractNumber} and we will be able to assist you with getting a unit set up ${Nearby73 ? 'at U-Haul Moving & Storage Of West Palm Beach, 2805 Vista Pkwy West Palm Beach, FL 33411!' : `in or nearby ${ResInfo.city}!`} We hope to hear from you soon and welcome to you ${ResInfo.city}, ${ResInfo.state}
+${ResInfo.MCOEnd}`
 	            }
 	
 				return `Failed to create message :(`
@@ -204,7 +204,7 @@
 					if (giveMeLink) {
 						if (dispatchButton && returnButton) {
 							return `How to Rent a Truck Using Truckshare 24/7: http://uhaul.com/s/E4260B3676
-	How to Return a Truck using U-Haul Self Return: http://uhaul.com/s/32081D5DE9`
+How to Return a Truck using U-Haul Self Return: http://uhaul.com/s/32081D5DE9`
 	                    } else if (dispatchButton) {
 							return `How to Rent a Truck Using Truckshare 24/7: http://uhaul.com/s/E4260B3676`
 	                    } else if (returnButton) {
@@ -215,16 +215,16 @@
 					} else {
 						if (dispatchButton && returnButton) {
 							return `U-Haul Truckshare 24/7 Quick Links
-	In order to start your rental using our Truckshare 24/7 process visit http://uhaul.com/s/E4260B3676 and follow the instructions provided within the webpage, if you plan on returning using our 24/7 option please verify the location you've selected supports this feature, once verified visit http://uhaul.com/s/32081D5DE9 and follow instructions provided within the webpage.
-	${ResInfo.MCOEnd}`
+In order to start your rental using our Truckshare 24/7 process visit http://uhaul.com/s/E4260B3676 and follow the instructions provided within the webpage, if you plan on returning using our 24/7 option please verify the location you've selected supports this feature, once verified visit http://uhaul.com/s/32081D5DE9 and follow instructions provided within the webpage.
+${ResInfo.MCOEnd}`
 	                    } else if (dispatchButton) {
 							return `U-Haul Truckshare 24/7 - How to Rent a Truck
-	In order to start your rental using our Truckshare 24/7 process visit http://uhaul.com/s/E4260B3676 and follow the instructions provided within the webpage.
-	${ResInfo.MCOEnd}`
+In order to start your rental using our Truckshare 24/7 process visit http://uhaul.com/s/E4260B3676 and follow the instructions provided within the webpage.
+${ResInfo.MCOEnd}`
 	                    } else if (returnButton) {
 							return `U-Haul Truckshare 24/7 - How to Return a Truck
-	In order to Return your rental using our Truckshare 24/7 please verify the location you've selected to return supports this feature, once verified visit http://uhaul.com/s/32081D5DE9 and follow the instructions provided within the webpage.
-	${ResInfo.MCOEnd}`
+In order to Return your rental using our Truckshare 24/7 please verify the location you've selected to return supports this feature, once verified visit http://uhaul.com/s/32081D5DE9 and follow the instructions provided within the webpage.
+${ResInfo.MCOEnd}`
 	                    } else {
 							return `Select an option!`
 	                    }
@@ -284,8 +284,8 @@
 	
 				if (!SubOptions === false) {
 					return `U-Haul Reservation; High Demand Confirmation : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	Thank you for choosing U-Haul, we greatly appreciate you reaching out to us to provide us with further information regarding your move on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} in ${ResInfo.amtCity} ${ResInfo.amtState}. Please be expecting a call 72-48 hours prior to your reservation pickup date with information on your pickup address. If you do not receive this information from a Call, Text, or Email within 24 hours from the rental date please contact us immediately using the number below.
-	${ResInfo.MCOEnd}`
+Thank you for choosing U-Haul, we greatly appreciate you reaching out to us to provide us with further information regarding your move on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} in ${ResInfo.amtCity} ${ResInfo.amtState}. Please be expecting a call 72-48 hours prior to your reservation pickup date with information on your pickup address. If you do not receive this information from a Call, Text, or Email within 24 hours from the rental date please contact us immediately using the number below.
+${ResInfo.MCOEnd}`
 	            }
 	
 				return `Failed to create message :(`
@@ -406,8 +406,8 @@
 	
 				if (!SubOptions === false) {
 					return `U-Haul Reservation; High Demand Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	You are receiving this notice to advise you we are experiencing a high volume of incoming reservations into ${ResInfo.amtCity}, ${ResInfo.amtState}. We ask you to reach out to us at your earliest availability to discuss further flexibility you may have with the Date/Time, Distance, and Equipment Size. If we aren't able to confirm details prior to ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} unwanted changes may be made during the scheduling process. As a reminder, the model, date, and location that you are choosing is a preference and further changes may need to be made to accommodate your reservation.
-	${ResInfo.MCOEnd}`
+You are receiving this notice to advise you we are experiencing a high volume of incoming reservations into ${ResInfo.amtCity}, ${ResInfo.amtState}. We ask you to reach out to us at your earliest availability to discuss further flexibility you may have with the Date/Time, Distance, and Equipment Size. If we aren't able to confirm details prior to ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} unwanted changes may be made during the scheduling process. As a reminder, the model, date, and location that you are choosing is a preference and further changes may need to be made to accommodate your reservation.
+${ResInfo.MCOEnd}`
 	            }
 	
 				return `Failed to create message :(`
@@ -446,8 +446,8 @@
 	
 				if (!SubOptions === false) {
 					return `U-Haul Reservation; Low Availability Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	You are receiving this notice to advise you we are experiencing delays with incoming equipment into your preferred city scheduled for ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}. We are informing you that you will need to reschedule your reservation for a different date/time or select a larger/smaller size of equipment. We will be in contact with you soon to discuss alternative availability. you can contact our office directly using the number below!
-	${ResInfo.MCOEnd}`
+You are receiving this notice to advise you we are experiencing delays with incoming equipment into your preferred city scheduled for ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}. We are informing you that you will need to reschedule your reservation for a different date/time or select a larger/smaller size of equipment. We will be in contact with you soon to discuss alternative availability. you can contact our office directly using the number below!
+${ResInfo.MCOEnd}`
 	            }
 	
 				return `Failed to create message :(`
@@ -503,8 +503,8 @@
 					const freeUpgrade = stringToBoolean(SubOptions.FreeUpgrade.SelectedValue)
 	
 					return `U-Haul Reservation; Equipment Changed : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	Hi ${ResInfo.customerFirstName}, Your U-Haul reservation has been updated. The "${PreviousEquipment}" has been updated to a "${NewEquipment}". ${freeUpgrade ? 'We would like to remind you this change will not incur any additional charges to the rental' : 'Please note, this change may incur additional charges to the rental'}. ${locChangedValue ? `Additionally, your pick-up address has been updated, please go to ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup at ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you would like to speak with your new location you can reach them at ${ResInfo.businessPhoneNumber} or for further information we` : 'We'} recommend reviewing these changes on uhaul.com/orders or if you would like to speak to a person you can reach us directly using the number provided below!
-	${ResInfo.MCOEnd}`
+Hi ${ResInfo.customerFirstName}, Your U-Haul reservation has been updated. The "${PreviousEquipment}" has been updated to a "${NewEquipment}". ${freeUpgrade ? 'We would like to remind you this change will not incur any additional charges to the rental' : 'Please note, this change may incur additional charges to the rental'}. ${locChangedValue ? `Additionally, your pick-up address has been updated, please go to ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup at ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you would like to speak with your new location you can reach them at ${ResInfo.businessPhoneNumber} or for further information we` : 'We'} recommend reviewing these changes on uhaul.com/orders or if you would like to speak to a person you can reach us directly using the number provided below!
+${ResInfo.MCOEnd}`
 	            }
 	
 				return `Failed to create message :(`
@@ -622,12 +622,12 @@
 					
 					if (!lowAvail) {
 						return `U-Haul Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled at' : 'Your pick-up address has been updated, please go to'} ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
-	${ResInfo.MCOEnd}`
+${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled at' : 'Your pick-up address has been updated, please go to'} ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
+${ResInfo.MCOEnd}`
 					} else {
 						return `U-Haul Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	We apologize for the inconvenience, but due to scheduling issues at this time, your pickup has been changed. Your equipment will be ready for pick-up at ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
-	${ResInfo.MCOEnd}`
+We apologize for the inconvenience, but due to scheduling issues at this time, your pickup has been changed. Your equipment will be ready for pick-up at ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
+${ResInfo.MCOEnd}`
 	                		}
 				}
 	
@@ -683,11 +683,11 @@
 	
 					if (msgStyle) {
 						return `U-Haul Reservation; New Dropoff : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled to return at' : 'Your return address has been updated, please return to'} ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your rental is due back in on ${ResInfo.returndayText}, ${ResInfo.returnmonthNumber} ${ResInfo.returndayNumber}, ${ResInfo.returnyear} at ${ResInfo.returnhour}:${ResInfo.returnminute} ${ResInfo.returnAMPM}. If you are returning after hours please use your mobile device to verify your equipment return by going to https://www.uhaul.com/Orders/OrderDetail.aspx?resid=${ResInfo.contractNumber}&ln=${ResInfo.customerLastName} or you can choose to have us verify it for you the next day for a $20 convenience fee.
-	${ResInfo.MCOEnd}`
+${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled to return at' : 'Your return address has been updated, please return to'} ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your rental is due back in on ${ResInfo.returndayText}, ${ResInfo.returnmonthNumber} ${ResInfo.returndayNumber}, ${ResInfo.returnyear} at ${ResInfo.returnhour}:${ResInfo.returnminute} ${ResInfo.returnAMPM}. If you are returning after hours please use your mobile device to verify your equipment return by going to https://www.uhaul.com/Orders/OrderDetail.aspx?resid=${ResInfo.contractNumber}&ln=${ResInfo.customerLastName} or you can choose to have us verify it for you the next day for a $20 convenience fee.
+${ResInfo.MCOEnd}`
 	                } else {
 						return `Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, your U-Haul Return address has been updated to ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. You can reach this location at ${ResInfo.businessPhoneNumber}, if you have any questions please call the number listed below.
-	${ResInfo.MCOEnd}`
+${ResInfo.MCOEnd}`
 	                }
 				}
 	
@@ -742,8 +742,8 @@
 	
 				if (SubOptions) {
 					return `U-Box Reservation; IMMEDIATE ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, you are receiving this notice in regards to a U-Box ${SubOptions.DeliveryType.SelectedText} on ${SubOptions.DeliveryDay.SelectedText}. We have timeframes available for the ${SubOptions.DeliveryType.SelectedText} and ask you call us to confirm before ${SubOptions.CutoffTime.SelectedText} on ${SubOptions.CutoffDate.SelectedText} or your ${SubOptions.DeliveryType.SelectedText} may be at risk of being rescheduled for the next available date, contact us at (561) 638-9428 or if our call volume is high you can also reach using our email 781_RM@uhaul.com and someone will reach out to you, we hope to hear from you soon!
-	${ResInfo.MCOEnd}`
+Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, you are receiving this notice in regards to a U-Box ${SubOptions.DeliveryType.SelectedText} on ${SubOptions.DeliveryDay.SelectedText}. We have timeframes available for the ${SubOptions.DeliveryType.SelectedText} and ask you call us to confirm before ${SubOptions.CutoffTime.SelectedText} on ${SubOptions.CutoffDate.SelectedText} or your ${SubOptions.DeliveryType.SelectedText} may be at risk of being rescheduled for the next available date, contact us at (561) 638-9428 or if our call volume is high you can also reach using our email 781_RM@uhaul.com and someone will reach out to you, we hope to hear from you soon!
+${ResInfo.MCOEnd}`
 	            }
 	
 				return `Failed to create message :(`
@@ -865,8 +865,8 @@
 				const SubOptions = getValInformation("EAlert");
 	
 				return `U-Haul Reservation; ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	Your reservation has been flagged due to an unresolved issue with U-Haul on a previous contract you or someone associated with you previously had, to avoid complications with your rental call (877) 653-0490 before the day of your rental or before you leave to pickup your equipment.
-	${ResInfo.MCOEnd}`
+Your reservation has been flagged due to an unresolved issue with U-Haul on a previous contract you or someone associated with you previously had, to avoid complications with your rental call (877) 653-0490 before the day of your rental or before you leave to pickup your equipment.
+${ResInfo.MCOEnd}`
 	
 	            return `Failed to create message :(`
 	        },
@@ -895,20 +895,19 @@
 				const SubOptions = getValInformation("Overdue");
 	
 				return `Dear ${ResInfo.customerFirstName} ${ResInfo.customerLastName},
-	We have attempted to reach you using the information you provided at the time of your rental, but have been unsuccessful. Our records indicate that your contract has not been completed.
-	
-	Contract Number: ${ResInfo.contractNumber}
-	Rental Area: ${ResInfo.city}, ${ResInfo.state}
-	Date Dispatched: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}
-	
-	If you have not returned and wish to extend for a longer period you will have to pay for previous days that were not charged as well the additional days you are wishing to extend until. If we do not hear from you U-Haul will be proceeding with our overdue process and further action will be taken.
-	
-	If you would like to speak to one of representatives directly, you may contact us at (800) 649-2507,
-	Monday - Saturday 7:00 am - 7:00 pm EST and Sunday 9:00 am - 5:00 pm EST.
-	
-	Sincerely,
-	U-Haul Equipment Recovery Department`
-	
+We have attempted to reach you using the information you provided at the time of your rental, but have been unsuccessful. Our records indicate that your contract has not been completed.
+
+Contract Number: ${ResInfo.contractNumber}
+Rental Area: ${ResInfo.city}, ${ResInfo.state}
+Date Dispatched: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}
+
+If you have not returned and wish to extend for a longer period you will have to pay for previous days that were not charged as well the additional days you are wishing to extend until. If we do not hear from you U-Haul will be proceeding with our overdue process and further action will be taken.
+
+If you would like to speak to one of representatives directly, you may contact us at (800) 649-2507,
+Monday - Saturday 7:00 am - 7:00 pm EST and Sunday 9:00 am - 5:00 pm EST.
+
+Sincerely,
+U-Haul Equipment Recovery Department`
 		            return `Failed to create message :(`
 		        },
 	
