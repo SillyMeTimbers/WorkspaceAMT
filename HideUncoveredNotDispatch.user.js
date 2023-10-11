@@ -8,13 +8,13 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const NotDispatchCleaner = "3"
+const NotDispatchCleaner = "5"
 let NotDispatchReportLastVisible = false;
 let NotDispatchSettings = {
     "UBOX": true,
     "Uncovered": false,
 }
-
+//#d94d45
 function NotDispatchinjectCSS(css) {
     const style = document.createElement('style');
     style.type = 'text/css';
@@ -23,17 +23,17 @@ function NotDispatchinjectCSS(css) {
 }
 
 const LatePickup = `
-    tr.latePU,
-    .wrapper > .row > .large-10 > section .item table tr.latePU {
+    tr.latePU.odd{
+        background: #cb3d36 !important;
+    }
+    tr.latePU.even{
         background: #bd362f !important;
     }
-    tr.latePU td,
-    .wrapper > .row > .large-10 > section .item table tr.latePU td {
+    tr.latePU td {
         color: #fff !important;
     }
-    tr.latePU:hover,
-    .wrapper > .row > .large-10 > section .item table tr.latePU:hover {
-        background: #c9453e !important;
+    tr.latePU:hover {
+        background: #e35a52 !important;
     }
 `;
 NotDispatchinjectCSS(LatePickup);
@@ -106,7 +106,7 @@ function runWhenNotDispatchReport() {
     if (document.querySelector("#addUBOX_Holder") == null) {
         const IncludeUBOX = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Include U-Box', NotDispatchSettings.UBOX);
         document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUBOX);
-        
+
         const IncludeUncovered = createCheckbox('addUncovered', 'NotDispatchPanel.addUncovered', 'Include 781008', NotDispatchSettings.Uncovered);
         document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUncovered);
     }
@@ -154,24 +154,15 @@ function runWhenNotDispatchReport() {
     });
 
     let FlipVal = true;
-    tbody.querySelectorAll("tr").forEach((tr) => {
-        tr.classList.remove("odd")
-        tr.classList.remove("even")
+    // Adjust the background color of visible rows
+    const $visibleRows = $(tbody).find("> tr");
+    $visibleRows.each(function(index) {
+        if (tr.classList.contains("latePU") == true) return
 
-        if (tr.style.display == "none" || tr.classList.contains("latePU") == true) {
-            if (tr.classList.contains("latePU") == true) {
-              FlipVal = !FlipVal
-            }
-        } else {
-            if (FlipVal == false) {
-                tr.style.background = "#f1f1f1";
-                /// tr.classList.add("odd")
-                FlipVal = true;
-            } else {
-                tr.style.background = '#ffffff';
-                //tr.classList.add("even")
-                FlipVal = false;
-            }
+        if (index % 2 === 0) { // Even row
+            $(this).addClass('even-row').removeClass('odd-row');
+        } else {  // Odd row
+            $(this).addClass('odd-row').removeClass('even-row');
         }
     });
 }
