@@ -84,6 +84,7 @@ const PermissionsList = {
             "NoteFormatter": true,
             "betterPaymentInfo": true,
             "betterHistoryPage": true,
+            "autoUnrentedEquipment": true,
         },
     },
 
