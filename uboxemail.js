@@ -2,14 +2,14 @@ function generateEmail(dayEntry) {
     let emailText = "<html><body style='font-family: Arial, sans-serif;'>"; // Default font
 
     for (let route of dayEntry.routes) {
-        emailText += "<b style='color: black; font-size: 16pt;'>" + route.routeStart + "</b><br>"; // Blue color and 18px font
+        emailText += "<b style='color: black; font-size: 14pt;'>" + route.routeStart + "</b><br>"; // Blue color and 18px font
 
         for (let movement of route.groupMovements) {
             if (movement.deliveryType.toLowerCase() === "transfer") {
-                emailText += "<b><i style='color: #ff6847; font-size: 12pt;'>TRANSFER</i> " + movement.transfer_Amount + " from " + `<i style='color: #ff6847; font-size: 12pt;'>${movement.transfer_From}</i>` + " to " + `<i style='color: #ff6847; font-size: 12pt;'>${movement.transfer_To}</i></b>` + "<br>";
+                emailText += "<b><i style='color: rgb(200, 38, 19); font-size: 12pt;'>TRANSFER</i> " + movement.transfer_Amount + " from " + `<i style='color: rgb(200, 38, 19); font-size: 12pt;'>${movement.transfer_From}</i>` + " to " + `<i style='color: rgb(200, 38, 19); font-size: 12pt;'>${movement.transfer_To}</i></b>` + "<br>";
             } else {
                 const actionWord = movement.deliveryType === "Deliver" ? "to" : "from";
-                emailText += `<b><i style='color: #ff6847; font-size: 12pt;'>${movement.deliveryType.toUpperCase()}</i> ` + movement.boxNumbers.length + " " + movement.delivery_Box + " " + actionWord + " " + `<i style='color: #ff6847; font-size: 12pt;'>${movement.delivery_LastName}</i> in ` + `<i style='color: #ff6847; font-size: 12pt;'>${movement.delivery_City}</i> between ` + `<i style='color: #ff6847; font-size: 12pt;'>${movement.delivery_Window}</i></b><br>`
+                emailText += `<b><i style='color: rgb(200, 38, 19); font-size: 12pt;'>${movement.deliveryType.toUpperCase()}</i> ` + movement.boxNumbers.length + " " + movement.delivery_Box + " " + actionWord + " " + `<i style='color: rgb(200, 38, 19); font-size: 12pt;'>${movement.delivery_LastName}</i> in ` + `<i style='color: rgb(200, 38, 19); font-size: 12pt;'>${movement.delivery_City}</i> between ` + `<i style='color: rgb(200, 38, 19); font-size: 12pt;'>${movement.delivery_Window}</i></b><br>`
                 emailText += "<span style='font-size: 12pt;'>" + movement.delivery_PhoneNumber + "&nbsp;&nbsp;&nbsp;&nbsp;" + movement.delivery_Address + "</span><br>"; // 14px font
             }
 
