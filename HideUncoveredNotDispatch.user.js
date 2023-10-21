@@ -6,7 +6,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const NotDispatchCleaner = "5"
+const NotDispatchCleaner = "6"
 let NotDispatchReportLastVisible = false;
 let NotDispatchSettings = {
 	"UBOX": true,
