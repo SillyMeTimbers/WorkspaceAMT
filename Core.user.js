@@ -37,7 +37,7 @@ const PermissionsList = {
             "OverdueOpenInPOS": true,
             "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
-            "HideUncoveredNotDispatch": true,
+            "HideUncoveredNotDispatch": false,
             "ReservationSearch": true,
             "VersionManager": true,
             "NoteFormatter": true,
