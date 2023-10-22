@@ -40,7 +40,8 @@ function runWhenOverdueVisible() {
 
       // Get the location ID from the relevant td element
       const locationId = tr.querySelector("td:nth-child(6)").textContent.trim();
-
+      const TrackingNumber = tr.querySelector("td:nth-child(13)").textContent.trim().replaceAll(" ", "");
+      
       // Check if the "Display Contract Notes" link already exists in the row
       const existingLink = tr.querySelector(
         `li > a[pos-contract-id="${contractId}"]`
@@ -49,23 +50,31 @@ function runWhenOverdueVisible() {
         return;
       }
 
-      // Duplicate the li element
-      const clonedLi = liElement.parentElement.cloneNode(true);
+      // View in POS || Actually bring you to the menu
+      const viewInPOS = liElement.parentElement.cloneNode(true);
 
       // Modify the onclick attribute of the cloned li element
-      clonedLi
+      viewInPOS
         .querySelector("a")
         .setAttribute("onclick", `OpenPOSLink(${contractId}, ${locationId})`);
 
-      // Update the text of the cloned li element
-      clonedLi.querySelector("a").textContent = "View in POS";
+      viewInPOS.querySelector("a").textContent = "View in POS";
+      viewInPOS.querySelector("a").setAttribute("pos-contract-id", contractId);
 
-      // Set the data-contract-id attribute for the cloned li element
-      clonedLi.querySelector("a").setAttribute("pos-contract-id", contractId);
+      
+      // Load tracking details
+      const TrackingDetails = liElement.parentElement.cloneNode(true);
+      
+      TrackingDetails
+      .querySelector("a")
+      .setAttribute("onclick", `window.open(https://www.trackingmore.com/track/en/${TrackingNumber});`);
+      
+      TrackingDetails.querySelector("a").textContent = "View Tracking Details";
+      TrackingDetails.querySelector("a").setAttribute("tracking-button-id", contractId);
 
-      // Add the cloned li element to the ul at the top of the list
       const ulElement = liElement.parentElement.parentElement;
-      ulElement.insertBefore(clonedLi, ulElement.firstChild);
+      ulElement.insertBefore(viewInPOS, ulElement.firstChild);
+      ulElement.insertBefore(TrackingDetails, ulElement.firstChild);
     }
   });
 }
@@ -80,8 +89,7 @@ const observer = new MutationObserver((mutationsList, observer) => {
       setTimeout(() => {
         runWhenOverdueVisible();
       }, 100); // Add a 10ms cooldown
-      console.log("Started [View In POS - Overdue]")
-      // No need to disconnect the observer, keep it running
+
     }
   }
 });
