@@ -73,8 +73,8 @@ function runWhenOverdueVisible() {
       TrackingDetails.querySelector("a").setAttribute("tracking-button-id", contractId);
 
       const ulElement = liElement.parentElement.parentElement;
-      ulElement.insertBefore(viewInPOS, ulElement.firstChild);
       ulElement.insertBefore(TrackingDetails, ulElement.firstChild);
+      ulElement.insertBefore(viewInPOS, ulElement.firstChild);
     }
   });
 }
