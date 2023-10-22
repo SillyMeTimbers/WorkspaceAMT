@@ -35,7 +35,7 @@ const PermissionsList = {
             "ExpNotes_VerifyTime": true,
             "TopBarAlert": true,
             "OverdueOpenInPOS": true,
-            "SendDropoffButtons": false,
+            "SendDropoffButtons": true,
             "EnhancedMessageTemplates": true,
             "HideUncoveredNotDispatch": true,
             "ReservationSearch": true,
