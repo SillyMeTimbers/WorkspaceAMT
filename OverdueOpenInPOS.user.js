@@ -67,7 +67,7 @@ function runWhenOverdueVisible() {
       
       TrackingDetails
       .querySelector("a")
-      .setAttribute("onclick", `window.open(https://www.trackingmore.com/track/en/${TrackingNumber});`);
+      .setAttribute("onclick", `window.open("https://www.trackingmore.com/track/en/${TrackingNumber}");`);
       
       TrackingDetails.querySelector("a").textContent = "View Tracking Details";
       TrackingDetails.querySelector("a").setAttribute("tracking-button-id", contractId);
