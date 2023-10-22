@@ -30,119 +30,42 @@ const PermissionsList = {
         Branch: {
             Live: false,
         },
-        Access: {
-            "ExtensionList": true,
-            "ExpNotes_VerifyTime": true,
-            "TopBarAlert": true,
-            "OverdueOpenInPOS": true,
-            "SendDropoffButtons": true,
-            "EnhancedMessageTemplates": true,
-            "HideUncoveredNotDispatch": true,
-            "ReservationSearch": true,
-            "VersionManager": true,
-            "NoteFormatter": true,
-            "betterPaymentInfo": true,
-            "betterHistoryPage": true,
-            "autoUnrentedEquipment": true,
-        },
+        Exclude: [],
     },
 
     "Emily Bertrand": {
         Branch: {
             Live: false,
         },
-        Access: {
-            "ExtensionList": true,
-            "ExpNotes_VerifyTime": true,
-            "TopBarAlert": true,
-            "OverdueOpenInPOS": true,
-            "SendDropoffButtons": true,
-            "EnhancedMessageTemplates": true,
-            "HideUncoveredNotDispatch": true,
-            "ReservationSearch": true,
-            "VersionManager": true,
-            "NoteFormatter": true,
-            "betterPaymentInfo": true,
-            "betterHistoryPage": true,
-        },
+        Exclude: [],
     },
 
     "Melissa Wise": {
         Branch: {
             Live: false,
         },
-        Access: {
-            "ExtensionList": true,
-            "ExpNotes_VerifyTime": true,
-            "TopBarAlert": true,
-            "OverdueOpenInPOS": true,
-            "SendDropoffButtons": true,
-            "EnhancedMessageTemplates": true,
-            "HideUncoveredNotDispatch": true,
-            "ReservationSearch": true,
-            "VersionManager": true,
-            "NoteFormatter": true,
-            "betterPaymentInfo": true,
-            "betterHistoryPage": true,
-            "autoUnrentedEquipment": true,
-        },
+        Exclude: [],
     },
 
     "Julianna Mayes": {
         Branch: {
             Live: true,
         },
-        Access: {
-            "ExtensionList": true,
-            "ExpNotes_VerifyTime": false,
-            "TopBarAlert": true,
-            "OverdueOpenInPOS": true,
-            "SendDropoffButtons": true,
-            "EnhancedMessageTemplates": true,
-            "HideUncoveredNotDispatch": true,
-            "ReservationSearch": true,
-            "VersionManager": true,
-            "betterPaymentInfo": true,
-            "betterHistoryPage": true,
-        },
+        Exclude: ["ExpNotes_VerifyTime"],
     },
 
     "Michelle Asker": {
         Branch: {
             Live: true,
         },
-        Access: {
-            "ExtensionList": true,
-            "ExpNotes_VerifyTime": true,
-            "TopBarAlert": true,
-            "OverdueOpenInPOS": true,
-            "SendDropoffButtons": true,
-            "EnhancedMessageTemplates": true,
-            "HideUncoveredNotDispatch": true,
-            "ReservationSearch": true,
-            "VersionManager": true,
-            "betterPaymentInfo": true,
-            "betterHistoryPage": true,
-        },
+        Exclude: [],
     },
     
     "Sheryse McKenzie": {
         Branch: {
             Live: true,
         },
-        Access: {
-            "ExtensionList": true,
-            "ExpNotes_VerifyTime": false,
-            "TopBarAlert": true,
-            "OverdueOpenInPOS": true,
-            "SendDropoffButtons": true,
-            "EnhancedMessageTemplates": true,
-            "HideUncoveredNotDispatch": true,
-            "ReservationSearch": true,
-            "VersionManager": true,
-            "betterPaymentInfo": true,
-            "betterHistoryPage": true,
-        },
+        Exclude: ["ExpNotes_VerifyTime"],
     },
     
     "Nyla Whitty": {
@@ -168,95 +91,35 @@ const PermissionsList = {
         Branch: {
             Live: true,
         },
-        Access: {
-            "ExtensionList": true,
-            "ExpNotes_VerifyTime": false,
-            "TopBarAlert": true,
-            "OverdueOpenInPOS": true,
-            "SendDropoffButtons": true,
-            "EnhancedMessageTemplates": true,
-            "HideUncoveredNotDispatch": true,
-            "ReservationSearch": true,
-            "VersionManager": true,
-            "betterPaymentInfo": true,
-            "betterHistoryPage": true,
-        },
+        Exclude: ["ExpNotes_VerifyTime"],
     },
 
     "Amber Ruiz": {
         Branch: {
             Live: true,
         },
-        Access: {
-            "ExtensionList": true,
-            "ExpNotes_VerifyTime": false,
-            "TopBarAlert": true,
-            "OverdueOpenInPOS": true,
-            "SendDropoffButtons": true,
-            "EnhancedMessageTemplates": true,
-            "HideUncoveredNotDispatch": true,
-            "ReservationSearch": true,
-            "VersionManager": true,
-            "betterPaymentInfo": true,
-            "betterHistoryPage": true,
-        },
+        Exclude: ["ExpNotes_VerifyTime"],
     },
   
     "Matthew Glenn": {
         Branch: {
             Live: true,
         },
-        Access: {
-            "ExtensionList": true,
-            "ExpNotes_VerifyTime": false,
-            "TopBarAlert": true,
-            "OverdueOpenInPOS": true,
-            "SendDropoffButtons": true,
-            "EnhancedMessageTemplates": true,
-            "HideUncoveredNotDispatch": true,
-            "ReservationSearch": true,
-            "VersionManager": true,
-            "betterPaymentInfo": true,
-            "betterHistoryPage": true,
-        },
+        Exclude: ["ExpNotes_VerifyTime"],
    },
 
    "Abigail Heister": {
         Branch: {
             Live: true,
         },
-        Access: {
-            "ExtensionList": true,
-            "ExpNotes_VerifyTime": false,
-            "TopBarAlert": true,
-            "OverdueOpenInPOS": true,
-            "SendDropoffButtons": true,
-            "EnhancedMessageTemplates": true,
-            "HideUncoveredNotDispatch": true,
-            "ReservationSearch": true,
-            "VersionManager": true,
-            "betterPaymentInfo": true,
-            "betterHistoryPage": true,
-        },
+        Exclude: ["ExpNotes_VerifyTime"],
    },
 
    "Danielle Clifford": {
       Branch: {
           Live: true,
       },
-      Access: {
-          "ExtensionList": true,
-          "ExpNotes_VerifyTime": false,
-          "TopBarAlert": true,
-          "OverdueOpenInPOS": true,
-          "SendDropoffButtons": true,
-          "EnhancedMessageTemplates": true,
-          "HideUncoveredNotDispatch": true,
-          "ReservationSearch": true,
-          "VersionManager": true,
-          "betterPaymentInfo": true,
-          "betterHistoryPage": true,
-      },
+      Exclude: ["ExpNotes_VerifyTime"],
    },
 };
 
@@ -268,13 +131,14 @@ const PermissionsList = {
   const timeString = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + '-' + now.getHours() + ':' + minutes;
 
   const userName = dynatraceUserName.textContent;
+
   if (userName in PermissionsList) {
     const userPermissions = PermissionsList[userName];
     const branch = userPermissions.Branch.Live ? 'Live' : 'Experimental';
     const githubURL = `https://raw.githubusercontent.com/SillyMeTimbers/WorkspaceAMT/${branch}/`;
 
     for (const redirect of Redirects) {
-      if (userPermissions.Access[redirect]) {
+      if (!userPermissions.Exclude.includes(redirect)) { // Only load if not excluded
         const url = `${githubURL}${redirect}.user.js?time=${timeString}`;
 
         try {
