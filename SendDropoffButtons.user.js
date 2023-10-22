@@ -207,7 +207,7 @@
             document.body.appendChild(scriptVersionElement);
         }
 
-        addScriptVersion("Dropoff Buttons", "Testing")
+        addScriptVersion("Dropoff Buttons", "2")
 
         setInterval(() => {
             if (!DropoffPause && isDropoffPopupVisible()) {
