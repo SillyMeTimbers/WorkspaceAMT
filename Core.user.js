@@ -30,7 +30,7 @@ const PermissionsList = {
         Branch: {
             Live: false,
         },
-        Exclude: [],
+        Exclude: ["EnhancedMessageTemplates"],
     },
 
     "Emily Bertrand": {
