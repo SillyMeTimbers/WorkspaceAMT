@@ -9,165 +9,213 @@
 // @grant        none
 // ==/UserScript==
 // Variables
-let DropOffButtons_LastVisible = false;
+(function () {
+    'use strict';
 
-function isDropoffPopupVisible() {
-    const textSubmitForm = document.querySelector("#SecondaryPopup");
-    const TextForumHeader = document.querySelector("#SecondaryPopup > section > header > h1");
+    let DropOffButtons_LastVisible = false;
+    let CSS_StyleSheetAdded = false
+    let DropoffPause = false
 
-    if (TextForumHeader !== null && TextForumHeader.innerHTML == "Send Customer Dropoff Info") {
-        if (
-            textSubmitForm &&
-            textSubmitForm.offsetWidth > 0 &&
-            textSubmitForm.offsetHeight > 0
-        ) {
-            return true;
+    function isDropoffPopupVisible() {
+        if (!DropoffPause == true) {
+            const textSubmitForm = document.querySelector("#SecondaryPopup");
+            const TextForumHeader = document.querySelector("#SecondaryPopup > section h1");
+
+            if (TextForumHeader !== null && TextForumHeader.innerHTML == "Send Customer Dropoff Info") {
+                if (
+                    textSubmitForm &&
+                    textSubmitForm.offsetWidth > 0 &&
+                    textSubmitForm.offsetHeight > 0
+                ) {
+                    $("#SecondaryPopup").css({
+                        width: `30%`,
+                        marginLeft: `auto`,
+                        left: `35%`,
+                    })
+
+                    return true;
+                }
+            }
+
+            if (DropOffButtons_LastVisible) {
+                console.log("reset")
+                $("#SecondaryPopup").css({
+                    width: ``,
+                    left: ``,
+                    marginLeft: ``,
+                })
+            }
+            DropOffButtons_LastVisible = false;
+            return false;
         }
     }
 
-    DropOffButtons_LastVisible = false;
-    return false;
-}
+    async function waitForElement(selector, timeout = 10000) {
+        const startTime = Date.now();
 
-function runWhenDropoffVisible() {
-    if (DropOffButtons_LastVisible === false) {
-        DropOffButtons_LastVisible = true;
+        while (Date.now() - startTime < timeout) {
+            const element = document.querySelector(selector);
 
-        function createButton(id, text, email, sms) {
-            const button = document.createElement('button');
-            button.id = id;
-            button.className = 'left schedulebutton';
-            button.type = 'button';
-            button.innerText = text;
-            button.onclick = function(event) {
-                ScheduleNowSendMessage(event, email, sms);
-            };
-            return button;
+            if ((element) && !(element.display == "none")) {
+                return element;
+            }
+
+            await new Promise((resolve) => setTimeout(resolve, 100));
         }
 
-        function addButtons() {
-            const targetElement = document.querySelector('#SecondaryPopup > section > div:nth-child(4) > div.large-12.columns');
+        return null;
+    }
 
-            targetElement.innerHTML = '';
+    function runWhenDropoffVisible() {
+        DropoffPause = true
+        if (DropOffButtons_LastVisible === false) {
+            DropOffButtons_LastVisible = true;
 
-            const emailButton = createButton('scheduleSendEmailBtn', 'Send E-Mail', true, false);
-            const textButton = createButton('scheduleSendTextBtn', 'Send Text', false, true);
-            const emailAndTextButton = createButton('scheduleSendEmailAndTextBtn', 'Send E-Mail and Text', true, true);
+            const MessagePopup = waitForElement("Body > #SecondaryPopup", 5000)
+            if (MessagePopup) {
+                const nMessagePopup = document.querySelector("Body > #SecondaryPopup > section")
+                const textPromptSplit = $("#textPrompt").text().trim().split("\n");
+                const emailPromptSplit = $("#emailPrompt").text().trim().split("\n");
+                const dropPromtReplace = $("#SecondaryPopup .message").text().trim()
+                const preDropText = dropPromtReplace.replace("Your dropoff Location is located at ", "");
+                
+                const ClonePhoneNumber = textPromptSplit.length > 1 ? textPromptSplit[1].trim() : "";
+                const CloneEmailAddress = emailPromptSplit.length > 1 ? emailPromptSplit[1].trim() : "";                
 
-            targetElement.appendChild(emailButton);
-            targetElement.appendChild(textButton);
-            targetElement.appendChild(emailAndTextButton);
-        }
+                nMessagePopup.innerHTML = `` // Reset Content
 
-        // Remove Send Buttons
-        const emailPrompt = document.getElementsByClassName('primary right emailPrompt');
-        for (let i = 0; i < emailPrompt.length; i++) {
-            emailPrompt[i].remove();
-        }
+                const Html_Content = `
+	                <h1 class="header">Send Customer Dropoff Info</h1>
 
-        const textPrompt = document.getElementsByClassName('primary right textPrompt');
-        for (let i = 0; i < textPrompt.length; i++) {
-            textPrompt[i].remove();
-        }
+	                <div class="dropoffcontent">
+	                    <div class="contactdetails">
+                            <label>
+                                To view or modify which customer details are sent, use the 'Customer' tab.
+                            </label>
 
-        const email_textPrompt = document.getElementsByClassName('primary right email_textPrompt');
-        for (let i = 0; i < email_textPrompt.length; i++) {
-            email_textPrompt[i].remove();
-        }
+                            <p class="message">
+                                U-Haul Drop-off Location: ${preDropText}. Use this link to self-return your equipment: <br>
+                                <a href="http://uhaul.com/s/500392A9D8" target="_blank">http://uhaul.com/s/500392A9D8</a>
+                            </p>
 
-        addButtons(); // Keep only this call to addButtons()
-        $('#emailPrompt').show();
-        $('#textPrompt').show();
-        function ScheduleNowSendMessage(event, sendEmail, sendText) {
-            if (sendEmail && sendText) {
-                sendDropoffInfo("email_text")
-            } else {
-                if (sendEmail) {
-                    sendDropoffInfo("email")
+	                        <label>
+	                            Phone Number:
+	                            <input id="CustomerPhoneNumber" name="CustomerPhoneNumber" type="text" value="${ClonePhoneNumber}" disabled="true" class="phone-input">
+	                        </label>
+
+                            <label>
+                                Email Address:
+                                <input id="CustomerEmailAddress" name="CustomerEmailAddress" type="text" value="${CloneEmailAddress}" disabled="true" class="phone-input">
+                            </label>
+	                    </div>
+	                </div>
+
+	                <div class="dropactionButtons">
+	                    <div class="large-12 columns actionButtonsPadding">
+                            <button id="dropEmail" type="submit" class="left dropoffButtons" onClick="sendDropoffInfo('email')">Send via Email</button>
+                            <button id="dropText" type="submit" class="left dropoffButtons" onClick="sendDropoffInfo('text')">Send via Text</button>
+                            <button id="dropEmailText" type="submit" class="left dropoffButtons" onClick="sendDropoffInfo('email_text')">Send via Both E-Mail and Text</button>
+	                        <button type="button" class="right secondary custom-close-reveal">Cancel</button>
+	                    </div>
+	                </div>
+	            `
+                nMessagePopup.innerHTML = Html_Content;
+
+                var css = `
+	                .dropoffcontent {
+	                    display: flex;
+	                    flex-direction: row;
+	                    width: 100%;
+	                    height: 100%;
+	                    align-items: stretch; /* new */
+                        padding-left: 10px;
+	                }
+
+	                .contactdetails {
+	                    flex-grow: 0;
+	                    flex-shrink: 0;
+	                    padding-right: 10px;
+	                    width: 100%;
+	                }
+
+                    .dropactionButtons {
+                        padding-left: 10px;
+                        padding-right: 10px;
+                        width: 100%;
+                    }
+                    
+                    .actionButtonsPadding {
+                        padding-left: 0px;
+                        padding-right: 0px;
+                    }
+
+                    .dropoffButtons {
+                            margin-right: 1em !important;
+                    }
+	                `,
+                    head = document.head || document.getElementsByTagName('head')[0],
+                    style = document.createElement('style');
+
+                if (!CSS_StyleSheetAdded) {
+                    CSS_StyleSheetAdded = true;
+
+                    head.appendChild(style);
+                    style.type = 'text/css';
+                    if (style.styleSheet) {
+                        style.styleSheet.cssText = css;
+                    } else {
+                        style.appendChild(document.createTextNode(css));
+                    }
                 }
 
-                if (sendText) {
-                    sendDropoffInfo("text")
+                // Phone Number formatting
+                const phoneNumberInput = document.querySelector("#CustomerPhoneNumber");
+                function formatPhoneNumber(inputElement) {
+                    let value = inputElement.value.replace(/\D/g, '');
+                    if (value.length > 10) value = value.slice(0, 10); // Limit to 10 numerical characters
+
+                    let formattedValue = '';
+                    if (value.length > 0) formattedValue += '(' + value.slice(0, 3);
+                    if (value.length > 3) formattedValue += ') ' + value.slice(3, 6);
+                    if (value.length > 6) formattedValue += '-' + value.slice(6);
+                    inputElement.value = formattedValue;
+                }
+
+                phoneNumberInput.addEventListener('input', function () {
+                    formatPhoneNumber(this);
+                });
+
+                formatPhoneNumber(phoneNumberInput);
+
+                if (CloneEmailAddress.length < 1) {
+                    $("#dropEmail").prop("disabled", true);
+                    $("#dropEmailText").prop("disabled", true);
                 }
             }
         }
-
-
-        const phoneNumberInput = document.querySelector("#customerPhoneNumber");
-        const emailInput = document.querySelector("#customerEmail");
-
-        function validateInputs() {
-            const phoneNumber = phoneNumberInput.value.replace(/\D/g, '');
-            const email = emailInput.value.toLowerCase();
-            const phoneNumberValid = phoneNumber.length === 10;
-            const validExtensions = ['.com', '.org', '.edu', '.net'];
-            const emailValid = email.match(/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/) !== null && validExtensions.some(extension => email.endsWith(extension));
-            const bothValid = phoneNumberValid && emailValid;
-
-            document.querySelector('#scheduleSendEmailBtn').disabled = !emailValid;
-            document.querySelector('#scheduleSendTextBtn').disabled = !phoneNumberValid;
-            document.querySelector('#scheduleSendEmailAndTextBtn').disabled = !bothValid;
-        }
-
-        function waitForElement(selector, callback) {
-            const observer = new MutationObserver((mutationsList, observer) => {
-                for (const mutation of mutationsList) {
-                    if (mutation.type === 'childList') {
-                        const element = document.querySelector(selector);
-                        if (element) {
-                            observer.disconnect();
-                            callback(element);
-                        }
-                    }
-                }
-            });
-
-            observer.observe(document.body, { attributes: false, childList: true, subtree: true });
-        }
-
-        function formatPhoneNumber(inputElement) {
-            let value = inputElement.value.replace(/\D/g, '');
-            if (value.length > 10) value = value.slice(0, 10); // Limit to 10 numerical characters
-
-            let formattedValue = '';
-            if (value.length > 0) formattedValue += '(' + value.slice(0, 3);
-            if (value.length > 3) formattedValue += ') ' + value.slice(3, 6);
-            if (value.length > 6) formattedValue += '-' + value.slice(6);
-            inputElement.value = formattedValue;
-        }
-
-        phoneNumberInput.addEventListener('input', function() {
-            formatPhoneNumber(this);
-        });
-
-        formatPhoneNumber(phoneNumberInput); // Call the function initially to format the value
-
-        phoneNumberInput.addEventListener('input', validateInputs);
-        emailInput.addEventListener('input', validateInputs);
-        validateInputs();
-    }
-}
-
-// Function to continuously check if the textSubmitForm is visible
-function continuouslyCheckTextSubmitFormVisibility() {
-    function addScriptVersion(scriptName, version) {
-        let scriptVersionElement = document.createElement('div');
-        scriptVersionElement.style.display = 'none'; // Make it hidden
-        scriptVersionElement.classList.add('script-version'); // So we can find it later
-        scriptVersionElement.dataset.name = scriptName; // Store the script name
-        scriptVersionElement.dataset.version = version; // Store the version
-        document.body.appendChild(scriptVersionElement);
+        DropoffPause = false
     }
 
-    addScriptVersion("Dropoff Buttons", "1")
-    
-    setInterval(() => {
-        if (isDropoffPopupVisible()) {
-            console.log("Executing [Send Dropoff Info]")
-            runWhenDropoffVisible();
+    // Function to continuously check if the textSubmitForm is visible
+    function continuouslyCheckTextSubmitFormVisibility() {
+        function addScriptVersion(scriptName, version) {
+            let scriptVersionElement = document.createElement('div');
+            scriptVersionElement.style.display = 'none'; // Make it hidden
+            scriptVersionElement.classList.add('script-version'); // So we can find it later
+            scriptVersionElement.dataset.name = scriptName; // Store the script name
+            scriptVersionElement.dataset.version = version; // Store the version
+            document.body.appendChild(scriptVersionElement);
         }
-    }, 100);
-}
 
-// Start checking the textSubmitForm visibility
-continuouslyCheckTextSubmitFormVisibility();
+        addScriptVersion("Dropoff Buttons", "Testing")
+
+        setInterval(() => {
+            if (!DropoffPause && isDropoffPopupVisible()) {
+                runWhenDropoffVisible();
+            }
+        }, 100);
+    }
+
+    // Start checking the textSubmitForm visibility
+    continuouslyCheckTextSubmitFormVisibility();
+})();
