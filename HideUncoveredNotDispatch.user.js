@@ -80,7 +80,7 @@ function createCheckbox(id, name, text, defaultValue) {
 	// Set the checked state based on defaultValue
 	input.checked = defaultValue;
 
-	input.addEventListener('change', function() {
+	input.addEventListener('change', function () {
 		notDispatchUpdateCheckbox(this);
 	});
 
@@ -111,72 +111,71 @@ function runWhenNotDispatchReport() {
 
 	const tbody = document.querySelector("#NotDispatchedResults > tbody");
 	function getOrdinalSuffix(number) {
-	    if (number % 10 == 1 && number != 11) {
-	        return 'st';
-	    }
-	    if (number % 10 == 2 && number != 12) {
-	        return 'nd';
-	    }
-	    if (number % 10 == 3 && number != 13) {
-	        return 'rd';
-	    }
-	    return 'th';
+		if (number % 10 == 1 && number != 11) {
+			return 'st';
+		}
+		if (number % 10 == 2 && number != 12) {
+			return 'nd';
+		}
+		if (number % 10 == 3 && number != 13) {
+			return 'rd';
+		}
+		return 'th';
 	}
-	
+
 	tbody.querySelectorAll("tr").forEach((tr) => {
-	    const locationId = tr.querySelector("td:nth-child(8)").textContent.trim();
-	    const EquipType = tr.querySelector("td:nth-child(7)").textContent.trim();
-	
-	    const rawDate = tr.querySelector("td:nth-child(6)").textContent.trim();
-	
-	    if (rawDate && !tr.hasAttribute("data-processed")) {
-	        const pickupTime = new Date(rawDate);
-	        if (isNaN(pickupTime)) return; // skip if pickupTime is not a valid date
-	
-	        const currentTime = new Date();
-	        const differenceInMilliseconds = currentTime - pickupTime;
-	        const differenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
-	        const differenceInHours = Math.floor(differenceInMinutes / 60);
-	        const differenceInDays = Math.floor(differenceInHours / 24);
-	
-	        let elapsedTime = "";
-	        if (differenceInDays > 0) {
-	            elapsedTime += `${differenceInDays}d `;
-	            elapsedTime += `${differenceInHours % 24}hr `;
-	        } else if (differenceInHours > 0) {
-	            elapsedTime += `${differenceInHours}hr `;
-	        }
-	        elapsedTime += `${differenceInMinutes % 60}min`;
-	
-	        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-	        const day = pickupTime.getDate();
-	        const month = monthNames[pickupTime.getMonth()];
-	        const year = pickupTime.getFullYear();
-	        const hours = pickupTime.getHours();
-	        const minutes = String(pickupTime.getMinutes()).padStart(2, '0');
-	        const amPm = hours < 12 ? "AM" : "PM";
-	        const formattedHour = hours > 12 ? hours - 12 : hours;
-	        const formattedDate = `${month} ${day}${getOrdinalSuffix(day)}, ${year} ${formattedHour}:${minutes} ${amPm} | ${elapsedTime}`;
-	
-	        tr.querySelector("td:nth-child(6)").textContent = formattedDate;
-	
-	        if (differenceInMinutes > 60) {
-	            tr.classList.add("latePU");
-	        } else {
-	            tr.classList.remove("latePU");
-	        }
-	
-	        // Mark row as processed
-	        tr.setAttribute("data-processed", "true");
-	    }
-	});
+		const locationId = tr.querySelector("td:nth-child(8)").textContent.trim();
+		const EquipType = tr.querySelector("td:nth-child(7)").textContent.trim();
+
+		const rawDate = tr.querySelector("td:nth-child(6)").textContent.trim();
+
+		if (rawDate && !tr.hasAttribute("data-processed")) {
+			const pickupTime = new Date(rawDate);
+			if (isNaN(pickupTime)) return; // skip if pickupTime is not a valid date
+
+			const currentTime = new Date();
+			const differenceInMilliseconds = currentTime - pickupTime;
+			const differenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
+			const differenceInHours = Math.floor(differenceInMinutes / 60);
+			const differenceInDays = Math.floor(differenceInHours / 24);
+
+			let elapsedTime = "";
+			if (differenceInDays > 0) {
+				elapsedTime += `${differenceInDays}d `;
+				elapsedTime += `${differenceInHours % 24}hr `;
+			} else if (differenceInHours > 0) {
+				elapsedTime += `${differenceInHours}hr `;
+			}
+			elapsedTime += `${differenceInMinutes % 60}min`;
+
+			const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+			const day = pickupTime.getDate();
+			const month = monthNames[pickupTime.getMonth()];
+			const year = pickupTime.getFullYear();
+			const hours = pickupTime.getHours();
+			const minutes = String(pickupTime.getMinutes()).padStart(2, '0');
+			const amPm = hours < 12 ? "AM" : "PM";
+			const formattedHour = hours > 12 ? hours - 12 : hours;
+			const formattedDate = `${month} ${day}${getOrdinalSuffix(day)}, ${year} ${formattedHour}:${minutes} ${amPm} | ${elapsedTime}`;
+
+			tr.querySelector("td:nth-child(6)").textContent = formattedDate;
+
+			if (differenceInMinutes > 60) {
+				tr.classList.add("latePU");
+			} else {
+				tr.classList.remove("latePU");
+			}
+
+			// Mark row as processed
+			tr.setAttribute("data-processed", "true");
+		}
 
 		// Rest of your logic for hiding rows based on conditions
 		const ignoreLocations = ['781008'];
 		const ignoreEquipment = ['AA', 'AB'];
 
 		let shouldHide = false;
-		if(NotDispatchSettings.Uncovered == false && ignoreLocations.some(location => locationId.endsWith(location))) {
+		if (NotDispatchSettings.Uncovered == false && ignoreLocations.some(location => locationId.endsWith(location))) {
 			shouldHide = true;
 		} else if ((NotDispatchSettings.UBOX == false && ignoreEquipment.some(equipment => EquipType.includes(equipment)))) {
 			shouldHide = true;
@@ -193,7 +192,7 @@ function runWhenNotDispatchReport() {
 	let FlipVal = true;
 	// Adjust the background color of visible rows
 	const $visibleRows = $(tbody).find("> tr");
-	$visibleRows.each(function(index) {
+	$visibleRows.each(function (index) {
 		if (index % 2 === 0) { // Even row
 			$(this).addClass('even-row').removeClass('odd-row');
 		} else {  // Odd row
