@@ -72,19 +72,7 @@ const PermissionsList = {
         Branch: {
             Live: true,
         },
-        Access: {
-            "ExtensionList": true,
-            "ExpNotes_VerifyTime": false,
-            "TopBarAlert": true,
-            "OverdueOpenInPOS": true,
-            "SendDropoffButtons": true,
-            "EnhancedMessageTemplates": true,
-            "HideUncoveredNotDispatch": true,
-            "ReservationSearch": true,
-            "VersionManager": true,
-            "betterPaymentInfo": true,
-            "betterHistoryPage": true,
-        },
+        Exclude: ["ExpNotes_VerifyTime"],
     },
     
     "Wilson Burgos": {
