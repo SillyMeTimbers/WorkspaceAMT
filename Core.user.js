@@ -13,7 +13,6 @@ const Redirects = [
   "ExtensionList",
   "ExpNotes_VerifyTime",
   "TopBarAlert",
-  "OverdueOpenInPOS",
   "SendDropoffButtons",
   "EnhancedMessageTemplates",
   "HideUncoveredNotDispatch",
@@ -23,6 +22,7 @@ const Redirects = [
   "betterPaymentInfo",
   "betterHistoryPage",
   "autoUnrentedEquipment",
+  "betterOverdues",
 ];
 
 const PermissionsList = {
@@ -30,7 +30,7 @@ const PermissionsList = {
         Branch: {
             Live: false,
         },
-        Exclude: ["OverdueOpenInPOS"],
+        Exclude: [],
     },
 
     "Emily Bertrand": {
