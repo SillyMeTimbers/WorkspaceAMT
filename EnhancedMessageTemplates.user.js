@@ -7,1604 +7,2059 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-let MessageTemplateLastVisible = false;
-let CSS_StyleSheetAdded = false;
-const TestingMode = false;
 
-const MsgTemplates = {
-    "LatePickupNotice": {
-        Display: "LatePickupNotice",
+(function () {
+	let MessageTemplateLastVisible = false;
+	let CSS_StyleSheetAdded = false;
+	const TestingMode = false;
 
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("LatePickupNotice");
+	const MsgTemplates = {
+		"LatePickupNotice": {
+			Display: "LatePickupNotice",
 
-            if (!SubOptions === false) {
-                const isAvail = stringToBoolean(SubOptions.isAvail.SelectedValue)
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("LatePickupNotice");
 
-                return `U-Haul Reservation; Late Pickup Reminder : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Our records indicate your rental has not yet been started and may be at risk of cancelation. ${isAvail ? 'If you would like to reschedule your reservation located at' : `Unfortunately, the equipment is no longer available at ${ResInfo.businessName} and would need to be relocated,`} ${isAvail ? `${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}, for a different date/time please contact us using the number provided below` : 'we ask you call us at your earliest convenience using the number below to discuss alternative solutions, we appreciate your business and hope to hear from you soon'}.
+				if (!SubOptions === false) {
+					const isAvail = stringToBoolean(SubOptions.isAvail.SelectedValue)
+					const isEAlert = stringToBoolean(SubOptions.isEAlert.SelectedValue)
+
+					return `U-Haul Reservation; Late Pickup Reminder : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Our records indicate your rental has not yet been started and may be at risk of cancelation. ${isAvail ? 'If you would like to reschedule your reservation located at' : `Unfortunately, the equipment is no longer available at ${ResInfo.businessName} and would need to be relocated,`} ${isAvail ? `${ResInfo.businessName}, for a different date/time please contact us using the number provided below` : 'we ask you call us at your earliest convenience using the number below to discuss alternative solutions, we appreciate your business and hope to hear from you soon'}${isEAlert ? `. Additionally, it appears your account has been flagged from a previous reservation you've had with U-Haul; to avoid any issues with U-Haul or if you've already experienced issues regarding an "E-Alert" associated with your account contact (877) 653-0490 before leaving for your pickup address` : ``}.
 ${ResInfo.MCOEnd}`
-            }
 
-            return `Failed to create message :(`
-        },
+					//return `U-Haul Reservation; ${ResInfo.contractNumber} - Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, our records indicate your rental hasn't been started yet and your reservation is at risk of cancelation, please contact us at (561) 638-9428 if you are still in need of this equipment.`
+				}
 
-        NoteTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("LatePickupNotice");
-            const isAvail = stringToBoolean(SubOptions.isAvail.SelectedValue)
+				return `Failed to create message :(`
+			},
 
-            return {
-                Text: `Text Sent to Customer - Message Type: Late Pickup, Equipment Available: ${isAvail}, Assigned Location: ${ResInfo.Entity}, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}`,
-                ExpectedIn: false,
-                Working: true,
-            }
-        },
+			NoteTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("LatePickupNotice");
+				const isAvail = stringToBoolean(SubOptions.isAvail.SelectedValue)
 
-        Dropdown: ["LatePickupNotice", {
-            "isAvail": {
-                DisplayText: "Equipment Available",
-                DefaultOption: true,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
-            },
-        }],
+				return {
+					Text: `No Call/No Show, Reservation previously scheduled for ${ResInfo.Entity} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. ${isAvail ? `` : `Scheduled equip is not avail anymore`}`,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
 
-        Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked')) {
-                return true
-            }
+			Dropdown: ["LatePickupNotice", {
+				"isAvail": {
+					DisplayText: "Equipment Available",
+					DefaultOption: true,
+					Type: "Checkbox",
+				},
 
-            return false
-        },
-    },
+				"isEAlert": {
+					DisplayText: "E-Alert Active",
+					DefaultOption: false,
+					Type: "Checkbox",
+				},
+			}],
 
-    "CancelationNotice": {
-        Display: "CancelationNotice",
+			Params: function () {
+				const ResStats = getResStatus()
+				if (!ResStats.Dispatched && !ResStats.Cancelled && ResStats.Covered) {
+					return true
+				}
 
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("CancelationNotice");
+				return false
+			},
+		},
 
-            if (!SubOptions === false) {
-                const cancelReason = SubOptions.cancelReason.SelectedValue
+		"CancelationNotice": {
+			Display: "CancelationNotice",
 
-                if (cancelReason === "Confirm") {
-                    return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("CancelationNotice");
+
+				if (!SubOptions === false) {
+					const cancelReason = SubOptions.cancelReason.SelectedValue
+
+					if (cancelReason === "Confirm") {
+						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. If you change your mind in the near future, you can call us at the number below to make new arrangements.
 ${ResInfo.MCOEnd}`
-                } else if (cancelReason === "Late") {
-                    return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-We hope we didn't miss your arrival, our records indicate your reservation scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} was not picked up and has automatically been canceled. If you believe this was a mistake and you are still in need of this reservation, you can call us using the number below to make new arrangements.
+
+						//return `U-Haul Reservation; ${ResInfo.contractNumber} - Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, your U-Haul Reservation was recently canceled, if you believe this was a mistake and you are still in need you can call us at (561) 638-9428 to make new arrangements.`
+					} else if (cancelReason === "Late") {
+						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+We hope we didn't miss your arrival, our records indicate your reservation scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} was not picked up and has automatically been canceled. If you believe this was a mistake and you are still in need of this reservation or have already picked up your equipment, you can call us using the number below to reinstate your reservation.
 ${ResInfo.MCOEnd}`
-                } else if (cancelReason === "Duplicate") {
-                    return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+
+						//return `U-Haul Reservation; ${ResInfo.contractNumber} - Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, our records indicate your has not been started and has been canceled. If you still need this equipment, you can contact our office at (561) 638-9428 to reinstate your reservation.`
+					} else if (cancelReason === "Duplicate") {
+						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Your U-Haul Reservation was recently canceled, our records indicated multiple reservations may have been made. If you believe this was a mistake and are in need of multiple reservations, please call us using the number below to reinstate this reservation.
 ${ResInfo.MCOEnd}`
-                }
-            }
 
-            return `Failed to create message :(`
-        },
+						//return "Template is temporarily disabled."
+					} else if (cancelReason === "EAlert") {
+						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Your U-Haul Reservation was recently canceled, our records indicate your account has been flagged due to a previous reservation you've had with U-Haul or an encounter that occured with this rental, in result your reservation had automatically been canceled. If you believe this was a mistake contact the number below for further assistance.
+${ResInfo.MCOEnd}`
 
-        NoteTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("CancelationNotice");
-            const cancelReason = SubOptions.cancelReason.SelectedValue
+						//return "Template is temporarily disabled."
+					}
+				}
 
-            return {
-                Text: `Text Sent to Customer - Message Type: Cancelation Notice, Assigned Location: ${ResInfo.Entity}, Previously Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}`,
-                ExpectedIn: false,
-                Working: true,
-            }
-        },
+				return `Failed to create message :(`
+			},
 
-        Dropdown: ["CancelationNotice", {
-            "cancelReason": {
-                DisplayText: "Reason",
-                DefaultOption: "Confirm",
-                Type: "Normal",
-                Options: [
-                    { value: "Confirm", text: "Confirmation" },
-                    { value: "Late", text: "No Call/No Show" },
-                    { value: "Duplicate", text: "Duplicate" },
-                ]
-            },
-        }],
+			NoteTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("CancelationNotice");
+				const cancelReason = SubOptions.cancelReason.SelectedValue
 
-        Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked')) {
-                return true
-            }
+				return {
+					Text: `Cancelation Notice, Reason: ${cancelReason}`,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
 
-            return false
-        },
-    },
+			Dropdown: ["CancelationNotice", {
+				"cancelReason": {
+					DisplayText: "Reason",
+					DefaultOption: "Confirm",
+					Type: "Normal",
+					Options: [
+						{ value: "Confirm", text: "Confirmation" },
+						{ value: "Late", text: "No Call/No Show" },
+						{ value: "Duplicate", text: "Duplicate" },
+						{ value: "EAlert", text: "E-Alert/Live Verify Deny" },
+					]
+				},
+			}],
 
-    "StorageOffer": {
-        Display: "StorageOffer",
+			Params: function () {
+				const ResStats = getResStatus()
+				if (!ResStats.Dispatched) {
+					return true
+				}
 
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("StorageOffer");
-            const zipcode = [
-                33004, 33009, 33019, 33020, 33021, 33023, 33024, 33025, 33026, 33027,
-                33028, 33029, 33060, 33062, 33063, 33064, 33065, 33066, 33067, 33068,
-                33069, 33071, 33073, 33076, 33301, 33304, 33305, 33306, 33308, 33309,
-                33311, 33312, 33313, 33314, 33315, 33316, 33317, 33319, 33321, 33322,
-                33323, 33324, 33325, 33326, 33327, 33328, 33330, 33331, 33332, 33334,
-                33351, 33401, 33403, 33404, 33405, 33406, 33407, 33408, 33409, 33410,
-                33411, 33412, 33413, 33414, 33415, 33417, 33418, 33426, 33428, 33430,
-                33431, 33432, 33433, 33434, 33435, 33436, 33437, 33438, 33440, 33441,
-                33442, 33444, 33445, 33446, 33449, 33455, 33458, 33460, 33461, 33462,
-                33463, 33467, 33469, 33470, 33472, 33473, 33476, 33477, 33478, 33480,
-                33483, 33484, 33486, 33487, 33493, 33496, 33498, 34945, 34946, 34947,
-                34949, 34950, 34951, 34952, 34953, 34956, 34957, 34972, 34974, 34981,
-                34982, 34983, 34984, 34986, 34987, 34990, 34994, 34996, 34997
-            ];
+				return false
+			},
+		},
 
-            if (!SubOptions === false) {
-                let Nearby73 = false
-                if (zipcode.includes(Number(ResInfo.zipcode))) {
-                    Nearby73 = true
-                }
+		"StorageOffer": {
+			Display: "StorageOffer",
 
-                return `CONGRATULATIONS, ${ResInfo.customerFirstName.toUpperCase()}!
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("StorageOffer");
+				const zipcode = [
+					33004, 33009, 33019, 33020, 33021, 33023, 33024, 33025, 33026, 33027,
+					33028, 33029, 33060, 33062, 33063, 33064, 33065, 33066, 33067, 33068,
+					33069, 33071, 33073, 33076, 33301, 33304, 33305, 33306, 33308, 33309,
+					33311, 33312, 33313, 33314, 33315, 33316, 33317, 33319, 33321, 33322,
+					33323, 33324, 33325, 33326, 33327, 33328, 33330, 33331, 33332, 33334,
+					33351, 33401, 33403, 33404, 33405, 33406, 33407, 33408, 33409, 33410,
+					33411, 33412, 33413, 33414, 33415, 33417, 33418, 33426, 33428, 33430,
+					33431, 33432, 33433, 33434, 33435, 33436, 33437, 33438, 33440, 33441,
+					33442, 33444, 33445, 33446, 33449, 33455, 33458, 33460, 33461, 33462,
+					33463, 33467, 33469, 33470, 33472, 33473, 33476, 33477, 33478, 33480,
+					33483, 33484, 33486, 33487, 33493, 33496, 33498, 34945, 34946, 34947,
+					34949, 34950, 34951, 34952, 34953, 34956, 34957, 34972, 34974, 34981,
+					34982, 34983, 34984, 34986, 34987, 34990, 34994, 34996, 34997
+				];
+
+				if (!SubOptions === false) {
+					let Nearby73 = false
+					if (zipcode.includes(Number(ResInfo.zipcode))) {
+						Nearby73 = true
+					}
+
+					return `CONGRATULATIONS, ${ResInfo.customerFirstName.toUpperCase()}!
 As a special thank you for choosing U-Haul, we are offering you 1 FREE MONTH OF STORAGE! We offer Drive up Storage, 24/7 Secured Inside Units & Climate Controlled Storage. NO DEPOSIT & Individually alarmed room with 24-Hour Access & MORE! To take advantage of this offer contact (561) 638-9428 and use your reference number ${ResInfo.contractNumber} and we will be able to assist you with getting a unit set up ${Nearby73 ? 'at U-Haul Moving & Storage Of West Palm Beach, 2805 Vista Pkwy West Palm Beach, FL 33411!' : `in or nearby ${ResInfo.city}!`} We hope to hear from you soon and welcome to you ${ResInfo.city}, ${ResInfo.state}
 ${ResInfo.MCOEnd}`
-            }
 
-            return `Failed to create message :(`
-        },
+					// 					return `CONGRATULATIONS, ${ResInfo.customerFirstName.toUpperCase()}!
+					// As a special thanks for choosing U-Haul, we are offering you 1 FREE MONTH OF STORAGE! 24/7 Secure Inside Units & Climate Control Storage. To take advantage of this offer contact (561) 638-9428 and use your contract number to get a unit setup!`
+				}
 
-        NoteTemplate: function () {
-            return {
-                Text: `Text Sent to Customer - Message Type: Storage Offer`,
-                ExpectedIn: true,
-                Working: false,
-            }
-        },
+				return `Failed to create message :(`
+			},
 
-        Dropdown: ["StorageOffer", {
-        }],
+			NoteTemplate: function () {
+				return {
+					Text: `Storage offer sent to cx`,
+					ExpectedIn: true,
+					Working: false,
+				}
+			},
 
-        Params: function () {
-            if (document.querySelector("#DispatchDate")) {
-                return true
-            }
+			Dropdown: ["StorageOffer", {
+			}],
 
-            return false
-        },
-    },
+			Params: function () {
+				const ResStats = getResStatus()
+				if (ResStats.Dispatched && !ResStats.IT_Rental) {
+					return true
+				}
 
-    "Truckshare": {
-        Display: "Truckshare",
+				return false
+			},
+		},
 
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("Truckshare");
+		"Truckshare": {
+			Display: "Truckshare",
 
-            if (!SubOptions === false) {
-                return `U-Haul Reservation; 24/7 Truckshare Reminder : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-You are receiving this message as your reservation scheduled for ${ResInfo.businessName} will not be open at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}, In order to proceed with the 24/7 Process you will need the U-Haul mobile app https://uhaul.com/s/6859554008, Additionally to learn more about the process you will find a full set of instructions as well a youtube guide to help you here http://uhaul.com/s/E4260B3676, If you have any questions please contact us using the number below.
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("Truckshare");
+
+				if (!SubOptions === false) {
+					const isBasic = stringToBoolean(SubOptions.Basic.SelectedValue)
+					const MsgType = SubOptions.Type.SelectedValue
+
+					const LocMoved = stringToBoolean(SubOptions.LocMoved.SelectedValue)
+					const TimeChanged = stringToBoolean(SubOptions.TimeChange.SelectedValue)
+
+					if (LocMoved || TimeChanged) {
+						if (LocMoved) {
+							return `U-Haul Reservation; Pickup Changed : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+We're sorry for the inconvenience. Due to unforeseen circumstances, the original location couldn't prepare your vehicle for the 24/7 Self-Service process. We've arranged for your equipment at the nearest available location and your equipment will now be ready for pick-up at ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} with your time of pickup scheduled for ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions you can contact 1-800-GO-U-HAUL or call the number provided below.
 ${ResInfo.MCOEnd}`
-            }
 
-            return `Failed to create message :(`
-        },
+							//return "Template is temporarily disabled."
+						}
 
-        NoteTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("NewPickup");
+						if (TimeChanged) {
+							return `U-Haul Reservation; Time Changed : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+We're sorry for the inconvenience. Due to unforeseen circumstances, the location we had you scheduled for was unable to prepare your vehicle for ther 24/7 Self-Service process. We've updated your pick-up time to ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions you can contact 1-800-GO-U-HAUL or call the number provided below.
+${ResInfo.MCOEnd}`
 
-            return {
-                Text: `Text Sent to Customer - Message Type: Truckshare Notice, Assigned Location: ${ResInfo.Entity}, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}, Notes: Location will not be open at customers preferred time.`,
-                ExpectedIn: false,
-                Working: true,
-            }
-        },
+							//return "Template is temporarily disabled."
+						}
+					}
 
-        Dropdown: ["Truckshare", {
-        }],
+					if (isBasic) {
+						if (MsgType == "1") {
+							return `How to Rent a Truck Using Truckshare 24/7: http://uhaul.com/s/E4260B3676`
+						} else if (MsgType == "2") {
+							return `How to Return a Truck using U-Haul Self Return: http://uhaul.com/s/32081D5DE9`
+						} else if (MsgType == "3") {
+							return `How to Rent a Truck Using Truckshare 24/7: http://uhaul.com/s/E4260B3676
+How to Return a Truck using U-Haul Self Return: http://uhaul.com/s/32081D5DE9`
+						}
+					} else {
+						if (MsgType == "1") {
+							return `U-Haul Truckshare 24/7 - How to Rent a Truck
+In order to start your rental using our Truckshare 24/7 process visit http://uhaul.com/s/E4260B3676 and follow the instructions provided within the webpage.`
 
-        Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
+							//return "Template is temporarily disabled."
+						} else if (MsgType == "2") {
+							return `U-Haul Truckshare 24/7 - How to Return a Truck
+In order to Return your rental using our Truckshare 24/7 please verify the location you've selected to return supports this feature, once verified visit http://uhaul.com/s/32081D5DE9 and follow the instructions provided within the webpage.`
 
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && document.querySelector("#ReservationSummaryTab > div:nth-child(1) > div.medium-6.large-7.columns > label > span.custom.checkbox.checked") && spanElement && spanElement.classList.contains('checked')) {
-                return true
-            }
+							//return "Template is temporarily disabled."
+						} else if (MsgType == "3") {
+							return `U-Haul Truckshare 24/7 Quick Links
+In order to start your rental using our Truckshare 24/7 process visit http://uhaul.com/s/E4260B3676 and follow the instructions provided within the webpage, if you plan on returning using our 24/7 option please verify the location you've selected supports this feature, once verified visit http://uhaul.com/s/32081D5DE9 and follow instructions provided within the webpage.`
 
-            return false
-        },
-    },
+							//return "Template is temporarily disabled."
+						}
+					}
+				}
+			},
 
-    "HighDemandConfirmation": {
-        Display: "HighDemandConfirmation",
+			NoteTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("NewPickup");
 
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("HighDemandConfirmation");
+				return {
+					Text: ``,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
 
-            if (!SubOptions === false) {
-                return `U-Haul Reservation; High Demand Confirmation : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+			Dropdown: ["Truckshare", {
+				"Basic": {
+					DisplayText: "Use Basic Format",
+					DefaultOption: true,
+					Type: "Checkbox",
+				},
+
+				"Type": {
+					DisplayText: "Message Type",
+					DefaultOption: "1",
+					Type: "Normal",
+					Options: [
+						{ value: "1", text: "Dispatch" },
+						{ value: "2", text: "Return" },
+						{ value: "3", text: "Dispatch & Return" },
+					]
+				},
+
+				"Splitter": {
+					DisplayText: "Something expermi",
+					Type: "Splitter",
+				},
+
+				"LocMoved": {
+					DisplayText: "Location Moved",
+					DefaultOption: false,
+					Type: "Checkbox",
+				},
+
+				"TimeChange": {
+					DisplayText: "Time Changed",
+					DefaultOption: false,
+					Type: "Checkbox",
+				},
+			}],
+
+			Params: function () {
+				const ResStats = getResStatus()
+				if (!ResStats.Cancelled && ResStats.Covered && ResStats.Truckshare || ResStats.Dispatched) {
+					return true
+				}
+
+				return false
+			},
+		},
+
+		"HighDemandConfirmation": {
+			Display: "HighDemandConfirmation",
+
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("HighDemandConfirmation");
+
+				if (!SubOptions === false) {
+					return `U-Haul Reservation; High Demand Confirmation : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Thank you for choosing U-Haul, we greatly appreciate you reaching out to us to provide us with further information regarding your move on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} in ${ResInfo.amtCity} ${ResInfo.amtState}. Please be expecting a call 72-48 hours prior to your reservation pickup date with information on your pickup address. If you do not receive this information from a Call, Text, or Email within 24 hours from the rental date please contact us immediately using the number below.
 ${ResInfo.MCOEnd}`
-            }
 
-            return `Failed to create message :(`
-        },
+					//return "Template is temporarily disabled."
+				}
 
-        NoteTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("HighDemandConfirmation");
+				return `Failed to create message :(`
+			},
 
-            if (!SubOptions === false) {
-                const FlexDate = SubOptions.Date.SelectedText
-                const PrefTime = SubOptions.Time.SelectedText
-                const Distance = SubOptions.Distance.SelectedText
-                const EquipSize = SubOptions.EquipmentSize.SelectedText
-                const SplitContract = SubOptions.SplitContract.SelectedText
-                const PaidMovers = SubOptions.PaidMovers.SelectedText
-                
-                return {
-                    Text: `High Demand Confirmation - Flexible Date: ${FlexDate}, Preferred Time: ${PrefTime}, Flexible Distance: ${Distance}, Flexible Equipment Size: ${EquipSize}, Split Rental: ${SplitContract}, Paid Movers: ${PaidMovers}, Additional Notes: `,
-                    ExpectedIn: false,
-                    Working: true,
-                }
-            }
-        },
+			NoteTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("HighDemandConfirmation");
 
-        Dropdown: ["HighDemandConfirmation", {
-            "Date": {
-                DisplayText: "Flexible w/Date",
-                DefaultOption: "1",
-                Type: "Normal",
-                Options: [
-                    { value: "1", text: "Must have preferred" },
-                    { value: "2", text: "Can do a day before/after" },
-                    { value: "3", text: "Can do a day before" },
-                    { value: "3", text: "Can do a day after" },
-                ]
-            },
+				if (!SubOptions === false) {
+					const FlexDate = SubOptions.Date.SelectedText
+					const PrefTime = SubOptions.Time.SelectedText
+					const Distance = SubOptions.Distance.SelectedText
+					const EquipSize = SubOptions.EquipmentSize.SelectedText
+					const SplitContract = SubOptions.SplitContract.SelectedText
+					const PaidMovers = SubOptions.PaidMovers.SelectedText
 
-            "Time": {
-                DisplayText: "Preferred Time",
-                DefaultOption: "5",
-                Type: "Normal",
-                Options: [
-                    { value: "1", text: "Morning (7am - 12pm)" },
-                    { value: "2", text: "Afternoon (12pm - 6pm)" },
-                    { value: "3", text: "Evening (6pm-12pm" },
-                    { value: "4", text: "Anytime (7am - 7pm)" },
-                    { value: "5", text: "Must have preferred" },
-                ]
-            },
+					return {
+						Text: `High Demand Confirmation - Flexible Date: ${FlexDate}, Preferred Time: ${PrefTime}, Flexible Distance: ${Distance}, Flexible Equipment Size: ${EquipSize}, Split Rental: ${SplitContract}, Paid Movers: ${PaidMovers}, Additional Notes: `,
+						ExpectedIn: false,
+						Working: true,
+					}
+				}
+			},
 
-           "Distance": {
-                DisplayText: "Flexible Distance",
-                DefaultOption: "2",
-                Type: "Normal",
-                Options: [
-                    { value: "1", text: "0-5 Miles" },
-                    { value: "2", text: "5-10 Miles" },
-                    { value: "3", text: "10-20 Miles" },
-                    { value: "4", text: "20-30 Miles" },
-                    { value: "5", text: "30-50 Miles" },
-                    { value: "6", text: "50+ Miles" },
-                    { value: "7", text: "100+ Miles" },
-                ]
-            },
+			Dropdown: ["HighDemandConfirmation", {
+				"Date": {
+					DisplayText: "Flexible w/Date",
+					DefaultOption: "1",
+					Type: "Normal",
+					Options: [
+						{ value: "1", text: "Must have preferred" },
+						{ value: "2", text: "Can do a day before/after" },
+						{ value: "3", text: "Can do a day before" },
+						{ value: "3", text: "Can do a day after" },
+					]
+				},
 
-           "EquipmentSize": {
-                DisplayText: "Flexible w/Equipment Size",
-                DefaultOption: "1",
-                Type: "Normal",
-                Options: [
-                    { value: "1", text: "Must have preferred" },
-                    { value: "2", text: "Can go larger/smaller" },
-                    { value: "3", text: "Can go larger" },
-                    { value: "4", text: "Can go smaller" },
-                ]
-            },
+				"Time": {
+					DisplayText: "Preferred Time",
+					DefaultOption: "5",
+					Type: "Normal",
+					Options: [
+						{ value: "1", text: "Morning (7am - 12pm)" },
+						{ value: "2", text: "Afternoon (12pm - 6pm)" },
+						{ value: "3", text: "Evening (6pm-12pm" },
+						{ value: "4", text: "Anytime (7am - 7pm)" },
+						{ value: "5", text: "Must have preferred" },
+					]
+				},
 
-           "SplitContract": {
-                DisplayText: "Split Contract",
-                DefaultOption: "2",
-                Type: "Normal",
-                Options: [
-                    { value: "1", text: "Can split" },
-                    { value: "2", text: "Do not split" },
-                    { value: "3", text: "Not-Applicable" },
-                ]
-            },
+				"Distance": {
+					DisplayText: "Flexible Distance",
+					DefaultOption: "2",
+					Type: "Normal",
+					Options: [
+						{ value: "1", text: "0-5 Miles" },
+						{ value: "2", text: "5-10 Miles" },
+						{ value: "3", text: "10-20 Miles" },
+						{ value: "4", text: "20-30 Miles" },
+						{ value: "5", text: "30-50 Miles" },
+						{ value: "6", text: "50+ Miles" },
+						{ value: "7", text: "100+ Miles" },
+					]
+				},
 
-           "PaidMovers": {
-                DisplayText: "Has Paid Movers",
-                DefaultOption: "2",
-                Type: "Normal",
-                Options: [
-                    { value: "1", text: "Yes" },
-                    { value: "2", text: "No" },
-                    { value: "3", text: "Unsure" },
-                ]
-            },
-        }],
+				"EquipmentSize": {
+					DisplayText: "Flexible w/Equipment Size",
+					DefaultOption: "1",
+					Type: "Normal",
+					Options: [
+						{ value: "1", text: "Must have preferred" },
+						{ value: "2", text: "Can go larger/smaller" },
+						{ value: "3", text: "Can go larger" },
+						{ value: "4", text: "Can go smaller" },
+					]
+				},
 
-        Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && !spanElement.classList.contains('checked')) {
-                return true
-            }
+				"SplitContract": {
+					DisplayText: "Split Contract",
+					DefaultOption: "2",
+					Type: "Normal",
+					Options: [
+						{ value: "1", text: "Can split" },
+						{ value: "2", text: "Do not split" },
+						{ value: "3", text: "Not-Applicable" },
+					]
+				},
 
-            return false
-        },
-    },
-    
-    "HighDemand": {
-        Display: "HighDemand",
+				"PaidMovers": {
+					DisplayText: "Has Paid Movers",
+					DefaultOption: "2",
+					Type: "Normal",
+					Options: [
+						{ value: "1", text: "Yes" },
+						{ value: "2", text: "No" },
+						{ value: "3", text: "Unsure" },
+					]
+				},
+			}],
 
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("HighDemand");
+			Params: function () {
+				const ResStats = getResStatus()
+				if (!ResStats.Dispatched && !ResStats.Cancelled && !ResStats.Covered) {
+					return true
+				}
 
-            if (!SubOptions === false) {
-                return `U-Haul Reservation; High Demand Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+				return false
+			},
+		},
+
+		"HighDemand": {
+			Display: "HighDemand",
+
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("HighDemand");
+
+				if (!SubOptions === false) {
+					return `U-Haul Reservation; High Demand Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 You are receiving this notice to advise you we are experiencing a high volume of incoming reservations into ${ResInfo.amtCity}, ${ResInfo.amtState}. We ask you to reach out to us at your earliest availability to discuss further flexibility you may have with the Date/Time, Distance, and Equipment Size. If we aren't able to confirm details prior to ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} unwanted changes may be made during the scheduling process. As a reminder, the model, date, and location that you are choosing is a preference and further changes may need to be made to accommodate your reservation.
 ${ResInfo.MCOEnd}`
-            }
 
-            return `Failed to create message :(`
-        },
+					//return "Template is temporarily disabled."
+				}
 
-        NoteTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("HighDemand");
+				return `Failed to create message :(`
+			},
 
-            return {
-                Text: `Text Sent to Customer - Message Type: High Demand Notice, Preferred Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}, Preferred City: ${ResInfo.amtCity}`,
-                ExpectedIn: false,
-                Working: true,
-            }
-        },
+			NoteTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("HighDemand");
 
-        Dropdown: ["HighDemand", {
-        }],
+				return {
+					Text: `high demand notice sent`,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
 
-        Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && !spanElement.classList.contains('checked')) {
-                return true
-            }
+			Dropdown: ["HighDemand", {
+			}],
 
-            return false
-        },
-    },
+			Params: function () {
+				const ResStats = getResStatus()
+				if (!ResStats.Dispatched && !ResStats.Cancelled && !ResStats.Covered) {
+					return true
+				}
 
-    "LowAvailability": {
-        Display: "LowAvailability",
+				return false
+			},
+		},
 
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("LowAvailability");
+		"LowAvailability": {
+			Display: "LowAvailability",
 
-            if (!SubOptions === false) {
-                return `U-Haul Reservation; Low Availability Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("LowAvailability");
+
+				if (!SubOptions === false) {
+					return `U-Haul Reservation; Low Availability Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 You are receiving this notice to advise you we are experiencing delays with incoming equipment into your preferred city scheduled for ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}. We are informing you that you will need to reschedule your reservation for a different date/time or select a larger/smaller size of equipment. We will be in contact with you soon to discuss alternative availability. you can contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
-            }
 
-            return `Failed to create message :(`
-        },
+					//return "Template is temporarily disabled."
+				}
 
-        NoteTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("LowAvailability");
+				return `Failed to create message :(`
+			},
 
-            return {
-                Text: `Text Sent to Customer - Message Type: Low Avail, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}`,
-                ExpectedIn: false,
-                Working: true,
-            }
-        },
+			NoteTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("LowAvailability");
 
-        Dropdown: ["LowAvailability", {
-        }],
+				return {
+					Text: `low availability notice sent`,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
 
-        Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && !spanElement.classList.contains('checked')) {
-                return true
-            }
+			Dropdown: ["LowAvailability", {
+			}],
 
-            return false
-        },
-    },
+			Params: function () {
+				const ResStats = getResStatus()
+				if (!ResStats.Dispatched && !ResStats.Cancelled && !ResStats.Covered) {
+					return true
+				}
 
-    "EquipmentChange": {
-        Display: "EquipmentChange",
+				return false
+			},
+		},
 
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("EquipmentChange");
+		"EquipmentChange": {
+			Display: "EquipmentChange",
 
-            if (!SubOptions === false) {
-                let PreviousEquipment = "";
-                let NewEquipment = "";
-                if (SubOptions.OldEquipment.SelectedValue === "Blank") {
-                    PreviousEquipment = "unassigned"
-                } else {
-                    PreviousEquipment = SubOptions.OldEquipment.SelectedText.split(" - ")[1].trim()
-                }
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("EquipmentChange");
 
-                if (SubOptions.NewEquipment.SelectedValue === "Blank") {
-                    NewEquipment = "unassigned"
-                } else {
-                    NewEquipment = SubOptions.NewEquipment.SelectedText.split(" - ")[1].trim()
-                }
+				if (!SubOptions === false) {
+					let PreviousEquipment = "";
+					let NewEquipment = "";
+					if (SubOptions.OldEquipment.SelectedValue === "Blank") {
+						PreviousEquipment = "unassigned"
+					} else {
+						PreviousEquipment = SubOptions.OldEquipment.SelectedText.split(" - ")[1].trim()
+					}
 
-                const locChangedValue = stringToBoolean(SubOptions.LocChanged.SelectedValue)
-                const freeUpgrade = stringToBoolean(SubOptions.FreeUpgrade.SelectedValue)
+					if (SubOptions.NewEquipment.SelectedValue === "Blank") {
+						NewEquipment = "unassigned"
+					} else {
+						NewEquipment = SubOptions.NewEquipment.SelectedText.split(" - ")[1].trim()
+					}
 
-                return `U-Haul Reservation; Equipment Changed : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+					const locChangedValue = stringToBoolean(SubOptions.LocChanged.SelectedValue)
+					const freeUpgrade = stringToBoolean(SubOptions.FreeUpgrade.SelectedValue)
+
+					return `U-Haul Reservation; Equipment Changed : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Hi ${ResInfo.customerFirstName}, Your U-Haul reservation has been updated. The "${PreviousEquipment}" has been updated to a "${NewEquipment}". ${freeUpgrade ? 'We would like to remind you this change will not incur any additional charges to the rental' : 'Please note, this change may incur additional charges to the rental'}. ${locChangedValue ? `Additionally, your pick-up address has been updated, please go to ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup at ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you would like to speak with your new location you can reach them at ${ResInfo.businessPhoneNumber} or for further information we` : 'We'} recommend reviewing these changes on uhaul.com/orders or if you would like to speak to a person you can reach us directly using the number provided below!
 ${ResInfo.MCOEnd}`
-            }
 
-            return `Failed to create message :(`
-        },
+					//return "Template is temporarily disabled."
+				}
 
-        NoteTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("EquipmentChange");
-            const locChangedValue = stringToBoolean(SubOptions.LocChanged.SelectedValue)
-            const freeUpgrade = stringToBoolean(SubOptions.FreeUpgrade.SelectedValue)
+				return `Failed to create message :(`
+			},
 
-            return {
-                Text: `Text Sent to Customer - Message Type: Equipment Change, Assigned Location: ${ResInfo.Entity}, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}, Changed from "${SubOptions.OldEquipment.SelectedValue}" to "${SubOptions.NewEquipment.SelectedValue}"`,
-                ExpectedIn: false,
-                Working: true,
-            }
-        },
+			NoteTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("EquipmentChange");
+				const locChangedValue = stringToBoolean(SubOptions.LocChanged.SelectedValue)
+				const freeUpgrade = stringToBoolean(SubOptions.FreeUpgrade.SelectedValue)
 
-        Dropdown: ["EquipmentChange", {
-            "OldEquipment": {
-                DisplayText: "Previous Equipment",
-                DefaultOption: "Blank",
-                Type: "Search",
-                Options: [
-                    { value: "Blank", text: "Select an option" },
-                    { value: "BE", text: "BE - Cargo Van" },
-                    { value: "BP", text: "BP - Pickup Truck" },
-                    { value: "MP", text: "MP - Ford Maverick Pickup Truck" },
-                    { value: "TM", text: "TM - 10' Box Truck" },
-                    { value: "DC", text: "DC - 15' Box Truck" },
-                    { value: "EL", text: "EL - 17' Box Truck" },
-                    { value: "TT", text: "TT - 20' Box Truck" },
-                    { value: "JH", text: "JH - 26' Box Truck" },
-                    { value: "FS", text: "FS - 4' X 7' Open Trailer" },
-                    { value: "AO", text: "AO - 5' X 8' Open Trailer" },
-                    { value: "RO", text: "RO - 6' X 12' Open Trailer" },
-                    { value: "HO", text: "HO - 6' X 12' Open Trailer w/Ramp" },
-                    { value: "UV", text: "UV - 4' X 8' Enclosed Trailer" },
-                    { value: "AV", text: "AV - 5' X 8' Enclosed Trailer" },
-                    { value: "MV", text: "MV - 5' X 10' Enclosed Trailer" },
-                    { value: "RV", text: "RV - 6' X 12' Enclosed Trailer" },
-                    { value: "RT", text: "RT - 5' X 9' Open Trailer w/Ramp" },
-                    { value: "MT", text: "MT - Motorcycle Trailer" },
-                    { value: "TD", text: "TD - Tow Dolly" },
-                    { value: "AT", text: "AT - Auto Transport" },
-                    { value: "AA", text: "AA - Wooden U-Box" },
-                    { value: "AB", text: "AB - Plastic U-Box" },
-                ]
-            },
+				return {
+					Text: `Text Sent to Customer - Message Type: Equipment Change, Assigned Location: ${ResInfo.Entity}, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}, Changed from "${SubOptions.OldEquipment.SelectedValue}" to "${SubOptions.NewEquipment.SelectedValue}"`,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
 
-            "NewEquipment": {
-                DisplayText: "New Equipment",
-                DefaultOption: "Blank",
-                Type: "Search",
-                Options: [
-                    { value: "Blank", text: "Select an option" },
-                    { value: "BE", text: "BE - Cargo Van" },
-                    { value: "BP", text: "BP - Pickup Truck" },
-                    { value: "MP", text: "MP - Ford Maverick Pickup Truck" },
-                    { value: "TM", text: "TM - 10' Box Truck" },
-                    { value: "DC", text: "DC - 15' Box Truck" },
-                    { value: "EL", text: "EL - 17' Box Truck" },
-                    { value: "TT", text: "TT - 20' Box Truck" },
-                    { value: "JH", text: "JH - 26' Box Truck" },
-                    { value: "FS", text: "FS - 4' X 7' Open Trailer" },
-                    { value: "AO", text: "AO - 5' X 8' Open Trailer" },
-                    { value: "RO", text: "RO - 6' X 12' Open Trailer" },
-                    { value: "HO", text: "HO - 6' X 12' Open Trailer w/Ramp" },
-                    { value: "UV", text: "UV - 4' X 8' Enclosed Trailer" },
-                    { value: "AV", text: "AV - 5' X 8' Enclosed Trailer" },
-                    { value: "MV", text: "MV - 5' X 10' Enclosed Trailer" },
-                    { value: "RV", text: "RV - 6' X 12' Enclosed Trailer" },
-                    { value: "RT", text: "RT - 5' X 9' Open Trailer w/Ramp" },
-                    { value: "MT", text: "MT - Motorcycle Trailer" },
-                    { value: "TD", text: "TD - Tow Dolly" },
-                    { value: "AT", text: "AT - Auto Transport" },
-                    { value: "AA", text: "AA - Wooden U-Box" },
-                    { value: "AB", text: "AB - Plastic U-Box" },
-                ]
-            },
+			Dropdown: ["EquipmentChange", {
+				"OldEquipment": {
+					DisplayText: "Previous Equipment",
+					DefaultOption: "Blank",
+					Type: "Search",
+					Options: [
+						{ value: "Blank", text: "Select an option" },
+						{ value: "BE", text: "BE - Cargo Van" },
+						{ value: "BP", text: "BP - Pickup Truck" },
+						{ value: "MP", text: "MP - Ford Maverick Pickup Truck" },
+						{ value: "TM", text: "TM - 10' Box Truck" },
+						{ value: "DC", text: "DC - 15' Box Truck" },
+						{ value: "EL", text: "EL - 17' Box Truck" },
+						{ value: "TT", text: "TT - 20' Box Truck" },
+						{ value: "JH", text: "JH - 26' Box Truck" },
+						{ value: "FS", text: "FS - 4' X 7' Open Trailer" },
+						{ value: "AO", text: "AO - 5' X 8' Open Trailer" },
+						{ value: "RO", text: "RO - 6' X 12' Open Trailer" },
+						{ value: "HO", text: "HO - 6' X 12' Open Trailer w/Ramp" },
+						{ value: "UV", text: "UV - 4' X 8' Enclosed Trailer" },
+						{ value: "AV", text: "AV - 5' X 8' Enclosed Trailer" },
+						{ value: "MV", text: "MV - 5' X 10' Enclosed Trailer" },
+						{ value: "RV", text: "RV - 6' X 12' Enclosed Trailer" },
+						{ value: "RT", text: "RT - 5' X 9' Open Trailer w/Ramp" },
+						{ value: "MT", text: "MT - Motorcycle Trailer" },
+						{ value: "TD", text: "TD - Tow Dolly" },
+						{ value: "AT", text: "AT - Auto Transport" },
+						{ value: "AA", text: "AA - Wooden U-Box" },
+						{ value: "AB", text: "AB - Plastic U-Box" },
+					]
+				},
 
-            "LocChanged": {
-                DisplayText: "Location Updated",
-                DefaultOption: false,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
-            },
+				"NewEquipment": {
+					DisplayText: "New Equipment",
+					DefaultOption: "Blank",
+					Type: "Search",
+					Options: [
+						{ value: "Blank", text: "Select an option" },
+						{ value: "BE", text: "BE - Cargo Van" },
+						{ value: "BP", text: "BP - Pickup Truck" },
+						{ value: "MP", text: "MP - Ford Maverick Pickup Truck" },
+						{ value: "TM", text: "TM - 10' Box Truck" },
+						{ value: "DC", text: "DC - 15' Box Truck" },
+						{ value: "EL", text: "EL - 17' Box Truck" },
+						{ value: "TT", text: "TT - 20' Box Truck" },
+						{ value: "JH", text: "JH - 26' Box Truck" },
+						{ value: "FS", text: "FS - 4' X 7' Open Trailer" },
+						{ value: "AO", text: "AO - 5' X 8' Open Trailer" },
+						{ value: "RO", text: "RO - 6' X 12' Open Trailer" },
+						{ value: "HO", text: "HO - 6' X 12' Open Trailer w/Ramp" },
+						{ value: "UV", text: "UV - 4' X 8' Enclosed Trailer" },
+						{ value: "AV", text: "AV - 5' X 8' Enclosed Trailer" },
+						{ value: "MV", text: "MV - 5' X 10' Enclosed Trailer" },
+						{ value: "RV", text: "RV - 6' X 12' Enclosed Trailer" },
+						{ value: "RT", text: "RT - 5' X 9' Open Trailer w/Ramp" },
+						{ value: "MT", text: "MT - Motorcycle Trailer" },
+						{ value: "TD", text: "TD - Tow Dolly" },
+						{ value: "AT", text: "AT - Auto Transport" },
+						{ value: "AA", text: "AA - Wooden U-Box" },
+						{ value: "AB", text: "AB - Plastic U-Box" },
+					]
+				},
 
-            "FreeUpgrade": {
-                DisplayText: "Free Upgrade",
-                DefaultOption: true,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
-            }
-        }],
+				"LocChanged": {
+					DisplayText: "Location Updated",
+					DefaultOption: false,
+					Type: "Checkbox",
+				},
 
-        Params: function () {
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate")) {
-                return true
-            }
+				"FreeUpgrade": {
+					DisplayText: "Free Upgrade",
+					DefaultOption: true,
+					Type: "Checkbox",
+				}
+			}],
 
-            return false
-        },
-    },
+			Params: function () {
+				const ResStats = getResStatus()
+				if (!ResStats.Dispatched && !ResStats.Cancelled) {
+					return true
+				}
 
-    "NewPickup": {
-        Display: "NewPickup",
+				return false
+			},
+		},
 
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("NewPickup");
+		"NewPickup": {
+			Display: "NewPickup",
 
-            if (!SubOptions === false) {
-                const reminderMessage = stringToBoolean(SubOptions.PickupConfirmation.SelectedValue)
-                const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("NewPickup");
 
-                if (!lowAvail) {
-                    return `U-Haul Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+				if (!SubOptions === false) {
+					const reminderMessage = stringToBoolean(SubOptions.PickupConfirmation.SelectedValue)
+					const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
+
+					if (!lowAvail) {
+						return `U-Haul Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 ${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled at' : 'Your pick-up address has been updated, please go to'} ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
-                } else {
-                    return `U-Haul Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+
+						//return "Template is temporarily disabled."
+					} else {
+						return `U-Haul Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 We apologize for the inconvenience, but due to scheduling issues at this time, your pickup has been changed. Your equipment will be ready for pick-up at ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
-                }
-            }
 
-            return `Failed to create message :(`
-        },
+						//return `U-Haul Reservation; ${ResInfo.contractNumber} - Your pickup address has been updated to ${ResInfo.street}, ${ResInfo.city}. Your reservation is scheduled for pickup on ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this change, contact us at (561) 638-9428.`
+					}
+				}
 
-        NoteTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("NewPickup");
-            const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
+				return `Failed to create message :(`
+			},
 
-            return {
-                Text: `Text Sent to Customer - Message Type: New Pickup, Assigned Location: ${ResInfo.Entity}, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}${lowAvail ? ', Notes: The equipment is currently appearing unavailable nearby cx preferred location.' : ''}`,
-                ExpectedIn: false,
-                Working: true,
-            }
-        },
+			NoteTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("NewPickup");
+				const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
 
-        Dropdown: ["NewPickup", {
-            "PickupConfirmation": {
-                DisplayText: "Reminder",
-                DefaultOption: true,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
-            },
+				return {
+					Text: `Text Sent to Customer - Message Type: New Pickup, Assigned Location: ${ResInfo.Entity}, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}${lowAvail ? ', Notes: The equipment is currently appearing unavailable nearby cx preferred location.' : ''}`,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
 
-            "LowAvail": {
-                DisplayText: "Low Availability (Suggested for 15+ Miles)",
-                DefaultOption: false,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
-            },
-        }],
+			Dropdown: ["NewPickup", {
+				"PickupConfirmation": {
+					DisplayText: "Reminder",
+					DefaultOption: true,
+					Type: "Checkbox",
+				},
 
-        Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.getElementById("cancelReservationLink") && !document.querySelector("#DispatchDate") && spanElement && spanElement.classList.contains('checked')) {
-                return true
-            }
+				"LowAvail": {
+					DisplayText: "Low Availability (Suggested for 15+ Miles)",
+					DefaultOption: false,
+					Type: "Checkbox",
+				},
+			}],
 
-            return false
-        },
-    },
+			Params: function () {
+				const ResStats = getResStatus()
+				if (!ResStats.Dispatched && !ResStats.Cancelled && ResStats.Covered) {
+					return true
+				}
 
-    "NewDropoff": {
-        Display: "NewDropoff",
+				return false
+			},
+		},
 
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("NewDropoff");
+		"NewDropoff": {
+			Display: "NewDropoff",
 
-            if (!SubOptions === false) {
-                const reminderMessage = stringToBoolean(SubOptions.DropoffConfirmation.SelectedValue)
-                const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("NewDropoff");
 
-                if (!lowAvail) {
-                    return `U-Haul Reservation; New Dropoff : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+				if (!SubOptions === false) {
+					const reminderMessage = stringToBoolean(SubOptions.DropoffConfirmation.SelectedValue)
+					const msgStyle = stringToBoolean(SubOptions.msgStyle.SelectedValue)
+
+					if (msgStyle) {
+						return `U-Haul Reservation; New Dropoff : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 ${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled to return at' : 'Your return address has been updated, please return to'} ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your rental is due back in on ${ResInfo.returndayText}, ${ResInfo.returnmonthNumber} ${ResInfo.returndayNumber}, ${ResInfo.returnyear} at ${ResInfo.returnhour}:${ResInfo.returnminute} ${ResInfo.returnAMPM}. If you are returning after hours please use your mobile device to verify your equipment return by going to https://www.uhaul.com/Orders/OrderDetail.aspx?resid=${ResInfo.contractNumber}&ln=${ResInfo.customerLastName} or you can choose to have us verify it for you the next day for a $20 convenience fee.
 ${ResInfo.MCOEnd}`
-                } else {
-                    return `dont use this setting haven't made a script for it yet thanks :)`
-                }
-            }
 
-            return `Failed to create message :(`
-        },
+						//return "Template is temporarily disabled."
+					} else {
+						return `Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, your U-Haul Return address has been updated to ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. You can reach this location at ${ResInfo.businessPhoneNumber}, if you have any questions please call the number listed below.`
+					}
+				}
 
-        NoteTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("NewDropoff");
-            const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
+				return `Failed to create message :(`
+			},
 
-            return {
-                Text: `Text Sent to Customer - Message Type: New Dropoff, Assigned Location: ${ResInfo.Entity}, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}`,
-                ExpectedIn: true,
-                Working: false,
-            }
-        },
+			NoteTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("NewDropoff");
 
-        Dropdown: ["NewDropoff", {
-            "DropoffConfirmation": {
-                DisplayText: "Reminder",
-                DefaultOption: true,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
-            },
+				return {
+					Text: `Text Sent to Customer - Message Type: New Dropoff, Assigned Location: ${ResInfo.Entity}, Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}`,
+					ExpectedIn: true,
+					Working: false,
+				}
+			},
 
-            "LowAvail": {
-                DisplayText: "Low Availability (Suggested for 15+ Miles)",
-                DefaultOption: false,
-                Type: "Normal",
-                Options: [
-                    { value: true, text: "Yes" },
-                    { value: false, text: "No" },
-                ]
-            },
-        }],
+			Dropdown: ["NewDropoff", {
+				"DropoffConfirmation": {
+					DisplayText: "Reminder",
+					DefaultOption: false,
+					Type: "Checkbox",
+				},
 
-        Params: function () {
-            const spanElement = document.querySelector('span.custom.checkbox.disabled');
-            if (document.querySelector("#DispatchDate")) {
-                return true
-            }
+				"msgStyle": {
+					DisplayText: "Format",
+					DefaultOption: true,
+					Type: "Normal",
+					Options: [
+						{ value: true, text: "Stylized" },
+						{ value: false, text: "Basic" },
+					]
+				},
+			}],
 
-            return false
-        },
-    },
+			Params: function () {
+				const ResStats = getResStatus()
+				if (ResStats.Dispatched && !ResStats.Cancelled && !ResStats.IT_Rental) {
+					return true
+				}
 
-    "EAlert": {
-        Display: "EAlert",
+				return false
+			},
+		},
 
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("EAlert");
+		"UBox": {
+			Display: "UBox",
 
-            return `U-Haul Reservation; ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("UBox");
+
+				if (SubOptions) {
+					return `U-Box Reservation; IMMEDIATE ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, you are receiving this notice in regards to a U-Box ${SubOptions.DeliveryType.SelectedText} on ${SubOptions.DeliveryDay.SelectedText}. We have timeframes available for the ${SubOptions.DeliveryType.SelectedText} and ask you call us to confirm before ${SubOptions.CutoffTime.SelectedText} on ${SubOptions.CutoffDate.SelectedText} or your ${SubOptions.DeliveryType.SelectedText} may be at risk of being rescheduled for the next available date, contact us at (561) 638-9428 or if our call volume is high you can also reach using our email 781_RM@uhaul.com and someone will reach out to you, we hope to hear from you soon!
+${ResInfo.MCOEnd}`
+				}
+
+				return `Failed to create message :(`
+			},
+
+			NoteTemplate: function () {
+				const SubOptions = getValInformation("UBox");
+
+				if (SubOptions) {
+					return {
+						Text: `U-Box Timeframe Confirmation - Delivery Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDay.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}`,
+						ExpectedIn: false,
+						Working: true,
+					}
+				}
+
+				return {
+					Text: ``,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
+
+			Dropdown: ["UBox", {
+				"DeliveryType": {
+					DisplayText: "Delivery Type",
+					DefaultOption: true,
+					Type: "Normal",
+					Options: [
+						{ value: true, text: "Delivery" },
+						{ value: false, text: "Pickup" },
+					]
+				},
+
+				"DeliveryDay": {
+					DisplayText: "Delivery Date",
+					Type: "DatePicker",
+				},
+
+				"DeliveryTimeStart": {
+					DisplayText: "Earliest Delivery Time",
+					DefaultOption: "1",
+					Type: "Normal",
+					Options: [
+						{ value: "1", text: "7:00 AM" },
+						{ value: "2", text: "8:00 AM" },
+						{ value: "3", text: "9:00 AM" },
+						{ value: "4", text: "10:00 AM" },
+						{ value: "5", text: "11:00 AM" },
+						{ value: "6", text: "12:00 PM" },
+						{ value: "7", text: "1:00 PM" },
+						{ value: "8", text: "2:00 PM" },
+						{ value: "9", text: "3:00 PM" },
+						{ value: "10", text: "4:00 PM" },
+						{ value: "11", text: "5:00 PM" },
+						{ value: "12", text: "6:00 PM" },
+						{ value: "13", text: "7:00 PM" },
+					]
+				},
+
+				"DeliveryTimeEnd": {
+					DisplayText: "Latest Delivery Time",
+					DefaultOption: "1",
+					Type: "Normal",
+					Options: [
+						{ value: "1", text: "7:00 AM" },
+						{ value: "2", text: "8:00 AM" },
+						{ value: "3", text: "9:00 AM" },
+						{ value: "4", text: "10:00 AM" },
+						{ value: "5", text: "11:00 AM" },
+						{ value: "6", text: "12:00 PM" },
+						{ value: "7", text: "1:00 PM" },
+						{ value: "8", text: "2:00 PM" },
+						{ value: "9", text: "3:00 PM" },
+						{ value: "10", text: "4:00 PM" },
+						{ value: "11", text: "5:00 PM" },
+						{ value: "12", text: "6:00 PM" },
+						{ value: "13", text: "7:00 PM" },
+					]
+				},
+
+				"CutoffDate": {
+					DisplayText: "Cutoff Date",
+					Type: "DatePicker",
+				},
+
+				"CutoffTime": {
+					DisplayText: "Cutoff Time",
+					DefaultOption: "1",
+					Type: "Normal",
+					Options: [
+						{ value: "1", text: "7:00 AM" },
+						{ value: "2", text: "8:00 AM" },
+						{ value: "3", text: "9:00 AM" },
+						{ value: "4", text: "10:00 AM" },
+						{ value: "5", text: "11:00 AM" },
+						{ value: "6", text: "12:00 PM" },
+						{ value: "7", text: "1:00 PM" },
+						{ value: "8", text: "2:00 PM" },
+						{ value: "9", text: "3:00 PM" },
+						{ value: "10", text: "4:00 PM" },
+						{ value: "11", text: "5:00 PM" },
+						{ value: "12", text: "6:00 PM" },
+						{ value: "13", text: "7:00 PM" },
+					]
+				},
+			}],
+
+			Params: function () {
+				return true
+			},
+		},
+
+		"EAlert": {
+			Display: "EAlert",
+
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("EAlert");
+
+				return `U-Haul Reservation; ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Your reservation has been flagged due to an unresolved issue with U-Haul on a previous contract you or someone associated with you previously had, to avoid complications with your rental call (877) 653-0490 before the day of your rental or before you leave to pickup your equipment.
 ${ResInfo.MCOEnd}`
 
-            return `Failed to create message :(`
-        },
-
-        NoteTemplate: function () {
-            return {
-                Text: `E-Alert Notice Sent`,
-                ExpectedIn: true,
-                Working: false,
-            }
-        },
-
-        Dropdown: ["EAlert", {
-        }],
-
-        Params: function () {
-            return true
-        },
-    },
-    
-    "CustomMessage": {
-        Display: "CustomMessage",
-
-        MsgTemplate: function () {
-            const ResInfo = getResInformation();
-            const SubOptions = getValInformation("CustomMessage");
-
-            return `U-Haul Reservation; #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-~
-${ResInfo.MCOEnd}`
-
-            return `Failed to create message :(`
-        },
-
-        NoteTemplate: function () {
-            return {
-                Text: `Text Sent to Customer - Message Type: ~`,
-                ExpectedIn: true,
-                Working: false,
-            }
-        },
-
-        Dropdown: ["CustomMessage", {
-        }],
-
-        Params: function () {
-            return true
-        },
-    },
-}
-
-function isReservationLatePickup() {
-    const preferredPickupDateElements = document.querySelectorAll("#Contract_PreferredPickupDate");
-    const rawPreferredPickupDate = Array.from(preferredPickupDateElements).find((element) => element.value).value;
-
-    const hour = document.querySelector("#Contract_PreferredPickupHour").value;
-    const minute = document.querySelector("#Contract_PreferredPickupMinute").value.padStart(2, "0");
-    const ampm = document.querySelector("#Contract_PreferredPickupAmPm").value
-
-    // Create a Date object for the pickup date.
-    let scheduledPickupTime = new Date(rawPreferredPickupDate);
-
-    // Adjust the hours and minutes based on the user's input.
-    scheduledPickupTime.setHours(hour % 12 + (ampm.toUpperCase() === 'PM' ? 12 : 0));
-    scheduledPickupTime.setMinutes(minute);
-
-    // Get the current time.
-    let currentTime = new Date();
-    // Calculate the difference between the current time and the scheduled pickup time.
-    let timeDifferenceInMinutes = (currentTime - scheduledPickupTime) / (1000 * 60);
-
-    // Check if the difference is more than 15 minutes.
-    if (timeDifferenceInMinutes > 15) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function stringToBoolean(string) {
-    switch (string.toLowerCase().trim()) {
-        case "true": return true;
-        case "false": return false;
-        case "yes": return true;
-        case "no": return false;
-        default: return Boolean(string);
-    }
-}
-
-function submitEmbed(Data) {
-    const webhookURL = 'https://discord.com/api/webhooks/1131072080503394404/spamAoxyeTJLlEmH_b8vpK7zEqkPE8o4ducnuCkocmPhZdKA-kpUEu4R60ewbp0IpEFi';
-
-    const payload = {
-        embeds: [
-            {
-                title: 'New Message',
-                fields: [
-                    { name: 'Contract Info', value: Data.Info },
-                    { name: 'Person', value: Data.Actor },
-                    { name: 'Note', value: Data.FirstLine },
-                    { name: 'Message', value: Data.SecondLine },
-                ],
-            },
-        ],
-    };
-
-    $.ajax({
-        url: webhookURL,
-        type: 'POST',
-        data: JSON.stringify(payload),
-        contentType: 'application/json',
-        error: function (error) {
-            // Handle error
-            console.error('An error occurred while submitting the embed:');
-            console.error(error);
-        },
-    });
-}
-
-function SubmitNote(n, t) {
-    ShowLoadingDiv();
-    $.ajax({
-        url: n,
-        type: "POST",
-        data: t,
-        datatype: "html",
-        success: function (n) {
-            if (HideLoadingDiv(),
-                n.error) {
-                toastr.error(n.error, "An error has occured:");
-                return
-            }
-
-            if (!n) {
-                toastr.error("Could not load.", "An error has occurred:");
-            }
-
-            ReloadCurrentReservation()
-        },
-        error: function (n) {
-            HideLoadingDiv();
-            toastr.error(n.responseText, "An error has occured:")
-        }
-    })
-}
-
-function createSubDropdown(id, data) {
-    let container = document.createElement('div');
-    container.className = "template-container";
-    container.id = `${id}_DropdownContainer`
-
-    const selectedValues = {}; // Object to store the selected values
-
-    for (let key in data) {
-        let selectId = id + key;
-
-        let label = document.createElement('label');
-        label.className = "template-label";
-        label.textContent = `${data[key].DisplayText}:`;
-
-        let select = document.createElement('select');
-        select.id = selectId;
-        select.name = selectId;
-        select.className = "hidden-field";
-
-        data[key].Options.forEach(option => {
-            let optionElement = document.createElement('option');
-            optionElement.value = option.value;
-            optionElement.textContent = option.text;
-
-            if (option.value === data[key].DefaultOption) {
-                optionElement.selected = true;
-                // Store the selected value and text
-                selectedValues[key] = {
-                    SelectedValue: option.value,
-                    SelectedText: option.text
-                };
-            }
-
-            select.appendChild(optionElement);
-        });
-
-        label.appendChild(select);
-
-        // The dropdown visuals
-        let dropdown = document.createElement('div');
-        dropdown.className = "custom dropdown msgcorner";
-
-        let current = document.createElement('a');
-        current.href = "#";
-        current.className = "current";
-        current.textContent = selectedValues[key]?.SelectedText || "";
-        dropdown.appendChild(current);
-
-        let selector = document.createElement('a');
-        selector.href = "#";
-        selector.className = "selector";
-        dropdown.appendChild(selector);
-
-        let ul = document.createElement('ul');
-        ul.className = "msgdropdown";
-
-        data[key].Options.forEach(option => {
-            let li = document.createElement('li');
-            li.textContent = option.text;
-            li.id = data[key].DisplayText;
-
-            if (option.value === selectedValues[key]?.SelectedValue) {
-                li.className = "selected";
-            }
-
-            ul.appendChild(li);
-        });
-
-        dropdown.appendChild(ul);
-        label.appendChild(dropdown);
-        container.appendChild(label);
-
-        // Add event listener to each select element
-
-        select.addEventListener('change', (event) => {
-            updateMessageTemplate()
-        });
-    }
-
-    setTimeout(function () {
-        updateMessageTemplate()
-    }, 100)
-
-    return container;
-}
-
-function isMessageTextForumVisible() {
-    const textSubmitForm = document.querySelector("#textMessageArea");
-    if (
-        textSubmitForm &&
-        textSubmitForm.offsetWidth > 0 &&
-        textSubmitForm.offsetHeight > 0
-    ) {
-        return true;
-    }
-    MessageTemplateLastVisible = false;
-    return false;
-}
-
-async function waitForElement(selector, timeout = 10000) {
-    const startTime = Date.now();
-
-    while (Date.now() - startTime < timeout) {
-        const element = document.querySelector(selector);
-
-        if ((element) && !(element.display == "none")) {
-            return element;
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-
-    return null;
-}
-
-function getResInformation() {
-    function processName(name, capitalizeWords, lowercaseWords) {
-        lowercaseWords = lowercaseWords || [];
-        return name.split(" ").map((word) => {
-            if (capitalizeWords.includes(word.toUpperCase())) {
-                return word.toUpperCase();
-            } else if (lowercaseWords.includes(word.toLowerCase())) {
-                return word.toLowerCase();
-            } else {
-                if (word.includes('-')) {
-                    return word.split('-').map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join('-');
-                } else {
-                    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-                }
-            }
-        }).join(" ");
-    }
-
-    function addOrdinalSuffix(number) {
-        const remainderTen = number % 10;
-        const remainderHundred = number % 100;
-
-        if (remainderTen === 1 && remainderHundred !== 11) {
-            return number + "st";
-        }
-        if (remainderTen === 2 && remainderHundred !== 12) {
-            return number + "nd";
-        }
-        if (remainderTen === 3 && remainderHundred !== 13) {
-            return number + "rd";
-        }
-
-        return number + "th";
-    }
-
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",];
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",];
-        const dayText = days[date.getDay()];
-        const month = months[date.getMonth()];
-        const day = date.getDate();
-        const year = date.getFullYear();
-
-        return `${dayText}, ${month} ${day}, ${year}`;
-    }
-
-    function processAddress(pickupCityStateZip, pickupStreet) {
-        const addressComponents = pickupCityStateZip.split(", ");
-        const city = addressComponents[0].split(" ").map(word => processName(word, [], ['of', 'the'])).join(" "); // Use processWord function here
-        const state = addressComponents[1].split(" ").join(" ");
-        const zipcode = addressComponents[2].trim();
-        return [pickupStreet, city, state, zipcode]; // Return an array
-    }
-
-    function findPhoneNumber(list) {
-        const phoneLabels = ["Primary Phone:", "Primary Phone", "Phone:", "Phone",];
-        let phoneLabel;
-
-        let allElements = list;
-        for (let i = 0; i < allElements.length; i++) {
-            let element = allElements[i];
-            if (phoneLabels.includes(element.innerText)) {
-                phoneLabel = element;
-                break;
-            }
-        }
-
-        if (phoneLabel) {
-            let phoneNumber = phoneLabel.nextElementSibling;
-            if (phoneNumber) {
-                return phoneNumber.innerText;
-            }
-        }
-    }
-
-    const capitalizeWords = ["LLC", "INC", "PSL"];
-    const lowercaseWords = ["of", "the"];
-
-    // Pickup
-    const preferredPickupDateElements = document.querySelectorAll("#Contract_PreferredPickupDate");
-    const rawPreferredPickupDate = Array.from(preferredPickupDateElements).find((element) => element.value).value;
-    const formattedPreferredPickupDate = formatDate(rawPreferredPickupDate);
-    const [dayText, month, dayNumber, year] = formattedPreferredPickupDate.split(/[\s,]+/);
-    const dayPref = addOrdinalSuffix(dayNumber);
-    const hour = document.querySelector("#Contract_PreferredPickupHour").value;
-    const minute = document.querySelector("#Contract_PreferredPickupMinute").value.padStart(2, "0");
-    const ampm = document.querySelector("#Contract_PreferredPickupAmPm").value
-
-    // Return
-    const preferredReturnDateElements = document.querySelectorAll("#expectedReceiveDate");
-    let rawPreferredReturnDate;
-    let formattedPreferredReturnDate;
-    let returndayText, returnmonth, returndayNumber, returnyear;
-    let returndayPref;
-    let returnhour;
-    let returnminute;
-    let returnampm;
-
-    if (preferredReturnDateElements) {
-        rawPreferredReturnDate = Array.from(preferredReturnDateElements).find((element) => element.value)
-
-        if (rawPreferredReturnDate) {
-            rawPreferredReturnDate = rawPreferredReturnDate.value
-            formattedPreferredReturnDate = formatDate(rawPreferredReturnDate);
-            [returndayText, returnmonth, returndayNumber, returnyear] = formattedPreferredReturnDate.split(/[\s,]+/);
-            returndayPref = addOrdinalSuffix(returndayNumber);
-            returnhour = document.querySelector("#expectedHour").value;
-            returnminute = document.querySelector("#expectedMinute").value.padStart(2, "0");
-            returnampm = document.querySelector("#expectedAmPm").value;
-        };
-    }
-
-    const locationDetails = document.querySelector("#mapLocationDetails > div.row > div:nth-child(2) > dl");
-    const ddElements = locationDetails.querySelectorAll("dd");
-    const dtElements = locationDetails.querySelectorAll("dt");
-
-    const pickupCityStateZip = ddElements[1].innerText.split("\n")[1].trim()
-    const pickupStreet = ddElements[1].innerText.split("\n")[0].trim();
-    const [street, city, state, zipcode] = processAddress(pickupCityStateZip, pickupStreet);
-    const businessName = processName(ddElements[0].innerText, capitalizeWords, lowercaseWords);
-    const phoneNumber = findPhoneNumber(dtElements);
-
-    return {
-        // Contract Numbers
-        rawContractNumber: document.querySelector("#ReservationPopup .whoseViewingStatus").getAttribute("data-contractid"),
-        contractNumber: document.querySelector("#ReservationPopup #textDocumentNumber").value,
-
-        // Customer Information
-        customerFirstName: processName(document.querySelector("#customerFirstNameOnly").value.trim(), [], []),
-        customerLastName: processName(document.querySelector("#ReservationPopup > section > header > h1").textContent.split("-")[1].trim(), [], []),
-
-        // Equipment Information
-        // Coming soon -- :)
-
-        // Date Information
-        monthNumber: month,
-        dayNumber: dayPref,
-        dayText: dayText,
-        year: year,
-        hour: hour,
-        minute, minute,
-        AMPM: ampm,
-
-        // Return Date Information
-        returnmonthNumber: returnmonth,
-        returndayNumber: returndayPref,
-        returndayText: returndayText,
-        returnyear: returnyear,
-        returnhour: returnhour,
-        returnminute, returnminute,
-        returnAMPM: returnampm,
-
-        // Business Information
-        amtCity: processName(document.getElementById("FromCityValue").textContent.trim().split(",")[0].trim(), [], ['of', 'the']),
-        amtState: processName(document.getElementById("FromCityValue").textContent.trim().split(",")[1].trim(), [], ['of', 'the']).toUpperCase(),
-        city: city,
-        state: state.toUpperCase(),
-        street: street,
-        zipcode: zipcode,
-        businessName: businessName,
-        businessPhoneNumber: phoneNumber,
-        Entity: $("#pickUpEntityChosen").val() || "Unassigned",
-
-        // MCO Information
-        MCOEnd: "U-Haul Co. Palm Bay, FL (800) 649-2507"
-    }
-}
-
-function getValInformation(id) {
-    if (!id) {
-        return false
-    }
-
-    const container = document.querySelector(`#${id}_DropdownContainer`);
-    if (!container) {
-        return false
-    }
-
-    const selectElements = container.getElementsByTagName("select");
-    const selectedValues = {};
-
-    for (let i = 0; i < selectElements.length; i++) {
-        const selectElement = selectElements[i];
-        const key = selectElement.name.replace(id, "");
-        const selectedOption = selectElement.value;
-        const selectedText = selectElement.options[selectElement.selectedIndex].text;
-
-        selectedValues[key] = {
-            SelectedValue: selectedOption,
-            SelectedText: selectedText
-        };
-    }
-
-    return selectedValues;
-}
-
-function AddMessageTemplate(n, t) {
-    // Add Note Template
-    const MsgData = MsgTemplates[document.querySelector("#customCustomerContactList .selected").textContent]
-    if (MsgData) {
-        $("#noteMessageArea").val(MsgData.NoteTemplate().Text)
-    }
-
-    // Add Message Template
-    t.val(n.val())
-}
-
-function formatPhoneNumber(inputElement) {
-    let value = inputElement.value.replace(/\D/g, '');
-    if (value.length > 10) value = value.slice(0, 10); // Limit to 10 numerical characters
-
-    let formattedValue = '';
-    if (value.length > 0) formattedValue += '(' + value.slice(0, 3);
-    if (value.length > 3) formattedValue += ') ' + value.slice(3, 6);
-    if (value.length > 6) formattedValue += '-' + value.slice(6);
-    inputElement.value = formattedValue;
-}
-
-window.AddMessageTemplate = AddMessageTemplate;
-window.formatPhoneNumber = formatPhoneNumber;
-
-function updateMessageTemplate() {
-    for (const MsgName in MsgTemplates) {
-        const MsgData = MsgTemplates[MsgName]
-
-        if (MsgData.Params() || TestingMode === true) {
-            const existingOption = document.querySelector(`#mainTemplateList > #customCustomerContactTemplateDropdown > #${MsgName}`)
-            const MessageTemplate = MsgData.MsgTemplate()
-            existingOption.value = MessageTemplate
-        }
-    };
-}
-
-function MessageTextForumVisible() {
-    if (MessageTemplateLastVisible === false) {
-        MessageTemplateLastVisible = true;
-
-        const MessagePopup = waitForElement("Body > #SecondaryPopup > #textSubmitForm", 5000)
-        if (MessagePopup) {
-            const ClonePhoneNumber = document.querySelector("#textSubmitForm label").textContent.trim().split(" ")[1]
-            document.querySelector("Body > #SecondaryPopup").style.borderRadius = '10px';
-
-            const nMessagePopup = document.querySelector("Body > #SecondaryPopup > #textSubmitForm")
-            nMessagePopup.innerHTML = `` // Reset Content
-
-            const Html_Content = `
-                <input id="ContractID" name="ContractID" type="hidden" value="${document.querySelector("#ContractId").value}">
-                <input id="textFromView" name="ViewMode" type="hidden" value="Cover">
-
-                <h3 class="header">Text Customer</h3>
-
-                <div class="messagecontent custom form">
-                    <div class="msgleft">
-                        <label class="phonenumber-label">
-                            Phone Number:
-                            <input id="CustomerPhoneNumber" name="CustomerPhoneNumber" type="text" value="${ClonePhoneNumber}" disabled="true" class="phone-input">
-                        </label>
-
-                        <li class="templatesplit"></li>
-
-                        <label class="msgList" id="mainTemplateList">
-                            Create Template:
-
-                            <select id="customCustomerContactTemplateDropdown" name="GetCustomCustomerContactTemplate" class="hidden-field">
-
-                            </select>
-
-                            <div class="custom dropdown msgcorner">
-                                <a href="#" class="current">Testing Option 1</a>
-                                <a href="#" class="selector"></a>
-
-                                <ul class="msgdropdown" id="customCustomerContactList">
-
-                                </ul>
-                            </div>
-                        </label>
-
-                        <div class="template-indent">
-                            <label class="template-label">
-                                Option 1:
-
-                                <select id="customCustomerContactTemplateDropdown" name="GetCustomCustomerContactTemplate" class="hidden-field">
-                                    <option value="This is an option">Testing Option 1</option>
-                                    <option value="This is an option">Testing Option 2</option>
-                                    <option value="This is an option">Testing Option 3</option>
-                                    <option value="This is an option">Testing Option 4</option>
-                                    <option value="This is an option">Testing Option 5</option>
-                                    <option value="This is an option">Testing Option 6</option>
-                                    <option value="This is an option">Testing Option 7</option>
-                                </select>
-
-                                <div class="custom dropdown msgcorner">
-                                    <a href="#" class="current">Testing Option 1</a>
-                                    <a href="#" class="selector"></a>
-
-                                    <ul class="msgdropdown">
-                                        <li class="selected">Testing Option 1</li>
-                                        <li class>Testing Option 2</li>
-                                        <li class>Testing Option 3</li>
-                                        <li class>Testing Option 4</li>
-                                        <li class>Testing Option 5</li>
-                                        <li class>Testing Option 6</li>
-                                        <li class>Testing Option 7</li>
-                                    </ul>
-                                </div>
-                            </label>
-                        </div>
-
-                        <button type="button" class="right msgcorner templateadd" onclick="AddMessageTemplate($('#mainTemplateList #customCustomerContactTemplateDropdown'), $('#textMessageArea'))">Add Template</button>
-                    </div>
-
-                    <div class="msgright">
-                        <div>
-                            Note Content:
-
-                            <div class="msgBox Top">
-                                <textarea placeholder="Add any additional notes or instructions here..." id="noteMessageArea" name="NoteMessage" class="message-textarea"></textarea>
-                            </div>
-                        </div>
-
-                        <li class="templatesplit" style="opacity: 0;"></li>
-
-                        <div style="height: 100%">
-                            Message Content:
-
-                            <div class="msgBox Bottom">
-                                <textarea placeholder="Compose your message here..." id="textMessageArea" name="TextMessage" class="message-textarea"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="actionButtons">
-                    <div class="large-12 columns">
-                        <button type="submit" class="right save msgcorner">Send</button>
-                        <button type="button" class="right cancel msgcorner" onclick="CloseModalPopup()">Cancel</button>
-                    </div>
-                </div>
-            `
-            nMessagePopup.innerHTML = Html_Content;
-
-            var css = `
-                .header {
-                    border-top-right-radius: 5px;
-                    border-top-left-radius: 5px;
-                }
-
-                .messagecontent {
-                    display: flex;
-                    flex-direction: row;
-                    margin: 10px !important;
-                    width: 100%;
-                    height: 100%;
-                    align-items: stretch; /* new */
-                }
-
-                .msgleft {
-                    flex-grow: 0;
-                    flex-shrink: 0;
-                    padding-right: 20px;
-                    width: 30%;
-                }
-
-                .msgright {
-                    flex-grow: 0;
-                    flex-shrink: 0;
-                    padding-right: 30px;
-                    display: flex;
-                    flex-direction: column;
-                    width: 70%;
-                }
-
-                .msgright .msgBox {
-                    padding-top: 5px;
-                }
-
-                .msgright .Top {
-                    flex-grow: 0;
-                    flex-shrink: 0;
-                    height: 30%;
-                }
-
-                .msgright .Bottom {
-                    flex-grow: 0;
-                    flex-shrink: 0;
-                    height: calc(100% - 10px);
-                    min-height: 10em;
-                }
-
-                .msgright .msgBox textarea {
-                    flex-grow: 0;
-                    flex-shrink: 0;
-                    resize: none;
-                    border-radius: 5px;
-                    height: 100%;
-                    border-radius: 5px;
-                    margin-bottom: 0px !important;
-                    margin-top: 0px !important;
-                }
-
-                .msgList {
-                    margin-bottom: 20px;
-                }
-
-                .phone-input {
-                    border-radius: 5px;
-                }
-
-                .msgcorner {
-                    border-radius: 5px;
-                }
-
-                .msgdropdown {
-                    border-radius: 5px;
-                    margin-top: 5px !important;
-                }
-
-                .msgdropdowntemplate {
-                    border: 1px solid #ccc;
-                    position: relative;
-                    top: 0;
-                    height: 2em;
-                    margin-bottom: 1.6666666667em;
-                    padding: 0;
-                    width: 100%;
-                }
-
-                .msgcurrent {
-                    cursor: default;
-                    white-space: nowrap;
-                    line-height: 1.9166666667em;
-                    color: rgba(0, 0, 0, 0.75);
-                    overflow: hidden;
-                    display: block;
-                    margin-left: 0.5833333333em;
-                    margin-right: 2em;
-                }
-
-                .actionButtons {
-                    margin: -10px;
-                    width: 100%;
-                }
-
-                .actionButtons button {
-                    margin-top: 20px !important;
-                    margin-bottom: 20px !important;
-                }
-
-                .templateadd {
-                    margin-bottom: 0px !important;
-                }
-
-                .messagecontent .templatesplit {
-                  border-bottom: none;
-                  border-top: solid 1px #d6d6d6;
-                  clear: both;
-                  width: 100%;
-                  padding-bottom: 10px;
-                }
-
-                .messagecontent .templatesplit::marker {
-                    content: "";
-                }
-
-                .template-indent {
-                    position: relative;
-                    padding-left: 30px; /* Add more left padding to make space for the line */
-
-                    /* Create the line */
-                    &::before {
-                        content: "";
-                        position: absolute;
-                        left: 10px; /* Adjust this to move the line left or right */
-                        top: 0;
-                        bottom: 0;
-                        width: 1px; /* Adjust this to make the line thicker or thinner */
-                        background-color: #d6d6d6; /* Change this to change the color of the line */
-                    }
-                }
-                `,
-                head = document.head || document.getElementsByTagName('head')[0],
-                style = document.createElement('style');
-
-            if (!CSS_StyleSheetAdded) {
-                CSS_StyleSheetAdded = true;
-
-                head.appendChild(style);
-                style.type = 'text/css';
-                if (style.styleSheet) {
-                    style.styleSheet.cssText = css;
-                } else {
-                    style.appendChild(document.createTextNode(css));
-                }
-            }
-
-            const SaveButton = document.querySelector(".actionButtons .save")
-
-            if (SaveButton) {
-                SaveButton.addEventListener("click", async function () {
-                    const MsgData = MsgTemplates[document.querySelector("#customCustomerContactList .selected").textContent]
-                    if (MsgData) {
-                        const Template = MsgData.NoteTemplate()
-                        const AddedNote = {
-                            Note: $("#noteMessageArea").val(),
-                            Working: Template.Working,
-                            ExpectedIn: Template.ExpectedIn,
-                        }
-
-                        if ($("#noteMessageArea").val().length > 1) {
-                            const Toast = await waitForElement("#toast-container", 10000);
-
-                            if (Toast.querySelector(".toast-info")) {
-                                const URL_Split = amtURL.baseURL.toString().split("/")
-
-                                function replaceSpacesWithPlus(str) {
-                                    return str.replace(/ /g, '+');
-                                }
-
-                                const SelectedNote = replaceSpacesWithPlus(AddedNote.Note)
-                                const ExpectedIn = AddedNote.ExpectedIn
-                                const Working = AddedNote.Working
-                                const NoteURL = `QuickNotes=&ContractNote.Note=${SelectedNote}&ContractNote.DownloadNote=false&ContractNote.WorkingNote=${Working}&ContractNote.SpecialInstructionNote=false&ContractNote.ExpectedInNote=${ExpectedIn}&ContractNote.ExpectedInNote=false&ContractNote.IsForOverdueEquipment=False&ContractNote.IsForOverdueRemoval=False&ContractNote.IsForReceivedOrDispatchedContract=False&ContractNote.IsFromExpectedIn=True&ContractNote.DenialType=None`
-                                SubmitNote(`/${URL_Split[3]}/Reservations/AddNewContractNote`, NoteURL);
-                            }
-                        }
-
-                        const ResInfo = getResInformation();
-                        const DataBreakdown = `Reservation #: ${ResInfo.contractNumber}
-Name: ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}
-Assigned Location: ${ResInfo.Entity}`
-                        
-                        submitEmbed({
-                            Info: DataBreakdown,
-                            Actor: dynatraceUserName.textContent,
-                            FirstLine: AddedNote.Note,
-                            SecondLine: $("#textMessageArea").val(),
-                        });
-                    }
-                });
-            }
-
-            // Phone Number formatting
-            const phoneNumberInput = document.querySelector("#CustomerPhoneNumber");
-            function formatPhoneNumber(inputElement) {
-                let value = inputElement.value.replace(/\D/g, '');
-                if (value.length > 10) value = value.slice(0, 10); // Limit to 10 numerical characters
-
-                let formattedValue = '';
-                if (value.length > 0) formattedValue += '(' + value.slice(0, 3);
-                if (value.length > 3) formattedValue += ') ' + value.slice(3, 6);
-                if (value.length > 6) formattedValue += '-' + value.slice(6);
-                inputElement.value = formattedValue;
-            }
-
-            phoneNumberInput.addEventListener('input', function () {
-                formatPhoneNumber(this);
-            });
-
-            formatPhoneNumber(phoneNumberInput);
-
-            function handleTemplateDropdownChange(event) {
-                const DropdownMenu = document.querySelector("#mainTemplateList .msgdropdown")
-                const Selected = DropdownMenu.querySelector(".selected").textContent.trim()
-                const SubMenu = document.querySelector(".template-indent")
-                SubMenu.innerHTML = ``
-
-                if (MsgTemplates[Selected]) {
-                    const NewDropdown = createSubDropdown(MsgTemplates[Selected].Dropdown[0], MsgTemplates[Selected].Dropdown[1])
-                    SubMenu.appendChild(NewDropdown);
-                }
-            }
-
-            const mainDropdownChange = document.querySelector("#mainTemplateList #customCustomerContactTemplateDropdown");
-            mainDropdownChange.addEventListener("change", handleTemplateDropdownChange);
-
-            function updateCurrentAnchorText() {
-                const list = document.querySelector("#mainTemplateList #customCustomerContactList");
-                const currentAnchor = document.querySelector("#textSubmitForm .current");
-
-                if (list && currentAnchor) {
-                    const firstListItem = list.querySelector("li:first-child");
-
-                    if (firstListItem) {
-                        firstListItem.click()
-                        firstListItem.classList.add("selected"); // Add the "selected" class to the first list item
-                        const firstListItemText = firstListItem.textContent;
-                        currentAnchor.textContent = firstListItemText;
-                    }
-                }
-            }
-
-            for (const MsgName in MsgTemplates) {
-                const MsgData = MsgTemplates[MsgName]
-                const MsgDisplayName = MsgData.Display
-
-                if (MsgData.Params() || TestingMode === true) {
-                    const MsgOption = document.createElement("li");
-                    MsgOption.textContent = `${MsgDisplayName}`
-                    MsgOption.id = `${MsgName}`
-                    document.querySelector("#mainTemplateList > div > #customCustomerContactList").appendChild(MsgOption)
-
-                    const MsgHiddenValue = new Option(MsgDisplayName, MsgName)
-                    MsgHiddenValue.value = MsgData.MsgTemplate()
-                    MsgHiddenValue.id = `${MsgName}`
-                    document.querySelector("#mainTemplateList > #customCustomerContactTemplateDropdown").appendChild(MsgHiddenValue)
-                }
-            };
-
-            updateCurrentAnchorText();
-        }
-    }
-}
-
-// Function to continuously check if the textSubmitForm is visible
-function isMessageTextForumVisibleInterval() {
-    function addScriptVersion(scriptName, version) {
-        let scriptVersionElement = document.createElement('div');
-        scriptVersionElement.style.display = 'none'; // Make it hidden
-        scriptVersionElement.classList.add('script-version'); // So we can find it later
-        scriptVersionElement.dataset.name = scriptName; // Store the script name
-        scriptVersionElement.dataset.version = version; // Store the version
-        document.body.appendChild(scriptVersionElement);
-    }
-
-    addScriptVersion("Dynamic Messages V2", "15")
-
-    setInterval(() => {
-        if (isMessageTextForumVisible()) {
-            MessageTextForumVisible();
-        }
-    }, 100); // Check every 100ms
-}
-
-isMessageTextForumVisibleInterval();
+				//return "Template is temporarily disabled."
+				return `Failed to create message :(`
+			},
+
+			NoteTemplate: function () {
+				return {
+					Text: `E-Alert Notice Sent`,
+					ExpectedIn: true,
+					Working: false,
+				}
+			},
+
+			Dropdown: ["EAlert", {
+			}],
+
+			Params: function () {
+				return true
+			},
+		},
+
+		"Overdue": {
+			Display: "Overdue",
+
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("Overdue");
+
+				return `Dear ${ResInfo.customerFirstName} ${ResInfo.customerLastName},
+We have attempted to reach you using the information you provided at the time of your rental, but have been unsuccessful. Our records indicate that your contract has not been completed.
+
+Contract Number: ${ResInfo.contractNumber}
+Rental Area: ${ResInfo.city}, ${ResInfo.state}
+Date Dispatched: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}
+
+If you have not returned and wish to extend for a longer period you will have to pay for previous days that were not charged as well the additional days you are wishing to extend until. If we do not hear from you U-Haul will be proceeding with our overdue process and further action will be taken.
+
+If you would like to speak to one of representatives directly, you may contact us at (800) 649-2507,
+Monday - Saturday 7:00 am - 7:00 pm EST and Sunday 9:00 am - 5:00 pm EST.
+
+Sincerely,
+U-Haul Equipment Recovery Department`
+				//return "Template is temporarily disabled."
+
+				return `Failed to create message :(`
+			},
+
+			NoteTemplate: function () {
+				return {
+					Text: `Overdue text sent`,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
+
+			Dropdown: ["Overdue", {
+			}],
+
+			Params: function () {
+				const ResStats = getResStatus()
+				if (ResStats.Dispatched) {
+					return true
+				}
+
+				return false
+			},
+		},
+
+		"CustomMessage": {
+			Display: "CustomMessage",
+
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("CustomMessage");
+
+				return `U-Haul Reservation; #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+	~
+	${ResInfo.MCOEnd}`
+
+				return `Failed to create message :(`
+			},
+
+			NoteTemplate: function () {
+				return {
+					Text: `Text Sent to Customer - Message Type: ~`,
+					ExpectedIn: true,
+					Working: false,
+				}
+			},
+
+			Dropdown: ["CustomMessage", {
+			}],
+
+			Params: function () {
+				return true
+			},
+		},
+	}
+
+	function isReservationLatePickup() {
+		const preferredPickupDateElements = document.querySelectorAll("#Contract_PreferredPickupDate");
+		const rawPreferredPickupDate = Array.from(preferredPickupDateElements).find((element) => element.value).value;
+
+		const hour = document.querySelector("#Contract_PreferredPickupHour").value;
+		const minute = document.querySelector("#Contract_PreferredPickupMinute").value.padStart(2, "0");
+		const ampm = document.querySelector("#Contract_PreferredPickupAmPm").value
+
+		// Create a Date object for the pickup date.
+		let scheduledPickupTime = new Date(rawPreferredPickupDate);
+
+		// Adjust the hours and minutes based on the user's input.
+		scheduledPickupTime.setHours(hour % 12 + (ampm.toUpperCase() === 'PM' ? 12 : 0));
+		scheduledPickupTime.setMinutes(minute);
+
+		// Get the current time.
+		let currentTime = new Date();
+		// Calculate the difference between the current time and the scheduled pickup time.
+		let timeDifferenceInMinutes = (currentTime - scheduledPickupTime) / (1000 * 60);
+
+		// Check if the difference is more than 15 minutes.
+		if (timeDifferenceInMinutes > 15) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function stringToBoolean(string) {
+		switch (string.toLowerCase().trim()) {
+			case "true": return true;
+			case "false": return false;
+			case "yes": return true;
+			case "no": return false;
+			default: return Boolean(string);
+		}
+	}
+
+	function submitEmbed(Data) {
+		const webhookURL = 'https://discord.com/api/webhooks/1131072080503394404/spamAoxyeTJLlEmH_b8vpK7zEqkPE8o4ducnuCkocmPhZdKA-kpUEu4R60ewbp0IpEFi';
+
+		const payload = {
+			embeds: [
+				{
+					title: 'New Message',
+					fields: [
+						{ name: 'Contract Info', value: Data.Info },
+						{ name: 'Person', value: Data.Actor },
+						{ name: 'Note', value: Data.FirstLine },
+						{ name: 'Message', value: Data.SecondLine },
+					],
+				},
+			],
+		};
+
+		$.ajax({
+			url: webhookURL,
+			type: 'POST',
+			data: JSON.stringify(payload),
+			contentType: 'application/json',
+			error: function (error) {
+				// Handle error
+				console.error('An error occurred while submitting the embed:');
+				console.error(error);
+			},
+		});
+	}
+
+	function SubmitNote(n, t) {
+		ShowLoadingDiv();
+		$.ajax({
+			url: n,
+			type: "POST",
+			data: t,
+			datatype: "html",
+			success: function (n) {
+				if (HideLoadingDiv(),
+					n.error) {
+					toastr.error(n.error, "An error has occured:");
+					return
+				}
+
+				if (!n) {
+					toastr.error("Could not load.", "An error has occurred:");
+				}
+
+				ReloadCurrentReservation()
+			},
+			error: function (n) {
+				HideLoadingDiv();
+				toastr.error(n.responseText, "An error has occured:")
+			}
+		})
+	}
+
+	function createSubDropdown(id, data) {
+		let container = document.createElement('div');
+		container.className = "template-container";
+		container.id = `${id}_DropdownContainer`
+
+		const selectedValues = {}; // Object to store the selected values
+
+		for (let key in data) {
+			let selectId = id + key;
+
+			let label = document.createElement('label');
+			label.className = "template-label";
+
+			if (data[key].Type === "Splitter") {
+				const splitHolder = $(`<li class="templatesplit"></li>`)
+				$(container).append(splitHolder);
+				continue;
+			}
+
+			// If the type is DatePicker, use the jQuery UI datepicker
+			if (data[key].Type === "DatePicker") {
+				label.textContent = `${data[key].DisplayText}:`;
+				let input = document.createElement('input');
+				input.type = "text";
+				input.className = "msgcorner dropdownpad customdatepicker"
+				input.id = selectId;
+				input.name = selectId;
+
+				let currentYear = new Date().getFullYear();
+				let nextYear = currentYear + 1;
+
+				$(input).datepicker({
+					dateFormat: "DD, MM d, yy",
+					minDate: 0,
+					yearRange: `${currentYear}:${nextYear}`,
+					changeYear: false,
+					changeMonth: true,
+					onSelect: function (dateText) {
+						selectedValues[key] = {
+							SelectedValue: dateText,
+							SelectedText: dateText
+						};
+						updateMessageTemplate()
+					}
+				});
+
+				// Set default date to current date
+				$(input).datepicker("setDate", new Date());
+
+				label.appendChild(input);
+				container.appendChild(label);
+				continue;
+			}
+
+			if (data[key].Type === "Checkbox") {
+				// Main container for the custom checkbox
+				let checkboxContainer = document.createElement('label');
+				checkboxContainer.className = 'customcheckbox checkbox offset-bottom-2';
+
+				// The actual input element
+				let input = document.createElement('input');
+				input.type = "checkbox";
+				input.className = "msgcorner dropdownpad customdatepicker";
+				input.id = selectId;
+				input.name = selectId;
+				input.value = data[key].DefaultOption;
+				input.checked = data[key].DefaultOption;
+				checkboxContainer.appendChild(input);
+
+				// Custom checkbox label text
+				let checkboxText = document.createElement('span');
+				checkboxText.textContent = data[key].DisplayText // use the DisplayText from data or a default value
+				checkboxContainer.appendChild(checkboxText);
+
+				// Custom checkbox visual element
+				let customCheckbox = document.createElement('span');
+				customCheckbox.className = 'custom checkbox'; // "checked" class will be added when the checkbox is checked
+				customCheckbox.style.top = "0px !important";
+				checkboxContainer.appendChild(customCheckbox);
+
+				if (data[key].DefaultOption) {
+					customCheckbox.classList.add('checked');
+					input.value = "true"
+					selectedValues[key] = {
+						SelectedValue: "true",
+						SelectedText: "true"
+					};
+				} else {
+					customCheckbox.classList.remove('checked');
+					input.value = "false"
+					selectedValues[key] = {
+						SelectedValue: "false",
+						SelectedText: "false"
+					};
+				}
+
+				// Change event for updating the selected values
+				$(input).change(function () {
+					if ($(this).is(':checked')) {
+						customCheckbox.classList.add('checked');
+						input.value = "true"
+						selectedValues[key] = {
+							SelectedValue: "true",
+							SelectedText: "true"
+						};
+					} else {
+						customCheckbox.classList.remove('checked');
+						input.value = "false"
+						selectedValues[key] = {
+							SelectedValue: "false",
+							SelectedText: "false"
+						};
+					}
+					updateMessageTemplate()
+				});
+
+				$(input).trigger('change');
+
+				label.appendChild(checkboxContainer);
+				container.appendChild(label);
+				continue;  // Skip the rest of the loop for this key and move to the next one
+			}
+
+			label.textContent = `${data[key].DisplayText}:`;
+			// For 'Normal' type, generate dropdowns
+			let select = document.createElement('select');
+			select.id = selectId;
+			select.name = selectId;
+			select.className = "hidden-field";
+
+			data[key].Options.forEach(option => {
+				let optionElement = document.createElement('option');
+				optionElement.value = option.value;
+				optionElement.textContent = option.text;
+
+				if (option.value === data[key].DefaultOption) {
+					optionElement.selected = true;
+					selectedValues[key] = {
+						SelectedValue: option.value,
+						SelectedText: option.text
+					};
+				}
+
+				select.appendChild(optionElement);
+			});
+
+			label.appendChild(select);
+
+			// The dropdown visuals
+			let dropdown = document.createElement('div');
+			dropdown.className = "custom dropdown msgcorner";
+
+			let current = document.createElement('a');
+			current.href = "#";
+			current.className = "current";
+			current.textContent = selectedValues[key]?.SelectedText || "";
+			dropdown.appendChild(current);
+
+			let selector = document.createElement('a');
+			selector.href = "#";
+			selector.className = "selector";
+			dropdown.appendChild(selector);
+
+			let ul = document.createElement('ul');
+			ul.className = "msgdropdown";
+
+			data[key].Options.forEach(option => {
+				let li = document.createElement('li');
+				li.textContent = option.text;
+				li.id = data[key].DisplayText;
+
+				if (option.value === selectedValues[key]?.SelectedValue) {
+					li.className = "selected";
+				}
+
+				ul.appendChild(li);
+			});
+
+			dropdown.appendChild(ul);
+			label.appendChild(dropdown);
+			container.appendChild(label);
+
+			// Add event listener to each select element
+			select.addEventListener('change', (event) => {
+				updateMessageTemplate()
+			});
+		}
+
+		setTimeout(function () {
+			updateMessageTemplate()
+		}, 100)
+
+		return container;
+	}
+
+	function getResStatus() {
+		const spanElement = document.querySelector('span.custom.checkbox.disabled');
+		let ReturnDetails = {
+			Dispatched: false,
+			Cancelled: false,
+			Covered: false,
+			Truckshare: false,
+			IT_Rental: false,
+		}
+
+		if (document.querySelector("#DispatchDate")) {
+			ReturnDetails.Dispatched = true;
+		}
+
+		if (!document.getElementById("cancelReservationLink") && !ReturnDetails.Dispatched) {
+			ReturnDetails.Cancelled = true;
+		}
+
+		if (spanElement && spanElement.classList.contains('checked')) {
+			ReturnDetails.Covered = true;
+		}
+
+		const TruckshareEle = document.querySelector('span.custom.checkbox.disabled');
+		if (TruckshareEle && TruckshareEle.classList.contains('checked')) {
+			ReturnDetails.Truckshare = true;
+		}
+
+		if (!ReturnDetails.Dispatched) {
+			const RentalType = document.querySelector("#ReservationSummaryTab > div:nth-child(2) > div:nth-child(1) dd:nth-child(4)");
+
+			if (RentalType && RentalType.textContent.trim().startsWith("InTown")) {
+				ReturnDetails.IT_Rental = true
+			}
+		} else {
+			const RentalType = document.querySelector("#ReservationSummaryTab > div:nth-child(3) > div:nth-child(1) dd:nth-child(4)");
+
+			if (RentalType && RentalType.textContent.trim().startsWith("InTown")) {
+				ReturnDetails.IT_Rental = true
+			}
+		}
+
+		return ReturnDetails
+	}
+
+	function isMessageTextForumVisible() {
+		const TextCustomerForm = document.querySelector("#textMessageArea");
+		if (
+			TextCustomerForm &&
+			TextCustomerForm.offsetWidth > 0 &&
+			TextCustomerForm.offsetHeight > 0
+		) {
+			return true;
+		}
+		MessageTemplateLastVisible = false;
+		return false;
+	}
+
+	async function waitForElement(selector, timeout = 10000) {
+		const startTime = Date.now();
+
+		while (Date.now() - startTime < timeout) {
+			const element = document.querySelector(selector);
+
+			if ((element) && !(element.display == "none")) {
+				return element;
+			}
+
+			await new Promise((resolve) => setTimeout(resolve, 100));
+		}
+
+		return null;
+	}
+
+	function getResInformation() {
+		function processName(name, capitalizeWords, lowercaseWords) {
+			lowercaseWords = lowercaseWords || [];
+			return name.split(" ").map((word) => {
+				if (capitalizeWords.includes(word.toUpperCase())) {
+					return word.toUpperCase();
+				} else if (lowercaseWords.includes(word.toLowerCase())) {
+					return word.toLowerCase();
+				} else {
+					if (word.includes('-')) {
+						return word.split('-').map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join('-');
+					} else {
+						return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+					}
+				}
+			}).join(" ");
+		}
+
+		function addOrdinalSuffix(number) {
+			const remainderTen = number % 10;
+			const remainderHundred = number % 100;
+
+			if (remainderTen === 1 && remainderHundred !== 11) {
+				return number + "st";
+			}
+			if (remainderTen === 2 && remainderHundred !== 12) {
+				return number + "nd";
+			}
+			if (remainderTen === 3 && remainderHundred !== 13) {
+				return number + "rd";
+			}
+
+			return number + "th";
+		}
+
+		function formatDate(dateString) {
+			const date = new Date(dateString);
+			const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",];
+			const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",];
+			const dayText = days[date.getDay()];
+			const month = months[date.getMonth()];
+			const day = date.getDate();
+			const year = date.getFullYear();
+
+			return `${dayText}, ${month} ${day}, ${year}`;
+		}
+
+		function processAddress(pickupCityStateZip, pickupStreet) {
+			const addressComponents = pickupCityStateZip.split(", ");
+			const city = addressComponents[0].split(" ").map(word => processName(word, [], ['of', 'the'])).join(" "); // Use processWord function here
+			const state = addressComponents[1].split(" ").join(" ");
+			const zipcode = addressComponents[2].trim();
+			return [pickupStreet, city, state, zipcode]; // Return an array
+		}
+
+		function findPhoneNumber(list) {
+			const phoneLabels = ["Primary Phone:", "Primary Phone", "Phone:", "Phone",];
+			let phoneLabel;
+
+			let allElements = list;
+			for (let i = 0; i < allElements.length; i++) {
+				let element = allElements[i];
+				if (phoneLabels.includes(element.innerText)) {
+					phoneLabel = element;
+					break;
+				}
+			}
+
+			if (phoneLabel) {
+				let phoneNumber = phoneLabel.nextElementSibling;
+				if (phoneNumber) {
+					return phoneNumber.innerText;
+				}
+			}
+		}
+
+		const capitalizeWords = ["LLC", "INC", "PSL"];
+		const lowercaseWords = ["of", "the"];
+
+		// Pickup
+		const preferredPickupDateElements = document.querySelectorAll("#Contract_PreferredPickupDate");
+		const rawPreferredPickupDate = Array.from(preferredPickupDateElements).find((element) => element.value).value;
+		const formattedPreferredPickupDate = formatDate(rawPreferredPickupDate);
+		const [dayText, month, dayNumber, year] = formattedPreferredPickupDate.split(/[\s,]+/);
+		const dayPref = addOrdinalSuffix(dayNumber);
+		const hour = document.querySelector("#Contract_PreferredPickupHour").value;
+		const minute = document.querySelector("#Contract_PreferredPickupMinute").value.padStart(2, "0");
+		const ampm = document.querySelector("#Contract_PreferredPickupAmPm").value
+
+		// Return
+		const preferredReturnDateElements = document.querySelectorAll("#expectedReceiveDate");
+		let rawPreferredReturnDate;
+		let formattedPreferredReturnDate;
+		let returndayText, returnmonth, returndayNumber, returnyear;
+		let returndayPref;
+		let returnhour;
+		let returnminute;
+		let returnampm;
+
+		if (preferredReturnDateElements) {
+			rawPreferredReturnDate = Array.from(preferredReturnDateElements).find((element) => element.value)
+
+			if (rawPreferredReturnDate) {
+				rawPreferredReturnDate = rawPreferredReturnDate.value
+				formattedPreferredReturnDate = formatDate(rawPreferredReturnDate);
+				[returndayText, returnmonth, returndayNumber, returnyear] = formattedPreferredReturnDate.split(/[\s,]+/);
+				returndayPref = addOrdinalSuffix(returndayNumber);
+				returnhour = document.querySelector("#expectedHour").value;
+				returnminute = document.querySelector("#expectedMinute").value.padStart(2, "0");
+				returnampm = document.querySelector("#expectedAmPm").value;
+			};
+		}
+
+		const locationDetails = document.querySelector("#mapLocationDetails > div.row > div:nth-child(2) > dl");
+		const ddElements = locationDetails.querySelectorAll("dd");
+		const dtElements = locationDetails.querySelectorAll("dt");
+
+		// Trim and split the text by newline
+		const _pickupCityStateZip = ddElements[1].innerText.trim().split("\n");
+
+		// Remove leading and trailing spaces from each line
+		const trimmedLines = _pickupCityStateZip.map(line => line.trim());
+
+		// Remove empty lines
+		const nonEmptyLines = trimmedLines.filter(line => line !== '');
+
+		// Assuming you want the first and second non-empty lines
+		const pickupStreet = nonEmptyLines[0];
+		const pickupCityStateZip = nonEmptyLines[1];
+		const [street, city, state, zipcode] = processAddress(pickupCityStateZip, pickupStreet);
+		const businessName = processName(ddElements[0].innerText, capitalizeWords, lowercaseWords);
+		const phoneNumber = findPhoneNumber(dtElements);
+
+		let DynamicTime;
+		let CurrentTime = new Date();
+
+		if (CurrentTime.getHours() < 12) {
+			DynamicTime = "Morning"
+		} else {
+			DynamicTime = "Afternoon"
+		}
+
+		return {
+			// Contract Numbers
+			rawContractNumber: document.querySelector("#ReservationPopup .whoseViewingStatus").getAttribute("data-contractid"),
+			contractNumber: document.querySelector("#ReservationPopup #textDocumentNumber").value,
+
+			// Customer Information
+			customerFirstName: processName(document.querySelector("#customerFirstNameOnly").value.trim(), [], []),
+			customerLastName: processName(document.querySelector("#ReservationPopup > section > header > h1").textContent.split("-")[1].trim(), [], []),
+
+			// Equipment Information
+			// Coming soon -- :)
+
+			// Date Information
+			monthNumber: month,
+			dayNumber: dayPref,
+			dayText: dayText,
+			year: year,
+			hour: hour,
+			minute, minute,
+			AMPM: ampm,
+
+			// Return Date Information
+			returnmonthNumber: returnmonth,
+			returndayNumber: returndayPref,
+			returndayText: returndayText,
+			returnyear: returnyear,
+			returnhour: returnhour,
+			returnminute, returnminute,
+			returnAMPM: returnampm,
+
+			// Business Information
+			amtCity: processName(document.getElementById("FromCityValue").textContent.trim().split(",")[0].trim(), [], ['of', 'the']),
+			amtState: processName(document.getElementById("FromCityValue").textContent.trim().split(",")[1].trim(), [], ['of', 'the']).toUpperCase(),
+			city: city,
+			state: state.toUpperCase(),
+			street: street,
+			zipcode: zipcode,
+			businessName: businessName,
+			businessPhoneNumber: phoneNumber,
+			Entity: $("#pickUpEntityChosen").val() || "Unassigned",
+
+			// MCO Information
+			MCOEnd: "U-Haul Co. Palm Bay, FL (800) 649-2507",
+			TimeOfDay: DynamicTime,
+		}
+	}
+
+	function getValInformation(id) {
+		if (!id) {
+			return false;
+		}
+
+		const container = document.querySelector(`#${id}_DropdownContainer`);
+		if (!container) {
+			return false;
+		}
+
+		const selectElements = container.getElementsByTagName("select");
+		const inputElements = container.getElementsByTagName("input");
+		const selectedValues = {};
+
+		for (let i = 0; i < selectElements.length; i++) {
+			const selectElement = selectElements[i];
+			const key = selectElement.name.replace(id, "");
+			const selectedOption = selectElement.value;
+			const selectedText = selectElement.options[selectElement.selectedIndex].text;
+
+			selectedValues[key] = {
+				SelectedValue: selectedOption,
+				SelectedText: selectedText
+			};
+		}
+
+		for (let i = 0; i < inputElements.length; i++) {
+			const inputElement = inputElements[i];
+			const key = inputElement.name.replace(id, "");
+
+			// Checking if this input is a DatePicker, based on its class.
+			if (inputElement.classList.contains('customdatepicker')) {
+				selectedValues[key] = {
+					SelectedValue: inputElement.value,
+					SelectedText: inputElement.value
+				};
+			}
+		}
+
+		return selectedValues;
+	}
+
+	function AddMessageTemplate(n, t) {
+		// Add Note Template
+		const MsgData = MsgTemplates[document.querySelector("#customCustomerContactList .selected").textContent]
+		if (MsgData) {
+			$("#noteMessageArea").val(MsgData.NoteTemplate().Text)
+		}
+
+		// Add Message Template
+		t.val(n.val())
+	}
+
+	function formatPhoneNumber(inputElement) {
+		let value = inputElement.value.replace(/\D/g, '');
+		if (value.length > 10) value = value.slice(0, 10); // Limit to 10 numerical characters
+
+		let formattedValue = '';
+		if (value.length > 0) formattedValue += '(' + value.slice(0, 3);
+		if (value.length > 3) formattedValue += ') ' + value.slice(3, 6);
+		if (value.length > 6) formattedValue += '-' + value.slice(6);
+		inputElement.value = formattedValue;
+	}
+
+	window.AddMessageTemplate = AddMessageTemplate;
+	window.formatPhoneNumber = formatPhoneNumber;
+
+	function updateMessageTemplate() {
+		for (const MsgName in MsgTemplates) {
+			const MsgData = MsgTemplates[MsgName]
+
+			if (MsgData.Params() || TestingMode === true) {
+				const existingOption = document.querySelector(`#mainTemplateList > #customCustomerContactTemplateDropdown > #${MsgName}`)
+				const MessageTemplate = MsgData.MsgTemplate()
+				existingOption.value = MessageTemplate
+			}
+		};
+	}
+
+	function MessageTextForumVisible() {
+		if (MessageTemplateLastVisible === false) {
+			MessageTemplateLastVisible = true;
+
+			const MessagePopup = waitForElement("Body > #SecondaryPopup > #TextCustomerForm", 5000)
+			if (MessagePopup) {
+				const ClonePhoneNumber = document.querySelector("#TextCustomerForm label").textContent.trim().split(" ")[1]
+				const TxtMsgAreaErr = $("#textMessageArea-error").text()
+				const TxtMsgDataVal = $("#textMessageArea").data("val")
+				const TxtMsgDataValLength = $("#textMessageArea").data("val-length")
+				const TxtMsgDataValLengthMax = $("#textMessageArea").data("val-length-max")
+				//document.querySelector("Body > #SecondaryPopup").style.borderRadius = '10px';
+
+				const nMessagePopup = document.querySelector("Body > #SecondaryPopup > #TextCustomerForm")
+				nMessagePopup.innerHTML = `` // Reset Content
+
+				const Html_Content = `
+	                <input id="ContractID" name="ContractID" type="hidden" value="${document.querySelector("#ContractId").value}">
+	                <input id="textFromView" name="ViewMode" type="hidden" value="Cover">
+					<input id="ReCaptchaToken" name="ReCaptchaToken" type="hidden" value="">
+
+	                <h3 class="header">Text Customer</h3>
+	
+	                <div class="messagecontent custom form">
+	                    <div class="msgleft">
+	                        <label class="phonenumber-label">
+	                            Phone Number:
+	                            <input id="CustomerPhoneNumber" name="CustomerPhoneNumber" type="text" value="${ClonePhoneNumber}" disabled="true" class="phone-input">
+	                        </label>
+	
+	                        <li class="templatesplit"></li>
+	
+	                        <label class="msgList" id="mainTemplateList">
+	                            Create Template:
+	
+	                            <select id="customCustomerContactTemplateDropdown" name="GetCustomCustomerContactTemplate" class="hidden-field">
+	
+	                            </select>
+	
+	                            <div class="custom dropdown msgcorner">
+	                                <a href="#" class="current">Failed to load templates</a>
+	                                <a href="#" class="selector"></a>
+	
+	                                <ul class="msgdropdown" id="customCustomerContactList">
+	
+	                                </ul>
+	                            </div>
+	                        </label>
+	
+	                        <div class="template-indent">
+	                        </div>
+	
+	                        <button type="button" class="right msgcorner templateadd" onclick="AddMessageTemplate($('#mainTemplateList #customCustomerContactTemplateDropdown'), $('#textMessageArea'))">Add Template</button>
+	                    </div>
+
+	                    <div class="msgright">
+	                        <div>
+	                            Note Content:
+	
+	                            <div class="msgBox Top">
+	                                <textarea placeholder="Add any additional notes or instructions here..." id="noteMessageArea" name="NoteMessage" class="message-textarea"></textarea>
+	                            </div>
+	                        </div>
+	
+	                        <li class="templatesplit" style="opacity: 0;"></li>
+	
+	                        <div style="height: 100%">
+	                            Message Content:
+	
+	                            <div class="msgBox Bottom">
+	                                <textarea placeholder="Compose your message here..." id="textMessageArea" name="TextMessage" class="message-textarea" data-val="${TxtMsgDataVal}" data-val-length="${TxtMsgDataValLength}" data-val-length-max="${TxtMsgDataValLengthMax}"></textarea>
+									<span class="errorClass field-validation-valid" data-valmsg-for="TextMessage" data-valmsg-replace="true"></span>
+								</div>
+	                        </div>
+	                    </div>
+	                </div>
+	
+	                <div class="actionButtons">
+	                    <div class="large-12 columns">
+	                        <button type="submit" class="right save msgcorner" onclick="GetCaptcha(event, '#TextCustomerForm', 'TextCustomerForm', true, SubmitTextCustomerForm, null)">Send</button>
+	                        <button type="button" class="right cancel msgcorner" onclick="CloseModalPopup()">Cancel</button>
+	                    </div>
+	                </div>
+	            `
+				nMessagePopup.innerHTML = Html_Content;
+
+				var css = `
+	                .header {
+	                    /*
+			    border-top-right-radius: 5px;
+	                    border-top-left-radius: 5px;
+			    */
+	                }
+	
+	                .messagecontent {
+	                    display: flex;
+	                    flex-direction: row;
+	                    margin: 10px !important;
+	                    width: 100%;
+	                    height: 100%;
+	                    align-items: stretch; /* new */
+	                }
+	
+	                .msgleft {
+	                    flex-grow: 0;
+	                    flex-shrink: 0;
+	                    padding-right: 20px;
+	                    width: 30%;
+	                }
+	
+	                .msgright {
+	                    flex-grow: 0;
+	                    flex-shrink: 0;
+	                    padding-right: 30px;
+	                    display: flex;
+	                    flex-direction: column;
+	                    width: 70%;
+	                }
+	
+	                .msgright .msgBox {
+	                    padding-top: 5px;
+	                }
+	
+	                .msgright .Top {
+	                    flex-grow: 0;
+	                    flex-shrink: 0;
+	                    height: 30%;
+	                }
+	
+	                .msgright .Bottom {
+	                    flex-grow: 0;
+	                    flex-shrink: 0;
+	                    height: calc(100% - 10px);
+	                    min-height: 10em;
+	                }
+	
+	                .msgright .msgBox textarea {
+	                    flex-grow: 0;
+	                    flex-shrink: 0;
+	                    resize: none;
+	                    /* border-radius: 5px; */
+	                    height: 100%;
+	                    margin-bottom: 0px !important;
+	                    margin-top: 0px !important;
+	                }
+	
+	                .msgList {
+	                    margin-bottom: 20px;
+	                }
+	
+	                .phone-input {
+	                    /* border-radius: 5px; */
+	                }
+
+					.textMessageArea-error {
+	                    margin-top: "0px"
+	                }
+	
+	                .msgcorner {
+	                    /* border-radius: 5px; */
+	                }
+	
+	                .dropdownpad {
+	                    margin-bottom: 1.6666666667em !important;
+	                    border: 1px solid #ccc;
+	                }
+	
+	                .customcheckbox {
+	                    margin-top: 12px !important;
+	                    height: 1em !important;
+	                }
+	
+		  	.msgleft .checkbox.custom {
+	                    top: 0px !important;
+	                    height: 100%;
+			    width: 100%;
+	                }
+	
+	                .msgdropdown {
+	                    /* border-radius: 5px; */
+	                    margin-top: 5px !important;
+	                }
+	
+	                .msgdropdowntemplate {
+	                    border: 1px solid #ccc;
+	                    position: relative;
+	                    top: 0;
+	                    height: 2em;
+	                    margin-bottom: 1.6666666667em;
+	                    padding: 0;
+	                    width: 100%;
+	                }
+	
+	                .msgcurrent {
+	                    cursor: default;
+	                    white-space: nowrap;
+	                    line-height: 1.9166666667em;
+	                    color: rgba(0, 0, 0, 0.75);
+	                    overflow: hidden;
+	                    display: block;
+	                    margin-left: 0.5833333333em;
+	                    margin-right: 2em;
+	                }
+	
+	                .actionButtons {
+	                    margin: -10px;
+	                    width: 100%;
+	                }
+	
+	                .actionButtons button {
+	                    margin-top: 20px !important;
+	                    margin-bottom: 20px !important;
+	                }
+	
+	                .templateadd {
+	                    margin-bottom: 0px !important;
+	                }
+	
+	                .messagecontent .templatesplit {
+	                  border-bottom: none;
+	                  border-top: solid 1px #d6d6d6;
+	                  clear: both;
+	                  width: 100%;
+	                  padding-bottom: 10px;
+	                }
+	
+	                .messagecontent .templatesplit::marker {
+	                    content: "";
+	                }
+	
+	                .template-indent {
+	                    position: relative;
+	                    padding-left: 30px; /* Add more left padding to make space for the line */
+	
+	                    /* Create the line */
+	                    &::before {
+	                        content: "";
+	                        position: absolute;
+	                        left: 10px; /* Adjust this to move the line left or right */
+	                        top: 0;
+	                        bottom: 0;
+	                        width: 1px; /* Adjust this to make the line thicker or thinner */
+	                        background-color: #d6d6d6; /* Change this to change the color of the line */
+	                    }
+	                }
+	                `,
+					head = document.head || document.getElementsByTagName('head')[0],
+					style = document.createElement('style');
+
+				if (!CSS_StyleSheetAdded) {
+					CSS_StyleSheetAdded = true;
+
+					head.appendChild(style);
+					style.type = 'text/css';
+					if (style.styleSheet) {
+						style.styleSheet.cssText = css;
+					} else {
+						style.appendChild(document.createTextNode(css));
+					}
+				}
+
+				const SaveButton = document.querySelector(".actionButtons .save")
+
+				if (SaveButton) {
+					SaveButton.addEventListener("click", async function () {
+						const MsgData = MsgTemplates[document.querySelector("#customCustomerContactList .selected").textContent]
+						if (MsgData) {
+							const Template = MsgData.NoteTemplate()
+							const AddedNote = {
+								Note: $("#noteMessageArea").val(),
+								Working: Template.Working,
+								ExpectedIn: Template.ExpectedIn,
+							}
+
+							if ($("#noteMessageArea").val().length > 1) {
+								const Toast = await waitForElement("#toast-container", 10000);
+
+								if (Toast.querySelector(".toast-info")) {
+									const URL_Split = amtURL.baseURL.toString().split("/")
+
+									function replaceSpacesWithPlus(str) {
+										return str.replace(/ /g, '+');
+									}
+
+									const SelectedNote = replaceSpacesWithPlus(AddedNote.Note)
+									const ExpectedIn = AddedNote.ExpectedIn
+									const Working = AddedNote.Working
+									const NoteURL = `QuickNotes=&ContractNote.Note=${SelectedNote}&ContractNote.DownloadNote=false&ContractNote.WorkingNote=${Working}&ContractNote.SpecialInstructionNote=false&ContractNote.ExpectedInNote=${ExpectedIn}&ContractNote.ExpectedInNote=false&ContractNote.IsForOverdueEquipment=False&ContractNote.IsForOverdueRemoval=False&ContractNote.IsForReceivedOrDispatchedContract=False&ContractNote.IsFromExpectedIn=True&ContractNote.DenialType=None`
+									SubmitNote(`/${URL_Split[3]}/Reservations/AddNewContractNote`, NoteURL);
+								}
+							}
+
+							const ResInfo = getResInformation();
+							const DataBreakdown = `Reservation #: ${ResInfo.contractNumber}
+	Name: ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+	Scheduled Date: ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}
+	Assigned Location: ${ResInfo.Entity}`
+
+							submitEmbed({
+								Info: DataBreakdown,
+								Actor: dynatraceUserName.textContent,
+								FirstLine: AddedNote.Note,
+								SecondLine: $("#textMessageArea").val(),
+							});
+						}
+					});
+				}
+
+				// Phone Number formatting
+				const phoneNumberInput = document.querySelector("#CustomerPhoneNumber");
+				function formatPhoneNumber(inputElement) {
+					let value = inputElement.value.replace(/\D/g, '');
+					if (value.length > 10) value = value.slice(0, 10); // Limit to 10 numerical characters
+
+					let formattedValue = '';
+					if (value.length > 0) formattedValue += '(' + value.slice(0, 3);
+					if (value.length > 3) formattedValue += ') ' + value.slice(3, 6);
+					if (value.length > 6) formattedValue += '-' + value.slice(6);
+					inputElement.value = formattedValue;
+				}
+
+				phoneNumberInput.addEventListener('input', function () {
+					formatPhoneNumber(this);
+				});
+
+				formatPhoneNumber(phoneNumberInput);
+
+				function handleTemplateDropdownChange(event) {
+					const DropdownMenu = document.querySelector("#mainTemplateList .msgdropdown")
+					const Selected = DropdownMenu.querySelector(".selected").textContent.trim()
+					const SubMenu = document.querySelector(".template-indent")
+					SubMenu.innerHTML = ``
+
+					if (MsgTemplates[Selected]) {
+						const NewDropdown = createSubDropdown(MsgTemplates[Selected].Dropdown[0], MsgTemplates[Selected].Dropdown[1])
+						SubMenu.appendChild(NewDropdown);
+					}
+				}
+
+				const mainDropdownChange = document.querySelector("#mainTemplateList #customCustomerContactTemplateDropdown");
+				mainDropdownChange.addEventListener("change", handleTemplateDropdownChange);
+
+				function updateCurrentAnchorText() {
+					const list = document.querySelector("#mainTemplateList #customCustomerContactList");
+					const currentAnchor = document.querySelector("#TextCustomerForm .current");
+
+					if (list && currentAnchor) {
+						const firstListItem = list.querySelector("li:first-child");
+
+						if (firstListItem) {
+							firstListItem.click()
+							firstListItem.classList.add("selected"); // Add the "selected" class to the first list item
+							const firstListItemText = firstListItem.textContent;
+							currentAnchor.textContent = firstListItemText;
+						}
+					}
+				}
+
+				for (const MsgName in MsgTemplates) {
+					const MsgData = MsgTemplates[MsgName]
+					const MsgDisplayName = MsgData.Display
+
+					if (MsgData.Params() || TestingMode === true) {
+						const MsgOption = document.createElement("li");
+						MsgOption.textContent = `${MsgDisplayName}`
+						MsgOption.id = `${MsgName}`
+						document.querySelector("#mainTemplateList > div > #customCustomerContactList").appendChild(MsgOption)
+
+						const MsgHiddenValue = new Option(MsgDisplayName, MsgName)
+						MsgHiddenValue.value = MsgData.MsgTemplate()
+						MsgHiddenValue.id = `${MsgName}`
+						document.querySelector("#mainTemplateList > #customCustomerContactTemplateDropdown").appendChild(MsgHiddenValue)
+					}
+				};
+
+				updateCurrentAnchorText();
+			}
+		}
+	}
+
+	// Function to continuously check if the TextCustomerForm is visible
+	function isMessageTextForumVisibleInterval() {
+		function addScriptVersion(scriptName, version) {
+			let scriptVersionElement = document.createElement('div');
+			scriptVersionElement.style.display = 'none'; // Make it hidden
+			scriptVersionElement.classList.add('script-version'); // So we can find it later
+			scriptVersionElement.dataset.name = scriptName; // Store the script name
+			scriptVersionElement.dataset.version = version; // Store the version
+			document.body.appendChild(scriptVersionElement);
+		}
+
+		addScriptVersion("Dynamic Messages V2", "36")
+
+		setInterval(() => {
+			if (isMessageTextForumVisible()) {
+				MessageTextForumVisible();
+			}
+		}, 100); // Check every 100ms
+	}
+
+	isMessageTextForumVisibleInterval();
+})();
