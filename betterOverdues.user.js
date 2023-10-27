@@ -112,7 +112,7 @@
             })
         })
 
-        ulElement.prepend(TrackingDetails);
+        ulElement.prepend(RequestDemandLetter);
         
         // Create Tracking Details button
         if (TrackingId > 0) {
