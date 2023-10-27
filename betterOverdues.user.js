@@ -101,6 +101,7 @@
         // Create Request Demand-Letter Button
         const RequestDemandLetter = OpenOnlineDoc.parent().clone(true);
         RequestDemandLetter.find("a")
+          .attr("onclick", `javascript:void(0)`)
           .text("Request Demand Letter")
           .attr("request-demand-letter-id", ContractId);
 
