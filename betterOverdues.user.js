@@ -107,7 +107,7 @@
         $(RequestDemandLetter).click(function() {
             ConfirmDialog("Are you sure you want to sent another Demand Letter? Only use this if the original was denied.", "Confirm Request", function(r) {
                 if (r === !0) {
-                    RequestDemandLetter(${ContractId})
+                    RequestDemandLetter(ContractId)
                 }
             })
         })
