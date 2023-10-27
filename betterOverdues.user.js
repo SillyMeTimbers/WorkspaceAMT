@@ -106,7 +106,7 @@
           .attr("request-demand-letter-id", ContractId);
 
         $(RequestDemandLetter).click(function() {
-            ConfirmDialog("Are you sure you want to sent another Demand Letter? Only use this if the original was denied.", "Confirm Request", function(r) {
+            ConfirmDialog(`Are you sure you want to sent another Demand Letter? Only use this if the original was denied else use the "In-Town Not Returned" in the "Contract Closed" panel.`, "Confirm Request", function(r) {
                 if (r === !0) {
                     RequestDemandLetter(ContractId)
                 }
@@ -114,7 +114,7 @@
         })
 
         ulElement.prepend(RequestDemandLetter);
-        
+
         // Create Tracking Details button
         if (TrackingId > 0) {
           const TrackingDetails = OpenOnlineDoc.parent().clone(true);
