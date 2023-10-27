@@ -98,6 +98,22 @@
           }
         }
 
+        // Create Request Demand-Letter Button
+        const RequestDemandLetter = OpenOnlineDoc.parent().clone(true);
+        RequestDemandLetter.find("a")
+          .text("Request Demand Letter")
+          .attr("request-demand-letter-id", ContractId);
+
+        $(RequestDemandLetter).click(function() {
+            ConfirmDialog("Are you sure you want to sent another Demand Letter? Only use this if the original was denied.", "Confirm Request", function(r) {
+                if (r === !0) {
+                    RequestDemandLetter(${ContractId})
+                }
+            })
+        })
+
+        ulElement.prepend(TrackingDetails);
+        
         // Create Tracking Details button
         if (TrackingId > 0) {
           const TrackingDetails = OpenOnlineDoc.parent().clone(true);
@@ -132,7 +148,7 @@
       document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Better Overdues", "1")
+    addScriptVersion("Better Overdues", "2")
 
     setInterval(() => {
       if (isSourceVisible()) {
