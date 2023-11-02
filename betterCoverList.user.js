@@ -190,7 +190,7 @@
             document.body.appendChild(scriptVersionElement);
         }
 
-        addScriptVersion("Better Selection List", "1")
+        addScriptVersion("Better Cover List", "2")
 
         setInterval(() => {
             if (isSourceVisible()) {
