@@ -23,6 +23,7 @@ const Redirects = [
   "betterHistoryPage",
   "autoUnrentedEquipment",
   "betterOverdues",
+  "betterCoverList",
 ];
 
 const PermissionsList = {
