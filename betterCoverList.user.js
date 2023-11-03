@@ -153,27 +153,25 @@
                         $(EntitySelection).show()
                     }
 
-                    if (EntitySelection.attr(`data-updated`) !== `true`) {
-                        let isTruckshareLocation = location[4]
+                    let isTruckshareLocation = location[4]
 
-                        if (isTruckshareLocation.length > 1) {
-                            isTruckshareLocation = true
-                        }
-
-                        if (!location[2] || location[2].length === 0) {
-                            location[2] = "0";
-                        } else if (location[2][0] === ".") {
-                            location[2] = "0" + location[2];
-                        }
-
-                        $(EntitySelection).removeClass(location[3]);
-                        $(EntitySelection).css("color", getColor(location[3]));
-                        $(EntitySelection).css("padding", "2px");
-
-                        EntitySelection.attr('data-updated', 'true');
-                        EntitySelection.text(EntitySelection.val() + ` | ${location[2]} : ${getCity(location[1])}` + `${isTruckshareLocation ? ` (24/7)` : ``}`)
-                        break;
+                    if (isTruckshareLocation.length > 1) {
+                        isTruckshareLocation = true
                     }
+
+                    if (!location[2] || location[2].length === 0) {
+                        location[2] = "0";
+                    } else if (location[2][0] === ".") {
+                        location[2] = "0" + location[2];
+                    }
+
+                    $(EntitySelection).removeClass(location[3]);
+                    $(EntitySelection).css("color", getColor(location[3]));
+                    $(EntitySelection).css("padding", "2px");
+
+                    EntitySelection.attr('data-updated', 'true');
+                    EntitySelection.text(EntitySelection.val() + ` | ${location[2]} : ${getCity(location[1])}` + `${isTruckshareLocation ? ` (24/7)` : ``}`)
+                    break;
                 }
             }
         });
@@ -190,7 +188,7 @@
             document.body.appendChild(scriptVersionElement);
         }
 
-        addScriptVersion("Better Cover List", "2")
+        addScriptVersion("Better Cover List", "3")
 
         setInterval(() => {
             if (isSourceVisible()) {
