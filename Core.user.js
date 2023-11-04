@@ -24,6 +24,7 @@ const Redirects = [
   "autoUnrentedEquipment",
   "betterOverdues",
   "betterCoverList",
+  "WindowCloseAll",
 ];
 
 const PermissionsList = {
