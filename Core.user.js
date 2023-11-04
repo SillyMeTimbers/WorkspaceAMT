@@ -31,7 +31,7 @@ const PermissionsList = {
         Branch: {
             Live: false,
         },
-        Exclude: ["HideUncoveredNotDispatch"],
+        Exclude: [],
     },
 
     "Emily Bertrand": {
