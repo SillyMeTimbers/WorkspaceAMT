@@ -6,220 +6,223 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const NotDispatchCleaner = "6"
-let NotDispatchReportLastVisible = false;
-let NotDispatchSettings = {
-	"UBOX": true,
-	"Uncovered": false,
-}
-//#d94d45
-function NotDispatchinjectCSS(css) {
-	const style = document.createElement('style');
-	style.type = 'text/css';
-	style.appendChild(document.createTextNode(css));
-	document.head.appendChild(style);
-}
 
-const LatePickup = `
-    tr.latePU.odd{
-        background: #cb3d36 !important;
+(function () {
+    'use strict';
+
+    const NotDispatchCleaner = "7"
+    let NotDispatchReportLastVisible = false;
+    let NotDispatchSettings = {
+        "UBOX": true,
+        "Uncovered": false,
     }
-    tr.latePU.even{
-        background: #bd362f !important;
+
+    function NotDispatchinjectCSS(css) {
+        const style = document.createElement('style');
+        style.type = 'text/css';
+        style.appendChild(document.createTextNode(css));
+        document.head.appendChild(style);
     }
-    tr.latePU td {
-        color: #fff !important;
-    }
-    tr.latePU:hover {
-        background: #e35a52 !important;
-    }
+
+    const LatePickup = `
+        tr.even-row, tr.odd-row {
+            -moz-transition: background-color 300ms ease-out;
+            -o-transition: background-color 300ms ease-out;
+            -webkit-transition: background-color 300ms ease-out;
+            transition: background-color 300ms ease-out;
+        }
+        tr.even-row{
+            background: white !important;
+        }
+        tr.odd-row{
+            background: #f1f1f1 !important;
+        }
+        tr.latePU.odd-row{
+            background: #cb3d36 !important;
+        }
+        tr.latePU.even-row{
+            background: #bd362f !important;
+        }
+        tr.latePU td {
+            color: #fff !important;
+        }
+        tr.latePU:hover {
+            background: #e35a52 !important;
+        }
+        tr.notLatePU:hover {
+            background: #d4e2f0 !important;
+        }
 `;
-NotDispatchinjectCSS(LatePickup);
+    NotDispatchinjectCSS(LatePickup);
 
-// Function to check if the OverdueSearchResultsDiv is visible
-function isNotDispatchReportVisible() {
-	const NotDispatchReportDiv = document.querySelector(
-		"#NotDispatchedResults_wrapper"
-	);
-	if (
-		NotDispatchReportDiv &&
-		NotDispatchReportDiv.offsetWidth > 0 &&
-		NotDispatchReportDiv.offsetHeight > 0
-	) {
-		return true;
-	}
-	NotDispatchReportLastVisible = false;
-	return false;
-}
+    function isNotDispatchReportActive() {
+        const NotDispatchReportDiv = document.querySelector(
+            "#NotDispatchedResults_wrapper"
+        );
+        if (
+            NotDispatchReportDiv &&
+            NotDispatchReportDiv.offsetWidth > 0 &&
+            NotDispatchReportDiv.offsetHeight > 0
+        ) {
+            return true;
+        }
+        NotDispatchReportLastVisible = false;
+        return false;
+    }
 
-function notDispatchUpdateCheckbox(checkbox) {
-	if (checkbox.id === "addUBOX") {
-		NotDispatchSettings.UBOX = $(checkbox).prop('checked')
-		console.log(`Updated Value to ${NotDispatchSettings.UBOX}`)
-	}
+    function notDispatchUpdateCheckbox(checkbox) {
+        if (checkbox.id === "addUBOX") {
+            NotDispatchSettings.UBOX = $(checkbox).prop('checked')
+        }
 
-	if (checkbox.id === "addUncovered") {
-		NotDispatchSettings.Uncovered = $(checkbox).prop('checked')
-		console.log(`Updated Value to ${NotDispatchSettings.Uncovered}`)
-	}
-}
+        if (checkbox.id === "addUncovered") {
+            NotDispatchSettings.Uncovered = $(checkbox).prop('checked')
+        }
+    }
 
-function createCheckbox(id, name, text, defaultValue) {
-	// Create the label element
-	let label = document.createElement('label');
+    function createCheckbox(id, name, text, defaultValue) {
+        let label = document.createElement('label');
+        let input = document.createElement('input');
+        input.setAttribute('data-val', 'true');
+        input.setAttribute('data-val-required', 'The DownloadNote field is required.');
+        input.setAttribute('id', id);
+        input.setAttribute('name', name);
+        input.setAttribute('type', 'checkbox');
+        input.style.marginRight = '5px';
+        input.checked = defaultValue;
 
-	// Create the input element
-	let input = document.createElement('input');
-	input.setAttribute('data-val', 'true');
-	input.setAttribute('data-val-required', 'The DownloadNote field is required.');
-	input.setAttribute('id', id);
-	input.setAttribute('name', name);
-	input.setAttribute('type', 'checkbox');
-	input.style.marginRight = '5px';
+        input.addEventListener('change', function () {
+            notDispatchUpdateCheckbox(this);
+        });
 
-	// Set the checked state based on defaultValue
-	input.checked = defaultValue;
+        let span = document.createElement('span');
+        span.setAttribute('class', 'custom checkbox');
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(text));
+        label.appendChild(span);
+        label.setAttribute('id', `${id}_Holder`);
+        label.style.width = "fit-content"
 
-	input.addEventListener('change', function () {
-		notDispatchUpdateCheckbox(this);
-	});
+        return label;
+    }
 
-	// Create the span element
-	let span = document.createElement('span');
-	span.setAttribute('class', 'custom checkbox');
+    function Execute() {
+        if (document.querySelector("#addUBOX_Holder") == null) {
+            const IncludeUBOX = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Include U-Box', NotDispatchSettings.UBOX);
+            document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUBOX);
 
-	// Add the input element and span to the label
-	label.appendChild(input);
-	label.appendChild(document.createTextNode(text));
-	label.appendChild(span);
-	label.setAttribute('id', `${id}_Holder`);
-	label.style.width = "fit-content"
+            const IncludeUncovered = createCheckbox('addUncovered', 'NotDispatchPanel.addUncovered', 'Include 781008', NotDispatchSettings.Uncovered);
+            document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUncovered);
+        }
 
-	// Return the label element
-	return label;
-}
+        const tbody = document.querySelector("#NotDispatchedResults > tbody");
+        function getOrdinalSuffix(number) {
+            if (number % 10 == 1 && number != 11) {
+                return 'st';
+            }
+            if (number % 10 == 2 && number != 12) {
+                return 'nd';
+            }
+            if (number % 10 == 3 && number != 13) {
+                return 'rd';
+            }
+            return 'th';
+        }
 
-// Function to run when the OverdueSearchResultsDiv is visible
-function runWhenNotDispatchReport() {
-	if (document.querySelector("#addUBOX_Holder") == null) {
-		const IncludeUBOX = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Include U-Box', NotDispatchSettings.UBOX);
-		document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUBOX);
+        $(tbody).find("> tr").each(function (index, element) {
+            const locID = $(this).find("> td:nth-child(8)").text().trim()
+            const equipID = $(this).find("> td:nth-child(7)").text().trim()
 
-		const IncludeUncovered = createCheckbox('addUncovered', 'NotDispatchPanel.addUncovered', 'Include 781008', NotDispatchSettings.Uncovered);
-		document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUncovered);
-	}
+            const ignoreLocations = ['781008'];
+            const ignoreEquipment = ['AA', 'AB'];
 
-	const tbody = document.querySelector("#NotDispatchedResults > tbody");
-	function getOrdinalSuffix(number) {
-		if (number % 10 == 1 && number != 11) {
-			return 'st';
-		}
-		if (number % 10 == 2 && number != 12) {
-			return 'nd';
-		}
-		if (number % 10 == 3 && number != 13) {
-			return 'rd';
-		}
-		return 'th';
-	}
+            let shouldHide = false;
+            if (NotDispatchSettings.Uncovered == false && ignoreLocations.some(location => locID.endsWith(location))) {
+                shouldHide = true;
+            } else if ((NotDispatchSettings.UBOX == false && ignoreEquipment.some(equipment => equipID.includes(equipment)))) {
+                shouldHide = true;
+            }
 
-	tbody.querySelectorAll("tr").forEach((tr) => {
-		const locationId = tr.querySelector("td:nth-child(8)").textContent.trim();
-		const EquipType = tr.querySelector("td:nth-child(7)").textContent.trim();
+            if (shouldHide) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
 
-		const rawDate = tr.querySelector("td:nth-child(6)").textContent.trim();
+        $(tbody).find("> tr:visible").each(function (index, element) {
+            const locID = $(this).find("> td:nth-child(8)").text().trim()
+            const equipID = $(this).find("> td:nth-child(7)").text().trim()
+            const rawDate = $(this).find("> td:nth-child(6)").text().trim()
 
-		if (rawDate && !tr.hasAttribute("data-processed")) {
-			const pickupTime = new Date(rawDate);
-			if (isNaN(pickupTime)) return; // skip if pickupTime is not a valid date
+            if (index % 2 === 0) {
+                $(this).addClass('even-row').removeClass('odd-row');
+            } else {
+                $(this).addClass('odd-row').removeClass('even-row');
+            }
 
-			const currentTime = new Date();
-			const differenceInMilliseconds = currentTime - pickupTime;
-			const differenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
-			const differenceInHours = Math.floor(differenceInMinutes / 60);
-			const differenceInDays = Math.floor(differenceInHours / 24);
+            if (rawDate && !$(this).data("processed")) {
+                const pickupTime = new Date(rawDate);
+                if (isNaN(pickupTime)) return;
 
-			let elapsedTime = "";
-			if (differenceInDays > 0) {
-				elapsedTime += `${differenceInDays}d `;
-				elapsedTime += `${differenceInHours % 24}hr `;
-			} else if (differenceInHours > 0) {
-				elapsedTime += `${differenceInHours}hr `;
-			}
-			elapsedTime += `${differenceInMinutes % 60}min`;
+                const currentTime = new Date();
+                const differenceInMilliseconds = currentTime - pickupTime;
+                const differenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
+                const differenceInHours = Math.floor(differenceInMinutes / 60);
+                const differenceInDays = Math.floor(differenceInHours / 24);
 
-			const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-			const day = pickupTime.getDate();
-			const month = monthNames[pickupTime.getMonth()];
-			const year = pickupTime.getFullYear();
-			const hours = pickupTime.getHours();
-			const minutes = String(pickupTime.getMinutes()).padStart(2, '0');
-			const amPm = hours < 12 ? "AM" : "PM";
-			const formattedHour = hours > 12 ? hours - 12 : hours;
-			const formattedDate = `${month} ${day}${getOrdinalSuffix(day)}, ${year} ${formattedHour}:${minutes} ${amPm} | ${elapsedTime}`;
+                let elapsedTime = "";
+                if (differenceInDays > 0) {
+                    elapsedTime += `${differenceInDays}d `;
+                    elapsedTime += `${differenceInHours % 24}hr `;
+                } else if (differenceInHours > 0) {
+                    elapsedTime += `${differenceInHours}hr `;
+                }
+                elapsedTime += `${differenceInMinutes % 60}min`;
 
-			tr.querySelector("td:nth-child(6)").textContent = formattedDate;
+                const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                const day = pickupTime.getDate();
+                const month = monthNames[pickupTime.getMonth()];
+                const year = pickupTime.getFullYear();
+                const hours = pickupTime.getHours();
+                const minutes = String(pickupTime.getMinutes()).padStart(2, '0');
+                const amPm = hours < 12 ? "AM" : "PM";
+                const formattedHour = hours > 12 ? hours - 12 : hours;
+                const formattedDate = `${month} ${day}${getOrdinalSuffix(day)}, ${year} ${formattedHour}:${minutes} ${amPm} | ${elapsedTime}`;
+                $(this).find("td:nth-child(6)").text(formattedDate)
 
-			if (differenceInMinutes > 60) {
-				tr.classList.add("latePU");
-			} else {
-				tr.classList.remove("latePU");
-			}
+                if (differenceInMinutes > 60) {
+                    $(this).removeClass("notLatePU")
+                    $(this).addClass("latePU")
+                } else {
+                    $(this).addClass("notLatePU")
+                    $(this).removeClass("latePU")
+                }
 
-			// Mark row as processed
-			tr.setAttribute("data-processed", "true");
-		}
+                $(this).data("processed", "true");
+            }
+        });
+    }
 
-		// Rest of your logic for hiding rows based on conditions
-		const ignoreLocations = ['781008'];
-		const ignoreEquipment = ['AA', 'AB'];
+    function isNotDispatchReport() {
+        function addScriptVersion(scriptName, version) {
+            let scriptVersionElement = document.createElement('div');
+            scriptVersionElement.style.display = 'none';
+            scriptVersionElement.classList.add('script-version');
+            scriptVersionElement.dataset.name = scriptName;
+            scriptVersionElement.dataset.version = version;
+            document.body.appendChild(scriptVersionElement);
+        }
 
-		let shouldHide = false;
-		if (NotDispatchSettings.Uncovered == false && ignoreLocations.some(location => locationId.endsWith(location))) {
-			shouldHide = true;
-		} else if ((NotDispatchSettings.UBOX == false && ignoreEquipment.some(equipment => EquipType.includes(equipment)))) {
-			shouldHide = true;
-		}
+        addScriptVersion("Better Not-Dispatch", NotDispatchCleaner)
 
-		if (shouldHide) {
-			tr.style.display = "none";
-		} else {
-			tr.style.display = "";
-		}
-	});
+        setInterval(() => {
+            if (isNotDispatchReportActive()) {
+                Execute();
+                NotDispatchReportLastVisible = true;
+            }
+        }, 100);
+    }
 
-
-	let FlipVal = true;
-	// Adjust the background color of visible rows
-	const $visibleRows = $(tbody).find("> tr");
-	$visibleRows.each(function (index) {
-		if (index % 2 === 0) { // Even row
-			$(this).addClass('even-row').removeClass('odd-row');
-		} else {  // Odd row
-			$(this).addClass('odd-row').removeClass('even-row');
-		}
-	});
-}
-
-// Function to continuously check if the textSubmitForm is visible
-function isNotDispatchReportVisibleCheck() {
-	function addScriptVersion(scriptName, version) {
-		let scriptVersionElement = document.createElement('div');
-		scriptVersionElement.style.display = 'none'; // Make it hidden
-		scriptVersionElement.classList.add('script-version'); // So we can find it later
-		scriptVersionElement.dataset.name = scriptName; // Store the script name
-		scriptVersionElement.dataset.version = version; // Store the version
-		document.body.appendChild(scriptVersionElement);
-	}
-
-	addScriptVersion("Not Dispatch Organizer", NotDispatchCleaner)
-
-	setInterval(() => {
-		if (isNotDispatchReportVisible()) {
-			runWhenNotDispatchReport();
-			NotDispatchReportLastVisible = true;
-		}
-	}, 100);
-}
-
-isNotDispatchReportVisibleCheck();
+    isNotDispatchReport();
+})();
