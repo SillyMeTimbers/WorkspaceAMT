@@ -10,7 +10,7 @@
 (function () {
     'use strict';
 
-    const NotDispatchCleaner = "7"
+    const NotDispatchCleaner = "8"
     let NotDispatchReportLastVisible = false;
     let NotDispatchSettings = {
         "UBOX": true,
@@ -106,6 +106,50 @@
         return label;
     }
 
+    function GetModalData(url, data, method="GET") {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: method,
+                async: true,
+                url: url,
+                data: data,
+                cache: false,
+                success: function(response) {
+                    if (IsValidValue(response.error)) {
+                        toastr.error(response.error, "An error has occured:");
+                        reject(response.error);
+                    } else if (IsValidValue(response)) {
+                        resolve(response);
+                    } else {
+                        toastr.error("Could not load.");
+                        reject("Could not load.");
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error("An error has occurred");
+                    reject(xhr.responseText);
+                }
+            });
+        });
+    }
+
+    function getLatestWorkingNote(Data) {
+        const Notes = $(Data).find(".notes");
+        let saveNote = null
+
+        Notes.find("> li").each(function (index, element) {
+            const isWorkingNote = $(element).find(".working-note");
+            console.log(isWorkingNote.length > 0 ? "Working note found" : "No working note found");
+
+            if (isWorkingNote.length > 0 && saveNote == null) {
+                console.log("update")
+                saveNote = $(element).find("> p").text().trim();
+            }
+        });
+
+        return saveNote
+    }
+
     function Execute() {
         if (document.querySelector("#addUBOX_Holder") == null) {
             const IncludeUBOX = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Include U-Box', NotDispatchSettings.UBOX);
@@ -113,6 +157,18 @@
 
             const IncludeUncovered = createCheckbox('addUncovered', 'NotDispatchPanel.addUncovered', 'Include 781008', NotDispatchSettings.Uncovered);
             document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUncovered);
+
+            const tbody = document.querySelector("#NotDispatchedResults_wrapper .fixed-table > thead > tr");
+            if (tbody) {
+                console.log('add')
+                $(tbody).find("> th:nth-child(10)").remove()
+                const AddWorkingNoteColumn = $(`<th class="sorting" tabindex="0" aria-controls="NotDispatchedResults" rowspan="1" colspan="1" aria-label="
+                Working Note
+            : activate to sort column ascending" style="width: 139.531px;">
+                <span>Working Note</span>
+            </th>`)
+                $(tbody).append(AddWorkingNoteColumn);
+            }
         }
 
         const tbody = document.querySelector("#NotDispatchedResults > tbody");
@@ -162,6 +218,7 @@
             }
 
             if (rawDate && !$(this).data("processed")) {
+                console.log("ayo get once? ahaha")
                 const pickupTime = new Date(rawDate);
                 if (isNaN(pickupTime)) return;
 
@@ -199,6 +256,32 @@
                     $(this).removeClass("latePU")
                 }
 
+                // Add Working Notes
+                const NoteText = ""
+                const NoteBox = $(`<td></td>`)
+                $(this).find("> td:nth-child(10)").remove()
+                $(this).append(NoteBox);
+
+                var data = {
+                    contractID: $(this).data("contractid")
+                };
+
+                GetModalData(UrlAction("DisplayContractNotesFromDashboard", "Reservations"), data)
+                    .then(function(htmlData) {
+                        const passedNote = getLatestWorkingNote(htmlData);
+                        NoteBox.attr('title', passedNote);
+                        NoteBox.text(passedNote);
+                        NoteBox.addClass("note has-tip");
+                        NoteBox.attr('data-tooltip', '');                    
+
+                        console.log(htmlData);
+                    })
+                    .catch(function(error) {
+                        console.error(error);
+                    });
+
+                var table = $('#NotDispatchedResults').DataTable();
+                table.columns.adjust().draw();
                 $(this).data("processed", "true");
             }
         });
