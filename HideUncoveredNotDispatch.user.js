@@ -10,7 +10,7 @@
 (function () {
     'use strict';
 
-    const NotDispatchCleaner = "8"
+    const NotDispatchCleaner = "9"
     let NotDispatchReportLastVisible = false;
     let NotDispatchSettings = {
         "UBOX": true,
@@ -272,7 +272,8 @@
                         NoteBox.attr('title', passedNote);
                         NoteBox.text(passedNote);
                         NoteBox.addClass("note has-tip");
-                        NoteBox.attr('data-tooltip', '');                    
+                        NoteBox.attr('data-tooltip', '');     
+                        NoteBox.css(`white-space`, `nowrap`)
 
                         console.log(htmlData);
                     })
