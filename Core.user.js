@@ -107,7 +107,7 @@ const PermissionsList = {
 
    "Danielle Clifford": {
       Branch: {
-          Live: true,
+          Live: false,
       },
       Exclude: ["ExpNotes_VerifyTime"],
    },
