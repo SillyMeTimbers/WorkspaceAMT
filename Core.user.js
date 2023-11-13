@@ -25,6 +25,7 @@ const Redirects = [
   "betterOverdues",
   "betterCoverList",
   "WindowCloseAll",
+  "isLocationOpen",
 ];
 
 const PermissionsList = {
