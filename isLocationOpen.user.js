@@ -156,9 +156,6 @@
 		    GetTime = formattedDate
 		
 		    if (GetTime === "Invalid date" && $("#pickUpEntityChosen").val()) {
-		        console.log("not real date")
-		        //11/19/2023 9:00:00 AM
-		
 		        const dateTime = moment(pDate, 'MM/DD/YYYY H:mm A');
 		        const formattedDate = dateTime.format('MM/DD/YYYY HH:mm');
 		        GetTime = formattedDate
