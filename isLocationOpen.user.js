@@ -135,27 +135,36 @@
 
 	function Execute() {
 		let GetTime;
-
+		
 		const dDate = $("#expectedReceiveDate").val()
 		const dHour = $("#expectedHour").val()
 		const dMinute = $("#expectedMinute").val()
 		const dAmPm = $("#ExpectedAmPm").val()
-
+		
 		const pDate = $("#Contract_PreferredPickupDate").val();
 		const pHour = $("#Contract_PreferredPickupHour").val();
 		const pMinute = $("#Contract_PreferredPickupMinute").val();
 		const pAmPm = $("#Contract_PreferredPickupAmPm").val();
-
+		
 		if (dDate) {
-			const dateTime = moment(dDate + ' ' + dHour + ':' + dMinute + ' ' + dAmPm, 'MM/DD/YYYY H:mm A');
-			const formattedDate = dateTime.format('MM/DD/YYYY HH:mm');
-			GetTime = formattedDate
+		    const dateTime = moment(dDate + ' ' + dHour + ':' + dMinute + ' ' + dAmPm, 'MM/DD/YYYY H:mm A');
+		    const formattedDate = dateTime.format('MM/DD/YYYY HH:mm');
+		    GetTime = formattedDate
 		} else {
-			const dateTime = moment(pDate + ' ' + pHour + ':' + pMinute + ' ' + pAmPm, 'dddd, MMMM D, YYYY h:mm A');
-			const formattedDate = dateTime.format('MM/DD/YYYY HH:mm');
-			GetTime = formattedDate
+		    const dateTime = moment(pDate + ' ' + pHour + ':' + pMinute + ' ' + pAmPm, 'dddd, MMMM D, YYYY h:mm A');
+		    const formattedDate = dateTime.format('MM/DD/YYYY HH:mm');
+		    GetTime = formattedDate
+		
+		    if (GetTime === "Invalid date" && $("#pickUpEntityChosen").val()) {
+		        console.log("not real date")
+		        //11/19/2023 9:00:00 AM
+		
+		        const dateTime = moment(pDate, 'MM/DD/YYYY H:mm A');
+		        const formattedDate = dateTime.format('MM/DD/YYYY HH:mm');
+		        GetTime = formattedDate
+		    }
 		}
-
+		
 		const LocOpen = locOpen(GetTime)
 		LocNotOpenAlertBar.hide()
 		if (LocOpen[0] !== true) {
