@@ -33,7 +33,7 @@ const PermissionsList = {
         Branch: {
             Live: false,
         },
-        Exclude: ["ExpNotes_VerifyTime"],
+        Exclude: [],
     },
 
     "Emily Bertrand": {
