@@ -169,10 +169,8 @@
 		        GetTime = formattedDate
 			}
 		}
-		console.log(GetTime)
+		
 		const LocOpen = locOpen(GetTime)
-		console.log(LocOpen)
-		console.log(GetTime)
 		LocNotOpenAlertBar.hide()
 		if (LocOpen[0] !== true) {
 			if ($("#mapLocationDetails > #locClosedAlert").length < 1) {
