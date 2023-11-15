@@ -135,17 +135,19 @@
 
 	function Execute() {
 		let GetTime;
-		
+
 		const dDate = $("#expectedReceiveDate").val()
 		const dHour = $("#expectedHour").val()
 		const dMinute = $("#expectedMinute").val()
 		const dAmPm = $("#ExpectedAmPm").val()
-		
+
 		const pDate = $("#Contract_PreferredPickupDate").val();
 		const pHour = $("#Contract_PreferredPickupHour").val();
 		const pMinute = $("#Contract_PreferredPickupMinute").val();
 		const pAmPm = $("#Contract_PreferredPickupAmPm").val();
-		
+
+		const disDate = $("#dispatchDateNonFormatted").val();
+
 		if (dDate) {
 		    const dateTime = moment(dDate + ' ' + dHour + ':' + dMinute + ' ' + dAmPm, 'MM/DD/YYYY H:mm A');
 		    const formattedDate = dateTime.format('MM/DD/YYYY HH:mm');
@@ -154,15 +156,23 @@
 		    const dateTime = moment(pDate + ' ' + pHour + ':' + pMinute + ' ' + pAmPm, 'dddd, MMMM D, YYYY h:mm A');
 		    const formattedDate = dateTime.format('MM/DD/YYYY HH:mm');
 		    GetTime = formattedDate
-		
+
 		    if (GetTime === "Invalid date" && $("#pickUpEntityChosen").val()) {
 		        const dateTime = moment(pDate, 'MM/DD/YYYY H:mm A');
 		        const formattedDate = dateTime.format('MM/DD/YYYY HH:mm');
 		        GetTime = formattedDate
 		    }
+
+			if (disDate) {
+		        const dateTime = moment(disDate, 'MM/DD/YYYY H:mm A');
+		        const formattedDate = dateTime.format('MM/DD/YYYY HH:mm');
+		        GetTime = formattedDate
+			}
 		}
-		
+		console.log(GetTime)
 		const LocOpen = locOpen(GetTime)
+		console.log(LocOpen)
+		console.log(GetTime)
 		LocNotOpenAlertBar.hide()
 		if (LocOpen[0] !== true) {
 			if ($("#mapLocationDetails > #locClosedAlert").length < 1) {
@@ -193,7 +203,7 @@
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Verify Loc Hours", "2")
+		addScriptVersion("Verify Loc Hours", "3")
 
 		setInterval(() => {
 			if (isSourceVisible()) {
