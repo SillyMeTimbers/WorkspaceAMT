@@ -33,7 +33,7 @@ const PermissionsList = {
         Branch: {
             Live: false,
         },
-        Exclude: [],
+        Exclude: ["isLocationOpen"],
     },
 
     "Emily Bertrand": {
