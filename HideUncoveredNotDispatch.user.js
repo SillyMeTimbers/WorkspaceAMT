@@ -10,7 +10,7 @@
 (function () {
     'use strict';
 
-    const NotDispatchCleaner = "10"
+    const NotDispatchCleaner = "11"
     let NotDispatchReportLastVisible = false;
     let NotDispatchSettings = {
         "UBOX": true,
