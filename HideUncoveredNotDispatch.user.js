@@ -158,17 +158,17 @@
             const IncludeUncovered = createCheckbox('addUncovered', 'NotDispatchPanel.addUncovered', 'Include 781008', NotDispatchSettings.Uncovered);
             document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUncovered);
 
-            const tbody = document.querySelector("#NotDispatchedResults_wrapper .fixed-table > thead > tr");
-            if (tbody) {
-                console.log('add')
-                $(tbody).find("> th:nth-child(10)").remove()
-                const AddWorkingNoteColumn = $(`<th class="sorting" tabindex="0" aria-controls="NotDispatchedResults" rowspan="1" colspan="1" aria-label="
-                Working Note
-            : activate to sort column ascending" style="width: 139.531px;">
-                <span>Working Note</span>
-            </th>`)
-                $(tbody).append(AddWorkingNoteColumn);
-            }
+            // const tbody = document.querySelector("#NotDispatchedResults_wrapper .fixed-table > thead > tr");
+            // if (tbody) {
+            //     console.log('add')
+            //     $(tbody).find("> th:nth-child(10)").remove()
+            //     const AddWorkingNoteColumn = $(`<th class="sorting" tabindex="0" aria-controls="NotDispatchedResults" rowspan="1" colspan="1" aria-label="
+            //     Working Note
+            // : activate to sort column ascending" style="width: 139.531px;">
+            //     <span>Working Note</span>
+            // </th>`)
+            //     $(tbody).append(AddWorkingNoteColumn);
+            // }
         }
 
         const tbody = document.querySelector("#NotDispatchedResults > tbody");
@@ -266,23 +266,23 @@
                     contractID: $(this).data("contractid")
                 };
 
-                GetModalData(UrlAction("DisplayContractNotesFromDashboard", "Reservations"), data)
-                    .then(function(htmlData) {
-                        const passedNote = getLatestWorkingNote(htmlData);
-                        NoteBox.attr('title', passedNote);
-                        NoteBox.text(passedNote);
-                        NoteBox.addClass("note has-tip");
-                        NoteBox.attr('data-tooltip', '');     
-                        NoteBox.css(`white-space`, `nowrap`)
+                // GetModalData(UrlAction("DisplayContractNotesFromDashboard", "Reservations"), data)
+                //     .then(function(htmlData) {
+                //         const passedNote = getLatestWorkingNote(htmlData);
+                //         NoteBox.attr('title', passedNote);
+                //         NoteBox.text(passedNote);
+                //         NoteBox.addClass("note has-tip");
+                //         NoteBox.attr('data-tooltip', '');     
+                //         NoteBox.css(`white-space`, `nowrap`)
 
-                        console.log(htmlData);
-                    })
-                    .catch(function(error) {
-                        console.error(error);
-                    });
+                //         console.log(htmlData);
+                //     })
+                //     .catch(function(error) {
+                //         console.error(error);
+                //     });
 
-                var table = $('#NotDispatchedResults').DataTable();
-                table.columns.adjust().draw();
+                // var table = $('#NotDispatchedResults').DataTable();
+                // table.columns.adjust().draw();
                 $(this).data("processed", "true");
             }
         });
