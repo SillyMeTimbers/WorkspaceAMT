@@ -218,7 +218,6 @@
             }
 
             if (rawDate && !$(this).data("processed")) {
-                console.log("ayo get once? ahaha")
                 const pickupTime = new Date(rawDate);
                 if (isNaN(pickupTime)) return;
 
