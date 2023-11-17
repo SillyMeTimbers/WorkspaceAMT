@@ -139,10 +139,8 @@
 
         Notes.find("> li").each(function (index, element) {
             const isWorkingNote = $(element).find(".working-note");
-            console.log(isWorkingNote.length > 0 ? "Working note found" : "No working note found");
-
+            
             if (isWorkingNote.length > 0 && saveNote == null) {
-                console.log("update")
                 saveNote = $(element).find("> p").text().trim();
             }
         });
@@ -255,15 +253,15 @@
                     $(this).removeClass("latePU")
                 }
 
-                // Add Working Notes
-                const NoteText = ""
-                const NoteBox = $(`<td></td>`)
-                $(this).find("> td:nth-child(10)").remove()
-                $(this).append(NoteBox);
+                // // Add Working Notes
+                // const NoteText = ""
+                // const NoteBox = $(`<td></td>`)
+                // $(this).find("> td:nth-child(10)").remove()
+                // $(this).append(NoteBox);
 
-                var data = {
-                    contractID: $(this).data("contractid")
-                };
+                // var data = {
+                //     contractID: $(this).data("contractid")
+                // };
 
                 // GetModalData(UrlAction("DisplayContractNotesFromDashboard", "Reservations"), data)
                 //     .then(function(htmlData) {
