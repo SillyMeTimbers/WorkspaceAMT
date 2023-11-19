@@ -299,7 +299,7 @@
         })
         
         if (visCount <= 0 && actCount > 0) {
-            if (NotDispatchAllHidden.find("#noResultsNotDispatch").length) {
+            if ($("#noResultsNotDispatch").length <= 0) {
                 NotDispatchAllHidden.append(ShowResults)
             }
             
