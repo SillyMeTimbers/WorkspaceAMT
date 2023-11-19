@@ -10,7 +10,7 @@
 (function () {
     'use strict';
 
-    const NotDispatchCleaner = "11"
+    const NotDispatchCleaner = "12"
     let NotDispatchReportLastVisible = false;
     let NotDispatchSettings = {
         "UBOX": true,
@@ -283,6 +283,26 @@
                 $(this).data("processed", "true");
             }
         });
+
+        const NotDispatchAllHidden = $("#NotDispatchedResults > tbody")
+        let visCount = 0
+        let actCount = 0
+        const ShowResults = $(`<td valign="top" colspan="11" style='font-size: 12px !important; padding: 6px !important;'>Uh oh, the table is empty but results were found! Trying changing your parameters</td>`)
+        
+        NotDispatchAllHidden.find("> tr").each(function(index, element) {
+            actCount++
+                
+            if ($(element).css("display") !== "none") {
+                visCount++
+            }
+        })
+        
+        if (visCount <= 0 && actCount > 0) {
+            NotDispatchAllHidden.append(ShowResults)
+            ShowResults.show()
+        } else {
+            ShowResults.hide()
+        }
     }
 
     function isNotDispatchReport() {
