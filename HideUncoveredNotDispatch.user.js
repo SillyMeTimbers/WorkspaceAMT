@@ -17,6 +17,8 @@
         "Uncovered": false,
     }
 
+    const ShowResults = $(`<td id="noResultsNotDispatch" valign="top" colspan="11" style='font-size: 12px !important; padding: 6px !important;'>Uh oh, the table is empty but results were found! Trying changing your parameters</td>`)
+    
     function NotDispatchinjectCSS(css) {
         const style = document.createElement('style');
         style.type = 'text/css';
@@ -287,7 +289,6 @@
         const NotDispatchAllHidden = $("#NotDispatchedResults > tbody")
         let visCount = 0
         let actCount = 0
-        const ShowResults = $(`<td valign="top" colspan="11" style='font-size: 12px !important; padding: 6px !important;'>Uh oh, the table is empty but results were found! Trying changing your parameters</td>`)
         
         NotDispatchAllHidden.find("> tr").each(function(index, element) {
             actCount++
@@ -298,7 +299,10 @@
         })
         
         if (visCount <= 0 && actCount > 0) {
-            NotDispatchAllHidden.append(ShowResults)
+            if (NotDispatchAllHidden.find("#noResultsNotDispatch").length) {
+                NotDispatchAllHidden.append(ShowResults)
+            }
+            
             ShowResults.show()
         } else {
             ShowResults.hide()
