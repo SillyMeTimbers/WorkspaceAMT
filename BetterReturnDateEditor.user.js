@@ -512,7 +512,7 @@
             document.body.appendChild(scriptVersionElement);
         }
 
-        addScriptVersion("Dropoff Buttons", "2")
+        addScriptVersion("Better Ruturn Date Editor", "1")
 
         setInterval(() => {
             if (!DropoffPause && isDropoffPopupVisible()) {
