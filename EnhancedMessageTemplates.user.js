@@ -2052,7 +2052,7 @@ U-Haul Equipment Recovery Department`
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Dynamic Messages V2", "36")
+		addScriptVersion("Dynamic Messages V2", "37")
 
 		setInterval(() => {
 			if (isMessageTextForumVisible()) {
