@@ -227,7 +227,7 @@ async function ExtensionListHandler() {
                 //"RM - Nyla Whitty": [false, "781316", "321-451-6460"],
                 "RM - Matthew Glenn": [false, "781311"],
                 "RM - Abigail Heister": [false, "781317"],
-                "RM - Danielle Clifford": [false, "781317"],
+                "RM - Danielle Clifford": [false, "781316"],
             },
 
             "MCO 781 AFM Extensions": {
