@@ -1,204 +1,333 @@
 // ==UserScript==
-// @name         [Functional] Not Dispatched Report - Hide 781008
+// @name         [Functional] betterNotDispatch
 // @namespace    http://tampermonkey.net/
-// @version      4.6.1130P
-// @description  try to take over the world!
 // @author       You
 // @match        https://amt.uhaul.net/*/Dashboard
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const NotDispatchCleaner = "3"
-let NotDispatchReportLastVisible = false;
-let NotDispatchSettings = {
-    "UBOX": true,
-    "Uncovered": false,
-}
 
-function NotDispatchinjectCSS(css) {
-    const style = document.createElement('style');
-    style.type = 'text/css';
-    style.appendChild(document.createTextNode(css));
-    document.head.appendChild(style);
-}
+(function () {
+    'use strict';
 
-const LatePickup = `
-    tr.latePU,
-    .wrapper > .row > .large-10 > section .item table tr.latePU {
-        background: #bd362f !important;
+    const NotDispatchCleaner = "14"
+    let NotDispatchReportLastVisible = false;
+    let NotDispatchSettings = {
+        "UBOX": true,
+        "Uncovered": false,
     }
-    tr.latePU td,
-    .wrapper > .row > .large-10 > section .item table tr.latePU td {
-        color: #fff !important;
+
+    const ShowResults = $(`<td id="noResultsNotDispatch" valign="top" colspan="11" style='font-size: 12px !important; padding: 6px !important;'>Uh oh, the table is empty but results were found! Trying changing your parameters</td>`)
+    
+    function NotDispatchinjectCSS(css) {
+        const style = document.createElement('style');
+        style.type = 'text/css';
+        style.appendChild(document.createTextNode(css));
+        document.head.appendChild(style);
     }
-    tr.latePU:hover,
-    .wrapper > .row > .large-10 > section .item table tr.latePU:hover {
-        background: #c9453e !important;
-    }
+
+    const LatePickup = `
+        tr.even-row, tr.odd-row {
+            -moz-transition: background-color 300ms ease-out;
+            -o-transition: background-color 300ms ease-out;
+            -webkit-transition: background-color 300ms ease-out;
+            transition: background-color 300ms ease-out;
+        }
+        tr.even-row{
+            background: white !important;
+        }
+        tr.odd-row{
+            background: #f1f1f1 !important;
+        }
+        tr.latePU.odd-row{
+            background: #cb3d36 !important;
+        }
+        tr.latePU.even-row{
+            background: #bd362f !important;
+        }
+        tr.latePU td {
+            color: #fff !important;
+        }
+        tr.latePU:hover {
+            background: #e35a52 !important;
+        }
+        tr.notLatePU:hover {
+            background: #d4e2f0 !important;
+        }
 `;
-NotDispatchinjectCSS(LatePickup);
+    NotDispatchinjectCSS(LatePickup);
 
-// Function to check if the OverdueSearchResultsDiv is visible
-function isNotDispatchReportVisible() {
-    const NotDispatchReportDiv = document.querySelector(
-        "#NotDispatchedResults_wrapper"
-    );
-    if (
-        NotDispatchReportDiv &&
-        NotDispatchReportDiv.offsetWidth > 0 &&
-        NotDispatchReportDiv.offsetHeight > 0
-    ) {
-        return true;
-    }
-    NotDispatchReportLastVisible = false;
-    return false;
-}
-
-function notDispatchUpdateCheckbox(checkbox) {
-    if (checkbox.id === "addUBOX") {
-        NotDispatchSettings.UBOX = $(checkbox).prop('checked')
-        console.log(`Updated Value to ${NotDispatchSettings.UBOX}`)
+    function isNotDispatchReportActive() {
+        const NotDispatchReportDiv = document.querySelector(
+            "#NotDispatchedResults_wrapper"
+        );
+        if (
+            NotDispatchReportDiv &&
+            NotDispatchReportDiv.offsetWidth > 0 &&
+            NotDispatchReportDiv.offsetHeight > 0
+        ) {
+            return true;
+        }
+        NotDispatchReportLastVisible = false;
+        return false;
     }
 
-    if (checkbox.id === "addUncovered") {
-        NotDispatchSettings.Uncovered = $(checkbox).prop('checked')
-        console.log(`Updated Value to ${NotDispatchSettings.Uncovered}`)
-    }
-}
-
-function createCheckbox(id, name, text, defaultValue) {
-    // Create the label element
-    let label = document.createElement('label');
-
-    // Create the input element
-    let input = document.createElement('input');
-    input.setAttribute('data-val', 'true');
-    input.setAttribute('data-val-required', 'The DownloadNote field is required.');
-    input.setAttribute('id', id);
-    input.setAttribute('name', name);
-    input.setAttribute('type', 'checkbox');
-    input.style.marginRight = '5px';
-
-    // Set the checked state based on defaultValue
-    input.checked = defaultValue;
-
-    input.addEventListener('change', function() {
-        notDispatchUpdateCheckbox(this);
-    });
-
-    // Create the span element
-    let span = document.createElement('span');
-    span.setAttribute('class', 'custom checkbox');
-
-    // Add the input element and span to the label
-    label.appendChild(input);
-    label.appendChild(document.createTextNode(text));
-    label.appendChild(span);
-    label.setAttribute('id', `${id}_Holder`);
-    label.style.width = "fit-content"
-
-    // Return the label element
-    return label;
-}
-
-// Function to run when the OverdueSearchResultsDiv is visible
-function runWhenNotDispatchReport() {
-    if (document.querySelector("#addUBOX_Holder") == null) {
-        const IncludeUBOX = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Include U-Box', NotDispatchSettings.UBOX);
-        document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUBOX);
-        console.log(IncludeUBOX.querySelector('input').checked);
-
-        const IncludeUncovered = createCheckbox('addUncovered', 'NotDispatchPanel.addUncovered', 'Include 781008', NotDispatchSettings.Uncovered);
-        document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUncovered);
-        console.log(IncludeUncovered.querySelector('input').checked);
-    }
-
-    const tbody = document.querySelector("#NotDispatchedResults > tbody");
-    tbody.querySelectorAll("tr").forEach((tr) => {
-        const locationId = tr.querySelector("td:nth-child(8)").textContent.trim();
-        const EquipType = tr.querySelector("td:nth-child(7)").textContent.trim();
-
-        const dateString = tr.querySelector("td:nth-child(6)").textContent.trim();
-        const pickupTime = new Date(dateString);
-        const currentTime = new Date();  // this gets the current time
-
-        const differenceInMilliseconds = currentTime - pickupTime;
-        const differenceInMinutes = differenceInMilliseconds / (1000 * 60);
-
-        let isLate = false
-
-        if (differenceInMinutes > 60) {
-            console.log("Late");
-            tr.classList.add("latePU")
-            isLate = true
-        } else {
-            tr.classList.remove("latePU")
-            console.log("On Time");
-            isLate = false
+    function notDispatchUpdateCheckbox(checkbox) {
+        if (checkbox.id === "addUBOX") {
+            NotDispatchSettings.UBOX = $(checkbox).prop('checked')
         }
 
-        //  console.log(NotDispatchSettings.UBOX)
-        const ignoreLocations = ['781008'];
-        const ignoreEquipment = ['AA', 'AB'];
-        let shouldHide = false;
-
-        if(NotDispatchSettings.Uncovered == false && ignoreLocations.some(location => locationId.endsWith(location))) {
-            shouldHide = true;
-        } else if ((NotDispatchSettings.UBOX == false && ignoreEquipment.some(equipment => EquipType.includes(equipment)))) {
-            shouldHide = true;
-        } else {
-            shouldHide = false;
+        if (checkbox.id === "addUncovered") {
+            NotDispatchSettings.Uncovered = $(checkbox).prop('checked')
         }
+    }
 
-        if (shouldHide == true) {
-            tr.style.display = "none";
-        } else {
-            tr.style.display = null;
-        }
-    });
+    function createCheckbox(id, name, text, defaultValue) {
+        let label = document.createElement('label');
+        let input = document.createElement('input');
+        input.setAttribute('data-val', 'true');
+        input.setAttribute('data-val-required', 'The DownloadNote field is required.');
+        input.setAttribute('id', id);
+        input.setAttribute('name', name);
+        input.setAttribute('type', 'checkbox');
+        input.style.marginRight = '5px';
+        input.checked = defaultValue;
 
-    let FlipVal = true;
-    tbody.querySelectorAll("tr").forEach((tr) => {
-        tr.classList.remove("odd")
-        tr.classList.remove("even")
+        input.addEventListener('change', function () {
+            notDispatchUpdateCheckbox(this);
+        });
 
-        if (tr.style.display == "none" || tr.classList.contains("latePU") == true) {
-            if (tr.classList.contains("latePU") == true) {
-              FlipVal = !FlipVal
+        let span = document.createElement('span');
+        span.setAttribute('class', 'custom checkbox');
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(text));
+        label.appendChild(span);
+        label.setAttribute('id', `${id}_Holder`);
+        label.style.width = "fit-content"
+
+        return label;
+    }
+
+    function GetModalData(url, data, method="GET") {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: method,
+                async: true,
+                url: url,
+                data: data,
+                cache: false,
+                success: function(response) {
+                    if (IsValidValue(response.error)) {
+                        toastr.error(response.error, "An error has occured:");
+                        reject(response.error);
+                    } else if (IsValidValue(response)) {
+                        resolve(response);
+                    } else {
+                        toastr.error("Could not load.");
+                        reject("Could not load.");
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error("An error has occurred");
+                    reject(xhr.responseText);
+                }
+            });
+        });
+    }
+
+    function getLatestWorkingNote(Data) {
+        const Notes = $(Data).find(".notes");
+        let saveNote = null
+
+        Notes.find("> li").each(function (index, element) {
+            const isWorkingNote = $(element).find(".working-note");
+            
+            if (isWorkingNote.length > 0 && saveNote == null) {
+                saveNote = $(element).find("> p").text().trim();
             }
-        } else {
-            if (FlipVal == false) {
-                tr.style.background = "#f1f1f1";
-                /// tr.classList.add("odd")
-                FlipVal = true;
+        });
+
+        return saveNote
+    }
+
+    function Execute() {
+        if (document.querySelector("#addUBOX_Holder") == null) {
+            const IncludeUBOX = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Include U-Box', NotDispatchSettings.UBOX);
+            document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUBOX);
+
+            const IncludeUncovered = createCheckbox('addUncovered', 'NotDispatchPanel.addUncovered', 'Include 781008', NotDispatchSettings.Uncovered);
+            document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUncovered);
+
+            // const tbody = document.querySelector("#NotDispatchedResults_wrapper .fixed-table > thead > tr");
+            // if (tbody) {
+            //     console.log('add')
+            //     $(tbody).find("> th:nth-child(10)").remove()
+            //     const AddWorkingNoteColumn = $(`<th class="sorting" tabindex="0" aria-controls="NotDispatchedResults" rowspan="1" colspan="1" aria-label="
+            //     Working Note
+            // : activate to sort column ascending" style="width: 139.531px;">
+            //     <span>Working Note</span>
+            // </th>`)
+            //     $(tbody).append(AddWorkingNoteColumn);
+            // }
+        }
+
+        const tbody = document.querySelector("#NotDispatchedResults > tbody");
+        function getOrdinalSuffix(number) {
+            if (number % 10 == 1 && number != 11) {
+                return 'st';
+            }
+            if (number % 10 == 2 && number != 12) {
+                return 'nd';
+            }
+            if (number % 10 == 3 && number != 13) {
+                return 'rd';
+            }
+            return 'th';
+        }
+
+        $(tbody).find("> tr").each(function (index, element) {
+            const locID = $(this).find("> td:nth-child(8)").text().trim()
+            const equipID = $(this).find("> td:nth-child(7)").text().trim()
+
+            const ignoreLocations = ['781008'];
+            const ignoreEquipment = ['AA', 'AB'];
+
+            let shouldHide = false;
+            if (NotDispatchSettings.Uncovered == false && ignoreLocations.some(location => locID.endsWith(location))) {
+                shouldHide = true;
+            } else if ((NotDispatchSettings.UBOX == false && ignoreEquipment.some(equipment => equipID.includes(equipment)))) {
+                shouldHide = true;
+            }
+
+            if (shouldHide) {
+                $(this).hide();
             } else {
-                tr.style.background = '#ffffff';
-                //tr.classList.add("even")
-                FlipVal = false;
+                $(this).show();
             }
-        }
-    });
-}
+        });
 
-// Function to continuously check if the textSubmitForm is visible
-function isNotDispatchReportVisibleCheck() {
-    function addScriptVersion(scriptName, version) {
-        let scriptVersionElement = document.createElement('div');
-        scriptVersionElement.style.display = 'none'; // Make it hidden
-        scriptVersionElement.classList.add('script-version'); // So we can find it later
-        scriptVersionElement.dataset.name = scriptName; // Store the script name
-        scriptVersionElement.dataset.version = version; // Store the version
-        document.body.appendChild(scriptVersionElement);
+        $(tbody).find("> tr:visible").each(function (index, element) {
+            const locID = $(this).find("> td:nth-child(8)").text().trim()
+            const equipID = $(this).find("> td:nth-child(7)").text().trim()
+            const rawDate = $(this).find("> td:nth-child(6)").text().trim()
+
+            if (index % 2 === 0) {
+                $(this).addClass('even-row').removeClass('odd-row');
+            } else {
+                $(this).addClass('odd-row').removeClass('even-row');
+            }
+
+            if (rawDate && !$(this).data("processed")) {
+                const pickupTime = new Date(rawDate);
+                if (isNaN(pickupTime)) return;
+
+                const currentTime = new Date();
+                const differenceInMilliseconds = currentTime - pickupTime;
+                const differenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
+                const differenceInHours = Math.floor(differenceInMinutes / 60);
+                const differenceInDays = Math.floor(differenceInHours / 24);
+
+                let elapsedTime = "";
+                if (differenceInDays > 0) {
+                    elapsedTime += `${differenceInDays}d `;
+                    elapsedTime += `${differenceInHours % 24}hr `;
+                } else if (differenceInHours > 0) {
+                    elapsedTime += `${differenceInHours}hr `;
+                }
+                elapsedTime += `${differenceInMinutes % 60}min`;
+
+                const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                const day = pickupTime.getDate();
+                const month = monthNames[pickupTime.getMonth()];
+                const year = pickupTime.getFullYear();
+                const hours = pickupTime.getHours();
+                const minutes = String(pickupTime.getMinutes()).padStart(2, '0');
+                const amPm = hours < 12 ? "AM" : "PM";
+                const formattedHour = hours > 12 ? hours - 12 : hours;
+                const formattedDate = `${month} ${day}${getOrdinalSuffix(day)}, ${year} ${formattedHour}:${minutes} ${amPm} | ${elapsedTime}`;
+                $(this).find("td:nth-child(6)").text(formattedDate)
+
+                if (differenceInMinutes > 60) {
+                    $(this).removeClass("notLatePU")
+                    $(this).addClass("latePU")
+                } else {
+                    $(this).addClass("notLatePU")
+                    $(this).removeClass("latePU")
+                }
+
+                // // Add Working Notes
+                // const NoteText = ""
+                // const NoteBox = $(`<td></td>`)
+                // $(this).find("> td:nth-child(10)").remove()
+                // $(this).append(NoteBox);
+
+                // var data = {
+                //     contractID: $(this).data("contractid")
+                // };
+
+                // GetModalData(UrlAction("DisplayContractNotesFromDashboard", "Reservations"), data)
+                //     .then(function(htmlData) {
+                //         const passedNote = getLatestWorkingNote(htmlData);
+                //         NoteBox.attr('title', passedNote);
+                //         NoteBox.text(passedNote);
+                //         NoteBox.addClass("note has-tip");
+                //         NoteBox.attr('data-tooltip', '');     
+                //         NoteBox.css(`white-space`, `nowrap`)
+
+                //         console.log(htmlData);
+                //     })
+                //     .catch(function(error) {
+                //         console.error(error);
+                //     });
+
+                // var table = $('#NotDispatchedResults').DataTable();
+                // table.columns.adjust().draw();
+                $(this).data("processed", "true");
+            }
+        });
+
+        const NotDispatchAllHidden = $("#NotDispatchedResults > tbody")
+        let visCount = 0
+        let actCount = 0
+        
+        NotDispatchAllHidden.find("> tr").each(function(index, element) {
+            actCount++
+                
+            if ($(element).css("display") !== "none") {
+                visCount++
+            }
+        })
+        
+        if (visCount <= 0 && actCount > 0) {
+            if ($("#noResultsNotDispatch").length <= 0) {
+                NotDispatchAllHidden.append(ShowResults)
+            }
+            
+            ShowResults.show()
+        } else {
+            ShowResults.hide()
+        }
     }
 
-    addScriptVersion("Not Dispatch Organizer", NotDispatchCleaner)
-
-    setInterval(() => {
-        if (isNotDispatchReportVisible()) {
-            runWhenNotDispatchReport();
-            NotDispatchReportLastVisible = true;
+    function isNotDispatchReport() {
+        function addScriptVersion(scriptName, version) {
+            let scriptVersionElement = document.createElement('div');
+            scriptVersionElement.style.display = 'none';
+            scriptVersionElement.classList.add('script-version');
+            scriptVersionElement.dataset.name = scriptName;
+            scriptVersionElement.dataset.version = version;
+            document.body.appendChild(scriptVersionElement);
         }
-    }, 100);
-}
 
-isNotDispatchReportVisibleCheck();
+        addScriptVersion("Better Not-Dispatch", NotDispatchCleaner)
+
+        setInterval(() => {
+            if (isNotDispatchReportActive()) {
+                Execute();
+                NotDispatchReportLastVisible = true;
+            }
+        }, 100);
+    }
+
+    isNotDispatchReport();
+})();
