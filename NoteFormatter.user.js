@@ -70,6 +70,13 @@ const startWithTable = {
     }
     return `<strong>Type: </strong>${keyword}<br>${content}`;
   },
+  "U-Box Timeframe Confirmation - ": (text, hasWorkingNoteClass) => {
+    const { keyword, content } = formatText(text);
+    if(hasWorkingNoteClass) {
+        return `<strong class="working-note">Type: </strong>${keyword}<br>${content}`;
+    }
+    return `<strong>Type: </strong>${keyword}<br>${content}`;
+  },
 };
 
 function resNotesIsVis() {
@@ -121,7 +128,7 @@ function resCheckIfNotesTabVis() {
 		document.body.appendChild(scriptVersionElement);
 	}
 
-	addScriptVersion("Reservation Notes", "3")
+	addScriptVersion("Reservation Notes", "4")
 
 	setInterval(() => {
 		if (isNoteTabVis()) {
