@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const ExtensionListVersion = "3"
+const ExtensionListVersion = "4"
 async function extensionButtonWaitForElement(selector, timeout = 10000) {
     const startTime = Date.now();
 
@@ -214,6 +214,21 @@ async function ExtensionListHandler() {
 
         // Create and insert the grid
         const data = {
+            "Dealer Alternative Contacts": {
+                "008071 - 1st Call Pats": [false, "", "772-924-8438", ""],
+                "010589 - Midgard Self Storage Viera": [false, "10589", "", "Press 5, LVM for office"],
+                "013531 - Mikes Garage & Wrecker Service": [false, "", "772-562-2631", ""],
+                "014131 - Jupiter Amocco": [false, "", "321-727-2446", ""],
+                "018197 - The Better Choice": [false, "", "", "Press 2 than 1"],
+                "022586 - Mondo Storage & Rentals": [false, "", "331-305-4693", ""],
+                "026131 - S A Automotive Repair": [false, "", "561-396-6489", "(Owner Cell)"],
+                "029757 - Crown Heights Cut & Shave Parlor": [false, "561-810-8510", "561-577-3421", ""],
+                "032790 - Compass Self Storage": [false, "", "561-771-5952", "Press 3 & LVM"],
+                "038170 - J&R Priority & Vision MultiServices LLC": [false, "", "561-503-0677", ""],
+                "041498 - Affordable Towing of Belle Glade": [false, "", "561-993-6380", ""],
+                "088036 - EZ Pay Auto Sales": [false, "", "321-728-0771", ""],
+            },
+            
             "Traffic Extensions": {
                 "TCM - Angel Vega": [true, "781301", "732-754-1721"],
                 "RDM - Steve Kirkbride": [false, "781302", "321-837-9625"],
