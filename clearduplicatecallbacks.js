@@ -36,33 +36,6 @@
         });
     }
 
-    const maxAmount = 51
-    let proces = 0
-    async function deleteCallback() {
-        if (proces < maxAmount) {
-            console.log("---------------------------------------")
-            proces++
-            await waitForElementToDisappear("#callback-details > .text-center")
-            await wait(500)
-            
-            console.log("CB_CLEANER - LOADED")
-            $("select[name='SelectedCallbackResultID']").val("6").change(); // Update Dropdown results
-    
-            const NextButton = $("#callbacks-main > div:nth-child(2) > div.text-right > button:nth-child(2)")
-            if (!NextButton.is(":disabled")) {
-                console.log("CB_CLEANER - PROCEEDING NEXT CONTRACT")
-                await wait(200)
-                $("#callbacks-main > div:nth-child(2) > div.panel > div:nth-child(2) > button:nth-child(2)").click()
-                await waitForElementToDisappear("#callbackDetailsContent")
-                await wait(10)
-                deleteCallback()
-            } else {
-                console.log("CB_CLEANER - FINISHED PAGE")
-            }
-        }
-        console.log(proces)
-    }
-
     function compareNames(p1, p2) {
         console.log(p1)
         console.log(p2)
@@ -74,12 +47,99 @@
         return false
     }
 
-    const CallbacksList = document.querySelector("#callbacks-list tbody > tr")
-    let PreviousPerson = {
-        First: null,
-        Last: null
+    function hasExistingReservation() {
+        const otherQuotes = $("#otherActivityContent > div:nth-child(2) > div")
+        let actQuote = false
+        
+        otherQuotes.find("> div").each(function() {
+            const tabHeader = $(this).find("> h3 > span:first")
+    
+            if (tabHeader.text() == "Reservation") {
+                actQuote = true
+            }
+        })
+    
+        return actQuote
+    }
+
+    const CallbacksList = $("#callbacks-list tbody > tr")
+    const CallbackSorted = []
+    function isDuplicate(p) {
+        for (const currPerson of CallbackSorted) {
+            if (currPerson.First == p.First && currPerson.Last == p.Last) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    const maxAmount = 51
+    let proces = 0
+    async function deleteCallback() {
+        if (proces < maxAmount) {
+            console.log("---------------------------------------")
+            proces++
+            await waitForElementToDisappear("#callback-details > .text-center")
+            await wait(500)
+            
+            console.log("CB_CLEANER - LOADED")
+            const cxFirstName = $("#callback-details > div:nth-child(3) > div.flex-grid-x.grid-padding-x > div.flex-cell.medium-5 > fieldset:nth-child(3) > div > div:nth-child(1) > label > input[type=text]").val()
+            const cxLastName = $("#callback-details > div:nth-child(3) > div.flex-grid-x.grid-padding-x > div.flex-cell.medium-5 > fieldset:nth-child(3) > div > div:nth-child(2) > label > input[type=text]").val()
+
+            if (isDuplicate({First: cxFirstName, Last: cxLastName})) {
+                console.log("CB_CLEANER - DUPLICATE")
+
+                $("select[name='SelectedCallbackResultID']").val("6").change(); // Update Dropdown results
+    
+                const NextButton = $("#callbacks-main > div:nth-child(2) > div.text-right > button:nth-child(2)")
+                if (!NextButton.is(":disabled")) {
+                    console.log("CB_CLEANER - PROCEEDING NEXT CONTRACT")
+                    await wait(200)
+                    $("#callbacks-main > div:nth-child(2) > div.panel > div:nth-child(2) > button:nth-child(2)").click()
+                    await waitForElementToDisappear("#callbackDetailsContent")
+                    await wait(10)
+                    deleteCallback()
+                } else {
+                    console.log("CB_CLEANER - FINISHED PAGE")
+                }
+            } else if (hasExistingReservation()) {
+                console.log("CB_CLEANER - ALREADY CONFIRMED")
+
+                $("select[name='SelectedCallbackResultID']").val("9").change(); // Update Dropdown results
+    
+                const NextButton = $("#callbacks-main > div:nth-child(2) > div.text-right > button:nth-child(2)")
+                if (!NextButton.is(":disabled")) {
+                    console.log("CB_CLEANER - PROCEEDING NEXT CONTRACT")
+                    await wait(200)
+                    $("#callbacks-main > div:nth-child(2) > div.panel > div:nth-child(2) > button:nth-child(2)").click()
+                    await waitForElementToDisappear("#callbackDetailsContent")
+                    await wait(10)
+                    deleteCallback()
+                } else {
+                    console.log("CB_CLEANER - FINISHED PAGE")
+                }
+            } else {
+                console.log("CB_CLEANER - NON-DUPE")
+
+                const NextButton = $("#callbacks-main > div:nth-child(2) > div.text-right > button:nth-child(2)")
+                if (!NextButton.is(":disabled")) {
+                    console.log("CB_CLEANER - PROCEEDING NEXT CONTRACT >> DID NOT DELETE")
+                    await wait(200)
+                    NextButton.click()
+                    await waitForElementToDisappear("#callbackDetailsContent")
+                    await wait(10)
+                    deleteCallback()
+                } else {
+                    console.log("CB_CLEANER - FINISHED PAGE")
+                }
+            }
+
+            CallbackSorted.push({First: cxFirstName, Last: cxLastName})
+        }
+        console.log(proces)
+        console.log(CallbackSorted)
     }
 
     CallbacksList.click()
-    console.log("clicky :)")
     deleteCallback()
