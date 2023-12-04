@@ -86,7 +86,8 @@
             console.log("CB_CLEANER - LOADED")
             const cxFirstName = $("#callback-details > div:nth-child(3) > div.flex-grid-x.grid-padding-x > div.flex-cell.medium-5 > fieldset:nth-child(3) > div > div:nth-child(1) > label > input[type=text]").val()
             const cxLastName = $("#callback-details > div:nth-child(3) > div.flex-grid-x.grid-padding-x > div.flex-cell.medium-5 > fieldset:nth-child(3) > div > div:nth-child(2) > label > input[type=text]").val()
-
+            const PickupDate = $("#callbackDetailsContent > div:nth-child(3) > div.flex-grid-x.grid-padding-x > div:nth-child(1) > dl > dd").text()
+            
             if (isDuplicate({First: cxFirstName, Last: cxLastName})) {
                 console.log("CB_CLEANER - DUPLICATE")
 
@@ -107,6 +108,22 @@
                 console.log("CB_CLEANER - ALREADY CONFIRMED")
 
                 $("select[name='SelectedCallbackResultID']").val("9").change(); // Update Dropdown results
+    
+                const NextButton = $("#callbacks-main > div:nth-child(2) > div.text-right > button:nth-child(2)")
+                if (!NextButton.is(":disabled")) {
+                    console.log("CB_CLEANER - PROCEEDING NEXT CONTRACT")
+                    await wait(200)
+                    $("#callbacks-main > div:nth-child(2) > div.panel > div:nth-child(2) > button:nth-child(2)").click()
+                    await waitForElementToDisappear("#callbackDetailsContent")
+                    await wait(10)
+                    deleteCallback()
+                } else {
+                    console.log("CB_CLEANER - FINISHED PAGE")
+                }
+            } else if (PickupDate.trim() == "12/03/2023") {
+                console.log("CB_CLEANER - PAST DUE")
+
+                $("select[name='SelectedCallbackResultID']").val("6").change(); // Update Dropdown results
     
                 const NextButton = $("#callbacks-main > div:nth-child(2) > div.text-right > button:nth-child(2)")
                 if (!NextButton.is(":disabled")) {
@@ -141,5 +158,10 @@
         console.log(CallbackSorted)
     }
 
-    CallbacksList.click()
-    deleteCallback()
+
+    if (CallbacksList.length > 0) {
+        CallbacksList.click()
+        deleteCallback()
+    } else {
+        console.warn("CB_CLEANER - UNABLE TO START")
+    }
