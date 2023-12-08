@@ -76,6 +76,10 @@
 
     const maxAmount = 51
     let proces = 0
+    let Dupe = 0
+    let Confirmed = 0
+    let Due = 0
+    let Ignore = 0
     async function deleteCallback() {
         if (proces < maxAmount) {
             console.log("---------------------------------------")
@@ -91,6 +95,7 @@
             if (isDuplicate({First: cxFirstName, Last: cxLastName})) {
                 console.log("CB_CLEANER - DUPLICATE")
 
+                Dupe++
                 $("select[name='SelectedCallbackResultID']").val("6").change(); // Update Dropdown results
     
                 const NextButton = $("#callbacks-main > div:nth-child(2) > div.text-right > button:nth-child(2)")
@@ -107,6 +112,7 @@
             } else if (hasExistingReservation()) {
                 console.log("CB_CLEANER - ALREADY CONFIRMED")
 
+                Confirmed++
                 $("select[name='SelectedCallbackResultID']").val("9").change(); // Update Dropdown results
     
                 const NextButton = $("#callbacks-main > div:nth-child(2) > div.text-right > button:nth-child(2)")
@@ -120,9 +126,10 @@
                 } else {
                     console.log("CB_CLEANER - FINISHED PAGE")
                 }
-            } else if (PickupDate.trim() == "12/03/2023") {
+            } else if (PickupDate.trim() == "12/03/2023" || PickupDate.trim() == "12/04/2023") {
                 console.log("CB_CLEANER - PAST DUE")
 
+                Due++
                 $("select[name='SelectedCallbackResultID']").val("6").change(); // Update Dropdown results
     
                 const NextButton = $("#callbacks-main > div:nth-child(2) > div.text-right > button:nth-child(2)")
@@ -139,6 +146,7 @@
             } else {
                 console.log("CB_CLEANER - NON-DUPE")
 
+                Ignore++
                 const NextButton = $("#callbacks-main > div:nth-child(2) > div.text-right > button:nth-child(2)")
                 if (!NextButton.is(":disabled")) {
                     console.log("CB_CLEANER - PROCEEDING NEXT CONTRACT >> DID NOT DELETE")
@@ -156,6 +164,11 @@
         }
         console.log(proces)
         console.log(CallbackSorted)
+
+        console.log(`Duplicates: ${Dupe}`)
+        console.log(`Already Confirmed: ${Confirmed}`)
+        console.log(`Past Due: ${Due}`)
+        console.log(`Ignored Callbacks: ${Ignore}`)
     }
 
 
