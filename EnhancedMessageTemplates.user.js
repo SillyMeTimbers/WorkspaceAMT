@@ -101,7 +101,7 @@ ${ResInfo.MCOEnd}`
 						//return "Template is temporarily disabled."
 					} else if (cancelReason === "EAlert") {
 						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Your U-Haul Reservation was recently canceled, our records indicate your account has been flagged due to a previous reservation you've had with U-Haul or an encounter that occured with this rental, in result your reservation had automatically been canceled. If you believe this was a mistake contact the number below for further assistance.
+Your U-Haul Reservation was recently canceled, our records indicate your account has been flagged due to a previous reservation you've had with U-Haul or an encounter that occurred with this rental, in result your reservation had automatically been canceled. If you believe this was a mistake contact the number below for further assistance.
 ${ResInfo.MCOEnd}`
 
 						//return "Template is temporarily disabled."
