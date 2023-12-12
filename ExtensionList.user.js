@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const ExtensionListVersion = "3"
+const ExtensionListVersion = "5"
 async function extensionButtonWaitForElement(selector, timeout = 10000) {
     const startTime = Date.now();
 
@@ -187,7 +187,6 @@ function createGrid(data) {
 async function ExtensionListHandler() {
     await extensionButtonWaitForElement("#SendAppToCustomerPopup", 30000);
     const Popup = document.querySelector("#SendAppToCustomerPopup");
-//.reveal-modal.tiny
     if (Popup) {
         Popup.classList.add("ExtensionList")
         console.log("Open Popup");
@@ -197,7 +196,7 @@ async function ExtensionListHandler() {
         Popup.style.width = "50%"
 
         // Update Visuals
-        const headerElement = await extensionButtonWaitForElement("#form0 > header > h1", 3e3);
+        const headerElement = await extensionButtonWaitForElement("#SendAppToCustomerForm > header > h1", 3e3);
         if (headerElement) {
             headerElement.textContent = "Extension List";
         } else {
@@ -205,7 +204,7 @@ async function ExtensionListHandler() {
         }
 
         // Remove the form div
-        const formDiv = await extensionButtonWaitForElement("#form0 > div", 3e3);
+        const formDiv = await extensionButtonWaitForElement("#SendAppToCustomerForm > div", 3e3);
         if (formDiv) {
             formDiv.remove();
         } else {
@@ -214,6 +213,21 @@ async function ExtensionListHandler() {
 
         // Create and insert the grid
         const data = {
+            "Dealer Alternative Contacts": {
+                "008071 - 1st Call Pats": [false, "", "772-924-8438", ""],
+                "010589 - Midgard Self Storage Viera": [false, "10589", "", "Press 5, LVM for office"],
+                "013531 - Mikes Garage & Wrecker Service": [false, "", "772-562-2631", ""],
+                "014131 - Jupiter Amocco": [false, "", "321-727-2446", ""],
+                "018197 - The Better Choice": [false, "", "", "Press 2 than 1"],
+                "022586 - Mondo Storage & Rentals": [false, "", "331-305-4693", ""],
+                "026131 - S A Automotive Repair": [false, "", "561-396-6489", "(Owner Cell)"],
+                "029757 - Crown Heights Cut & Shave Parlor": [false, "561-810-8510", "561-577-3421", ""],
+                "032790 - Compass Self Storage": [false, "", "561-771-5952", "Press 3 & LVM"],
+                "038170 - J&R Priority & Vision MultiServices LLC": [false, "", "561-503-0677", ""],
+                "041498 - Affordable Towing of Belle Glade": [false, "", "561-993-6380", ""],
+                "088036 - EZ Pay Auto Sales": [false, "", "321-728-0771", ""],
+            },
+
             "Traffic Extensions": {
                 "TCM - Angel Vega": [true, "781301", "732-754-1721"],
                 "RDM - Steve Kirkbride": [false, "781302", "321-837-9625"],
@@ -228,6 +242,7 @@ async function ExtensionListHandler() {
                 "RM - Matthew Glenn": [false, "781311"],
                 "RM - Abigail Heister": [false, "781317"],
                 "RM - Danielle Clifford": [false, "781316"],
+                "RM - Rebekah Brown": [false, "781303"],
             },
 
             "MCO 781 AFM Extensions": {
@@ -238,7 +253,7 @@ async function ExtensionListHandler() {
                 "AFM 005 - Rick Ruiz": [false, "781005", "321-960-8760", "781005_afm@uhaul.com"],
                 "AFM 006 - Emilio Ruiz": [false, "781006", "954-465-6830", "781006_afm@uhaul.com"],
             },
-            
+
             "District 12 Extensions": {
                 "MCO 753 (UHC of Clearwater)": [false, "753300", "727-288-9919"],
                 "MCO 781 (UHC of Eastern Florida)": [false, "781300", "561-638-9428"],
@@ -298,9 +313,9 @@ async function ExtensionListHandler() {
                 "Vendor Request (request to sell U-Haul a product/service refer online)": [false, "uhaul.com/purchasing"],
             },
         };
-        
+
         const grid = createGrid(data);
-        const formElement = document.querySelector('#SendAppToCustomerPopup > #form0');
+        const formElement = document.querySelector('#SendAppToCustomerPopup > #SendAppToCustomerForm');
         formElement.appendChild(grid);
     }
 }
@@ -346,7 +361,7 @@ function shouldAddExtensionListButton() {
     }
 
     addScriptVersion("Extension List", ExtensionListVersion)
-    
+
     setInterval(() => {
         const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > li.has-tip")
         const ExtensionButton = document.querySelector("#Header > nav > section > ul.left > li.extension-button")
