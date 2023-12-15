@@ -26,10 +26,10 @@
 					const isEAlert = stringToBoolean(SubOptions.isEAlert.SelectedValue)
 
 					return `U-Haul Reservation; Late Pickup Reminder : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Our records indicate your rental has not yet been started and may be at risk of cancelation. ${isAvail ? 'If you would like to reschedule your reservation located at' : `Unfortunately, the equipment is no longer available at ${ResInfo.businessName} and would need to be relocated,`} ${isAvail ? `${ResInfo.businessName}, for a different date/time please contact us using the number provided below` : 'we ask you call us at your earliest convenience using the number below to discuss alternative solutions, we appreciate your business and hope to hear from you soon'}${isEAlert ? `. Additionally, it appears your account has been flagged from a previous reservation you've had with U-Haul; to avoid any issues with U-Haul or if you've already experienced issues regarding an "E-Alert" associated with your account contact (877) 653-0490 before leaving for your pickup address` : ``}.
+Our records indicate your rental has not yet been started and may be at risk of cancellation. ${isAvail ? 'If you would like to reschedule your reservation located at' : `Unfortunately, the equipment is no longer available at ${ResInfo.businessName} and would need to be relocated,`} ${isAvail ? `${ResInfo.businessName}, for a different date/time please contact us using the number provided below` : 'we ask you call us at your earliest convenience using the number below to discuss alternative solutions, we appreciate your business and hope to hear from you soon'}${isEAlert ? `. Additionally, it appears your account has been flagged from a previous reservation you've had with U-Haul; to avoid any issues with U-Haul or if you've already experienced issues regarding an "E-Alert" associated with your account contact (877) 653-0490 before leaving for your pickup address` : ``}.
 ${ResInfo.MCOEnd}`
 
-					//return `U-Haul Reservation; ${ResInfo.contractNumber} - Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, our records indicate your rental hasn't been started yet and your reservation is at risk of cancelation, please contact us at (561) 638-9428 if you are still in need of this equipment.`
+					//return `U-Haul Reservation; ${ResInfo.contractNumber} - Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, our records indicate your rental hasn't been started yet and your reservation is at risk of cancellation, please contact us at (561) 638-9428 if you are still in need of this equipment.`
 				}
 
 				return `Failed to create message :(`
@@ -71,36 +71,36 @@ ${ResInfo.MCOEnd}`
 			},
 		},
 
-		"CancelationNotice": {
-			Display: "CancelationNotice",
+		"cancellationNotice": {
+			Display: "cancellationNotice",
 
 			MsgTemplate: function () {
 				const ResInfo = getResInformation();
-				const SubOptions = getValInformation("CancelationNotice");
+				const SubOptions = getValInformation("cancellationNotice");
 
 				if (!SubOptions === false) {
 					const cancelReason = SubOptions.cancelReason.SelectedValue
 
 					if (cancelReason === "Confirm") {
-						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+						return `U-Haul Reservation; cancellation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. If you change your mind in the near future, you can call us at the number below to make new arrangements.
 ${ResInfo.MCOEnd}`
 
 						//return `U-Haul Reservation; ${ResInfo.contractNumber} - Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, your U-Haul Reservation was recently canceled, if you believe this was a mistake and you are still in need you can call us at (561) 638-9428 to make new arrangements.`
 					} else if (cancelReason === "Late") {
-						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+						return `U-Haul Reservation; cancellation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 We hope we didn't miss your arrival, our records indicate your reservation scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} was not picked up and has automatically been canceled. If you believe this was a mistake and you are still in need of this reservation or have already picked up your equipment, you can call us using the number below to reinstate your reservation.
 ${ResInfo.MCOEnd}`
 
 						//return `U-Haul Reservation; ${ResInfo.contractNumber} - Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, our records indicate your has not been started and has been canceled. If you still need this equipment, you can contact our office at (561) 638-9428 to reinstate your reservation.`
 					} else if (cancelReason === "Duplicate") {
-						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+						return `U-Haul Reservation; cancellation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Your U-Haul Reservation was recently canceled, our records indicated multiple reservations may have been made. If you believe this was a mistake and are in need of multiple reservations, please call us using the number below to reinstate this reservation.
 ${ResInfo.MCOEnd}`
 
 						//return "Template is temporarily disabled."
 					} else if (cancelReason === "EAlert") {
-						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+						return `U-Haul Reservation; cancellation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Your U-Haul Reservation was recently canceled, our records indicate your account has been flagged due to a previous reservation you've had with U-Haul or an encounter that occurred with this rental, in result your reservation had automatically been canceled. If you believe this was a mistake contact the number below for further assistance.
 ${ResInfo.MCOEnd}`
 
@@ -113,17 +113,17 @@ ${ResInfo.MCOEnd}`
 
 			NoteTemplate: function () {
 				const ResInfo = getResInformation();
-				const SubOptions = getValInformation("CancelationNotice");
+				const SubOptions = getValInformation("cancellationNotice");
 				const cancelReason = SubOptions.cancelReason.SelectedValue
 
 				return {
-					Text: `Cancelation Notice, Reason: ${cancelReason}`,
+					Text: `cancellation Notice, Reason: ${cancelReason}`,
 					ExpectedIn: false,
 					Working: true,
 				}
 			},
 
-			Dropdown: ["CancelationNotice", {
+			Dropdown: ["cancellationNotice", {
 				"cancelReason": {
 					DisplayText: "Reason",
 					DefaultOption: "Confirm",
