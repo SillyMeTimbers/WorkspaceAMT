@@ -2367,7 +2367,7 @@ U-Haul Equipment Recovery Department`
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Dynamic Messages V2", "41")
+		addScriptVersion("Dynamic Messages V2", "42")
 
 		setInterval(() => {
 			if (isMessageTextForumVisible()) {
