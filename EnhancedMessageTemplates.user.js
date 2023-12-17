@@ -165,7 +165,7 @@ ${ResInfo.MCOEnd}`
 
 					${ResStats.TrailerList.length > 0 ? `
 						<dt>Trailers:</dt>
-						<dd>${ReResStatssInfo.TrailerList}</dd>` : ``
+						<dd>${ResStats.TrailerList}</dd>` : ``
 					}
 
 					${ResStats.TowingList.length > 0 ? `
@@ -591,7 +591,7 @@ ${ResInfo.MCOEnd}`
 
 					${ResStats.TrailerList.length > 0 ? `
 						<dt>Trailers:</dt>
-						<dd>${ReResStatssInfo.TrailerList}</dd>` : ``
+						<dd>${ResStats.TrailerList}</dd>` : ``
 					}
 
 					${ResStats.TowingList.length > 0 ? `
@@ -667,7 +667,7 @@ ${ResInfo.MCOEnd}`
 
 					${ResStats.TrailerList.length > 0 ? `
 						<dt>Trailers:</dt>
-						<dd>${ReResStatssInfo.TrailerList}</dd>` : ``
+						<dd>${ResStats.TrailerList}</dd>` : ``
 					}
 
 					${ResStats.TowingList.length > 0 ? `
@@ -764,7 +764,7 @@ ${ResInfo.MCOEnd}`
 
 					${ResStats.TrailerList.length > 0 ? `
 						<dt>Trailers:</dt>
-						<dd>${ReResStatssInfo.TrailerList}</dd>` : ``
+						<dd>${ResStats.TrailerList}</dd>` : ``
 					}
 
 					${ResStats.TowingList.length > 0 ? `
@@ -927,7 +927,7 @@ ${ResInfo.MCOEnd}`
 
 					${ResStats.TrailerList.length > 0 ? `
 						<dt>Trailers:</dt>
-						<dd>${ReResStatssInfo.TrailerList}</dd>` : ``
+						<dd>${ResStats.TrailerList}</dd>` : ``
 					}
 
 					${ResStats.TowingList.length > 0 ? `
@@ -2367,7 +2367,7 @@ U-Haul Equipment Recovery Department`
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Dynamic Messages V2", "40")
+		addScriptVersion("Dynamic Messages V2", "41")
 
 		setInterval(() => {
 			if (isMessageTextForumVisible()) {
