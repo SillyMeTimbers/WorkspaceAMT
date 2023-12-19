@@ -114,6 +114,12 @@ const PermissionsList = {
       },
       Exclude: ["ExpNotes_VerifyTime"],
    },
+   "Rebekah Brown": {
+      Branch: {
+          Live: true,
+      },
+      Exclude: ["ExpNotes_VerifyTime"],
+   },
 };
 
 (async function() {
