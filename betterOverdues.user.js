@@ -100,7 +100,7 @@
         }
 
         // Create Request Demand-Letter Button
-        if (!ResType == "One-way") {
+        if (ResType !== "One-way") {
           const RequestDemandLetterButton = OpenOnlineDoc.parent().clone(true);
           RequestDemandLetterButton.find("a")
             .attr("onclick", `javascript:void(0)`)
