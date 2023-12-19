@@ -62,6 +62,7 @@
         }
 
         const EntityId = $(this).find(":nth-child(6)").text().split("\n")[3].trim();
+        const ResType = $(this).find(":nth-child(1)").text().split("\n")[3].trim();
         const TrackingId = $(this).find(":nth-child(13)").text().trim().replaceAll(" ", "");
         const ulElement = OpenOnlineDoc.parent().parent();
 
@@ -99,21 +100,23 @@
         }
 
         // Create Request Demand-Letter Button
-        const RequestDemandLetterButton = OpenOnlineDoc.parent().clone(true);
-        RequestDemandLetterButton.find("a")
-          .attr("onclick", `javascript:void(0)`)
-          .text("Request Demand Letter")
-          .attr("request-demand-letter-id", ContractId);
-
-        $(RequestDemandLetterButton).click(function() {
-            ConfirmDialog(`Are you sure you want to sent another Demand Letter? Only use this if the original was denied else use the "In-Town Not Returned" in the "Contract Closed" panel.`, "Confirm Request", function(r) {
-                if (r === !0) {
-                    RequestDemandLetter(ContractId)
-                }
-            })
-        })
-
-        ulElement.prepend(RequestDemandLetterButton);
+        if (!ResType == "One-way") {
+          const RequestDemandLetterButton = OpenOnlineDoc.parent().clone(true);
+          RequestDemandLetterButton.find("a")
+            .attr("onclick", `javascript:void(0)`)
+            .text("Request Demand Letter")
+            .attr("request-demand-letter-id", ContractId);
+  
+          $(RequestDemandLetterButton).click(function() {
+              ConfirmDialog(`Are you sure you want to sent another Demand Letter? Only use this if the original was denied else use the "In-Town Not Returned" in the "Contract Closed" panel.`, "Confirm Request", function(r) {
+                  if (r === !0) {
+                      RequestDemandLetter(ContractId)
+                  }
+              })
+          })
+  
+          ulElement.prepend(RequestDemandLetterButton);
+        }
 
         // Create Tracking Details button
         if (TrackingId > 0) {
