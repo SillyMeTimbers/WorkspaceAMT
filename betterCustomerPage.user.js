@@ -54,62 +54,136 @@
 		}
 
 		.splitinfo > div {
-			width: calc(50% - 5px)
+			width: calc(33.3% - 5px)
 		}
-		.splitinfo > div:nth-child(1) {
+		.splitinfo > div:nth-child(1), .splitinfo > div:nth-child(2) {
 			margin-right: 10px;
 		}
 		.
 	  `;
 	injectCSS(CSSToInject);
 
+	function extractCustomerInfo() {
+		const customerTabDirect = document.querySelector(`[data-slug="section5"]`);
+		if (!customerTabDirect) {
+			console.log('Customer section not found.');
+			return [];
+		}
+	
+		const customerData = [];
+		const customerRows = Array.from(customerTabDirect.querySelectorAll('.row:not(.authorized-user-header)'));
+	
+		for (let i = 0; i < customerRows.length; i += 2) {
+			const infoRow = customerRows[i];
+			const addressRow = customerRows[i + 1] || null;
+	
+			// Extract name and the management link (editLink)
+			const nameAndLinkElement = infoRow.querySelector('.medium-5.columns a[href*="CustomerManagementLink"]');
+			const name = nameAndLinkElement ? nameAndLinkElement.textContent.trim() : 'N/A';
+			const editLink = nameAndLinkElement ? nameAndLinkElement.getAttribute('href') : 'N/A';
+	
+			// Extract the JavaScript function call for modifying the customer
+			const editFunctionElement = infoRow.querySelector('.fa-edit');
+			const modifyLink = editFunctionElement ? editFunctionElement.getAttribute('onclick') : 'N/A';
+	
+			// Other information extraction remains the same
+			const emailElement = infoRow.querySelector('#customerEmailAddress');
+			const phoneElement = infoRow.querySelector('.medium-3.columns').textContent.trim();
+			const textMsgLinkElement = infoRow.querySelector('.fa-mobile');
+	
+			let customer = {
+				name: name,
+				email: emailElement && emailElement.textContent.includes('@') ? emailElement.textContent.trim() : 'N/A',
+				phoneNumber: phoneElement.match(/\(\d{3}\)\s\d{3}-\d{4}/) ? phoneElement.match(/\(\d{3}\)\s\d{3}-\d{4}/)[0] : 'N/A',
+				editLink: editLink, // This remains the href link
+				modifyLink: modifyLink, // This is the new property for the JavaScript function call
+				emailLink: emailElement ? emailElement.nextElementSibling.getAttribute('onclick') : 'N/A',
+				textMsgLink: textMsgLinkElement ? textMsgLinkElement.parentElement.getAttribute('onclick') : 'N/A',
+				fromAddress: 'N/A', // To be updated below if present
+				toAddress: 'N/A' // To be updated below if present
+			};
+	
+			// Extract address information if present
+			if (addressRow) {
+				const fromAddressElement = addressRow.querySelector('.medium-4.columns b');
+				if (fromAddressElement && fromAddressElement.nextSibling) {
+					customer.fromAddress = fromAddressElement.nextSibling.textContent.trim() || 'N/A';
+				}
+	
+				const toAddressElement = addressRow.querySelector('.medium-4.columns b:last-of-type');
+				if (toAddressElement && toAddressElement.nextSibling) {
+					customer.toAddress = toAddressElement.nextSibling.textContent.trim() || 'N/A';
+				}
+			}
+	
+			customerData.push(customer);
+		}
+	
+		return customerData;
+	}	
+
 	function execute() {
 		const CustomerTabDirect = document.querySelector(`[data-slug="section5"]`);
 		if (CustomerTabDirect && !CustomerTabDirect.querySelector("#CustomerInformation")) {
-			const CustomerTabInformation = CustomerTabDirect.cloneNode(true)
+			const saveCustomerInformation = extractCustomerInfo();
 
-			CustomerTabDirect.innerHTML = '';  // Reset Content
+			// Reset Content
+			$(CustomerTabDirect).empty();
+
 			const Html_Content = `
 				<div id="CustomerInformation">
 					<div id="CustomerInformationTable">
-						<fieldset class="customerInfo">
-							<legend class="customerName">
-								John Doe
-							</legend>
-						
-							<div class="splitinfo">
-								<div>
-									<input id="customerPhone" type="text" value="(999) 999-9999" disabled="true">
-								</div>
-
-								<div>
-									<input id="customerEmail" type="text" value="johndoe@uhaul.com" disabled="true">
-								</div>
-							</div>
-
-							<dl class="inline movinginfo">
-								<dt>Moving From:</dt>
-								<dd id="movingFromAddress">4703 Babcock St, Palm Bay, FL 32905</dd>
-								<dt>Moving To:</dt>
-								<dd id="movingToAddress">376 N Harbor City Blvd, Melbourne, FL 32935</dd>
-                        	</dl>
-
-							<div class="inputbuttons row">
-								<button class="left" type="button">Send Text</button>
-								<button class="left" type="button">Send Email</button>
-								<button class="left" type="button">Modify Customer</button>
-								<button class="left" type="button">Manage Customer</button>
-							</div>
-						</fieldset>
-
-						<p>
-							<a class="right" href="#" onclick="OpenAddCustomer()"><i class="fa fa-plus"></i> Add Customer</a>
-						</p>
+						<a class="right" href="#" onclick="OpenAddCustomer()" style="width: 100%; margin: 3px 0px;"><i class="fa fa-plus"></i> Add Customer</a>
 					</div>
 				</div>
-        	`
-			CustomerTabDirect.innerHTML = Html_Content;
-			//$("#CustomerInformationTable").append(Template)
+			`;
+
+			$(CustomerTabDirect).html(Html_Content);
+
+			// Loop through saveCustomerInformation and use the html template to fill in the data
+			saveCustomerInformation.forEach(function (customer) {
+				const customerHtml = `
+					<fieldset class="customerInfo">
+						<legend class="customerName">
+							${customer.name}
+						</legend>
+					
+						<div class="splitinfo">
+							<div>
+								Primary:
+								<input id="customerPhone" type="text" value="${customer.phoneNumber}" disabled="true">
+							</div>
+	
+							<div>
+								Alternative:
+								<input id="customerPhoneAlt" type="text" value="N/A" disabled="true">
+							</div>
+	
+							<div>
+								Email:
+								<input id="customerEmail" type="text" value="${customer.email}" disabled="true">
+							</div>
+						</div>
+	
+						<dl class="inline movinginfo">
+							<dt>Moving From:</dt>
+							<dd id="movingFromAddress">${customer.fromAddress}</dd>
+							<dt>Moving To:</dt>
+							<dd id="movingToAddress">${customer.toAddress}</dd>
+						</dl>
+	
+						<div class="inputbuttons row">
+							<button class="left" type="button" onclick="${customer.textMsgLink}">Send Text</button>
+							<button class="left" type="button" onclick="${customer.emailLink}">Send Email</button>
+							<button class="left" type="button" onclick="${customer.modifyLink}">Modify Customer</button>
+							<a class="left" href="${customer.editLink}" target="_blank"><button type="button">View in uhaul.net</button></a>
+						</div>
+					</fieldset>
+				`;
+
+				// Append the customerHtml to the #CustomerInformationTable
+				$('#CustomerInformationTable').append(customerHtml);
+			});
 		}
 	}
 
