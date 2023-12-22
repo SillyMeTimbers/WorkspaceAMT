@@ -877,14 +877,14 @@ ${ResInfo.MCOEnd}`
 					const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
 
 					if (!lowAvail) {
-						return `U-Haul Reservation; ${reminderMessage ? 'Pickup Reminder' : 'Pickup Updated'} : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+						return `U-Haul Reservation; ${reminderMessage ? 'Pickup Reminder' : 'New Changed'} : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 ${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled at' : 'Your pick-up address has been updated, please go to'} ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
 
 						//return "Template is temporarily disabled."
 					} else {
-						return `U-Haul Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-We apologize for the inconvenience, but due to scheduling issues at this time, your pickup has been changed. Your equipment will be ready for pick-up at ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
+						return `U-Haul Reservation; New Changed : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+We apologize for the inconvenience, due to low availability at this time your pickup has been changed. The nearest location that will have your equipmenet available is ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
 
 						//return `U-Haul Reservation; ${ResInfo.contractNumber} - Your pickup address has been updated to ${ResInfo.street}, ${ResInfo.city}. Your reservation is scheduled for pickup on ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this change, contact us at (561) 638-9428.`
