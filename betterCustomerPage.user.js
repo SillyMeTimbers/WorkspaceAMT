@@ -84,8 +84,7 @@
 	
 			// Extract the JavaScript function call for modifying the customer
 			const editFunctionElement = infoRow.querySelector('.fa-edit');
-			const modifyLink = editFunctionElement ? editFunctionElement.getAttribute('onclick') : 'N/A';
-	
+
 			// Other information extraction remains the same
 			const emailElement = infoRow.querySelector('#customerEmailAddress');
 			const phoneElement = infoRow.querySelector('.medium-3.columns').textContent.trim();
@@ -96,14 +95,13 @@
 				email: emailElement && emailElement.textContent.includes('@') ? emailElement.textContent.trim() : 'N/A',
 				phoneNumber: phoneElement.match(/\(\d{3}\)\s\d{3}-\d{4}/) ? phoneElement.match(/\(\d{3}\)\s\d{3}-\d{4}/)[0] : 'N/A',
 				editLink: editLink, // This remains the href link
-				modifyLink: modifyLink, // This is the new property for the JavaScript function call
+				modifyLink: `OpenEditCustomer(${$(".whoseViewingStatus").attr("data-contractid")})`, // This is the new property for the JavaScript function call
 				emailLink: emailElement ? emailElement.nextElementSibling.getAttribute('onclick') : 'N/A',
 				textMsgLink: textMsgLinkElement ? textMsgLinkElement.parentElement.getAttribute('onclick') : 'N/A',
 				fromAddress: 'N/A', // To be updated below if present
 				toAddress: 'N/A' // To be updated below if present
 			};
 	
-			// Extract address information if present
 			if (addressRow) {
 				const fromAddressElement = addressRow.querySelector('.medium-4.columns b');
 				if (fromAddressElement && fromAddressElement.nextSibling) {
