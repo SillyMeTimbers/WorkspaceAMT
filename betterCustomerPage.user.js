@@ -69,19 +69,19 @@
 			console.log('Customer section not found.');
 			return [];
 		}
-	
+
 		const customerData = [];
 		const customerRows = Array.from(customerTabDirect.querySelectorAll('.row:not(.authorized-user-header)'));
-	
+
 		for (let i = 0; i < customerRows.length; i += 2) {
 			const infoRow = customerRows[i];
 			const addressRow = customerRows[i + 1] || null;
-	
+
 			// Extract name and the management link (editLink)
 			const nameAndLinkElement = infoRow.querySelector('.medium-5.columns a[href*="CustomerManagementLink"]');
 			const name = nameAndLinkElement ? nameAndLinkElement.textContent.trim() : 'N/A';
 			const editLink = nameAndLinkElement ? nameAndLinkElement.getAttribute('href') : 'N/A';
-	
+
 			// Extract the JavaScript function call for modifying the customer
 			const editFunctionElement = infoRow.querySelector('.fa-edit');
 
@@ -89,36 +89,36 @@
 			const emailElement = infoRow.querySelector('#customerEmailAddress');
 			const phoneElement = infoRow.querySelector('.medium-3.columns').textContent.trim();
 			const textMsgLinkElement = infoRow.querySelector('.fa-mobile');
-	
+
 			let customer = {
 				name: name,
-				email: emailElement && emailElement.textContent.includes('@') ? emailElement.textContent.trim() : 'N/A',
-				phoneNumber: phoneElement.match(/\(\d{3}\)\s\d{3}-\d{4}/) ? phoneElement.match(/\(\d{3}\)\s\d{3}-\d{4}/)[0] : 'N/A',
-				editLink: editLink, // This remains the href link
-				modifyLink: `OpenEditCustomer(${$(".whoseViewingStatus").attr("data-contractid")})`, // This is the new property for the JavaScript function call
-				emailLink: emailElement ? emailElement.nextElementSibling.getAttribute('onclick') : 'N/A',
-				textMsgLink: textMsgLinkElement ? textMsgLinkElement.parentElement.getAttribute('onclick') : 'N/A',
-				fromAddress: 'N/A', // To be updated below if present
-				toAddress: 'N/A' // To be updated below if present
+				email: emailElement && emailElement.textContent.includes('@') ? emailElement.textContent.trim() : '',
+				phoneNumber: phoneElement.match(/\(\d{3}\)\s\d{3}-\d{4}/) ? phoneElement.match(/\(\d{3}\)\s\d{3}-\d{4}/)[0] : '',
+				editLink: editLink,
+				modifyLink: `OpenEditCustomer(${String(textMsgLinkElement ? textMsgLinkElement.parentElement.getAttribute('onclick') : ``).split(",")[3].trim().split(")")[0]})`,
+				emailLink: emailElement ? emailElement.nextElementSibling.getAttribute('onclick') : '',
+				textMsgLink: textMsgLinkElement ? textMsgLinkElement.parentElement.getAttribute('onclick') : '',
+				fromAddress: '', // To be updated below if present
+				toAddress: '' // To be updated below if present
 			};
-	
+
 			if (addressRow) {
 				const fromAddressElement = addressRow.querySelector('.medium-4.columns b');
 				if (fromAddressElement && fromAddressElement.nextSibling) {
-					customer.fromAddress = fromAddressElement.nextSibling.textContent.trim() || 'N/A';
+					customer.fromAddress = fromAddressElement.nextSibling.textContent.trim() || '';
 				}
-	
+
 				const toAddressElement = addressRow.querySelector('.medium-4.columns b:last-of-type');
 				if (toAddressElement && toAddressElement.nextSibling) {
-					customer.toAddress = toAddressElement.nextSibling.textContent.trim() || 'N/A';
+					customer.toAddress = toAddressElement.nextSibling.textContent.trim() || '';
 				}
 			}
-	
+
 			customerData.push(customer);
 		}
-	
+
 		return customerData;
-	}	
+	}
 
 	function execute() {
 		const CustomerTabDirect = document.querySelector(`[data-slug="section5"]`);
@@ -145,31 +145,31 @@
 						<legend class="customerName">
 							${customer.name}
 						</legend>
-					
+
 						<div class="splitinfo">
 							<div>
 								Primary:
 								<input id="customerPhone" type="text" value="${customer.phoneNumber}" disabled="true">
 							</div>
-	
+
 							<div>
 								Alternative:
-								<input id="customerPhoneAlt" type="text" value="N/A" disabled="true">
+								<input id="customerPhoneAlt" type="text" value="" disabled="true">
 							</div>
-	
+
 							<div>
 								Email:
 								<input id="customerEmail" type="text" value="${customer.email}" disabled="true">
 							</div>
 						</div>
-	
+
 						<dl class="inline movinginfo">
 							<dt>Moving From:</dt>
 							<dd id="movingFromAddress">${customer.fromAddress}</dd>
 							<dt>Moving To:</dt>
 							<dd id="movingToAddress">${customer.toAddress}</dd>
 						</dl>
-	
+
 						<div class="inputbuttons row">
 							<button class="left" type="button" onclick="${customer.textMsgLink}">Send Text</button>
 							<button class="left" type="button" onclick="${customer.emailLink}">Send Email</button>
