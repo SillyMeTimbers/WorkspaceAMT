@@ -1872,7 +1872,7 @@ U-Haul Equipment Recovery Department`
 			businessName: businessName,
 			businessPhoneNumber: phoneNumber,
 			Entity: $("#pickUpEntityChosen").val() || "Unassigned",
-			Distance: $("#milesAwayFromLocation").text() || 0
+			Distance: $("#milesAwayFromLocation").text() || 0,
 
 			// MCO Information
 			MCOEnd: "U-Haul Co. Palm Bay, FL (800) 649-2507",
