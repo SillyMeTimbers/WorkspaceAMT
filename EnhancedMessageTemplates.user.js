@@ -939,6 +939,9 @@ ${ResInfo.MCOEnd}`
 						<dt>SRI:</dt>
 						<dd>${ResStats.SRIList}</dd>` : ``
 					}
+
+     					<dt>Miles From Pref. Loc:</dt>
+					<dd>${ResInfo.Distance}</dd>
 				`
 			},
 
@@ -1841,9 +1844,6 @@ U-Haul Equipment Recovery Department`
 			customerFirstName: processName(document.querySelector("#customerFirstNameOnly").value.trim(), [], []),
 			customerLastName: processName(document.querySelector("#ReservationPopup > section > header > h1").textContent.split("-")[1].trim(), [], []),
 
-			// Equipment Information
-			// Coming soon -- :)
-
 			// Date Information
 			monthNumber: month,
 			dayNumber: dayPref,
@@ -1872,6 +1872,7 @@ U-Haul Equipment Recovery Department`
 			businessName: businessName,
 			businessPhoneNumber: phoneNumber,
 			Entity: $("#pickUpEntityChosen").val() || "Unassigned",
+			Distance: $("#milesAwayFromLocation").text() || 0
 
 			// MCO Information
 			MCOEnd: "U-Haul Co. Palm Bay, FL (800) 649-2507",
