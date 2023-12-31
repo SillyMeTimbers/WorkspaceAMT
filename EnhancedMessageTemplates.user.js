@@ -877,7 +877,7 @@ ${ResInfo.MCOEnd}`
 					const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
 
 					if (!lowAvail) {
-						return `U-Haul Reservation; ${reminderMessage ? 'Pickup Reminder' : 'New Changed'} : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+						return `U-Haul Reservation; ${reminderMessage ? 'Pickup Reminder' : 'Pickup Changed'} : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 ${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled at' : 'Your pick-up address has been updated, please go to'} ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
 
@@ -2367,7 +2367,7 @@ U-Haul Equipment Recovery Department`
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Dynamic Messages V2", "43")
+		addScriptVersion("Dynamic Messages V2", "44")
 
 		setInterval(() => {
 			if (isMessageTextForumVisible()) {
