@@ -1053,8 +1053,10 @@ ${ResInfo.MCOEnd}`
 				const SubOptions = getValInformation("UBox");
 
 				if (SubOptions) {
+					const ConfirmDetails = stringToBoolean(SubOptions.ConfirmDetails.SelectedValue)
 					return {
-						Text: `Ubx Timeframe Confirmation - Delivery Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDay.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}`,
+						// Ubx Timeframe Confirmation - Delivery Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDay.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}
+						Text: `${ConfirmDetails ? `***CONFIRM CUSTOMER DETAILS*** // ` : ``} Sent msg to cx in ref to a ${SubOptions.DeliveryType.SelectedText}, we have cx scheduled between ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} on ${SubOptions.DeliveryDay.SelectedText}. cx will need to contact us before ${SubOptions.CutoffTime.SelectedText} on ${SubOptions.CutoffDate.SelectedText} or they may be moved to the next available date.`,
 						ExpectedIn: false,
 						Working: true,
 					}
@@ -1075,6 +1077,16 @@ ${ResInfo.MCOEnd}`
 					Options: [
 						{ value: true, text: "Delivery" },
 						{ value: false, text: "Pickup" },
+					]
+				},
+
+				"ConfirmDetails": {
+					DisplayText: "Confirm Details",
+					DefaultOption: false,
+					Type: "Normal",
+					Options: [
+						{ value: true, text: "Yes" },
+						{ value: false, text: "No" },
 					]
 				},
 
@@ -2368,7 +2380,7 @@ U-Haul Equipment Recovery Department`
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Dynamic Messages V2", "44")
+		addScriptVersion("Dynamic Messages V2", "45")
 
 		setInterval(() => {
 			if (isMessageTextForumVisible()) {
