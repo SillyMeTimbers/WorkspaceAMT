@@ -1056,7 +1056,7 @@ ${ResInfo.MCOEnd}`
 					const ConfirmDetails = stringToBoolean(SubOptions.ConfirmDetails.SelectedValue)
 					return {
 						// Ubx Timeframe Confirmation - Delivery Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDay.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}
-						Text: `${ConfirmDetails ? `***CONFIRM CUSTOMER DETAILS*** // ` : ``} Sent msg to cx in ref to a ${SubOptions.DeliveryType.SelectedText}, we have cx scheduled between ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} on ${SubOptions.DeliveryDay.SelectedText}. cx will need to contact us before ${SubOptions.CutoffTime.SelectedText} on ${SubOptions.CutoffDate.SelectedText} or they may be moved to the next available date.`,
+						Text: `${ConfirmDetails ? `***CONFIRM CUSTOMER DETAILS*** // ` : ``}Sent msg to cx in ref to a ${SubOptions.DeliveryType.SelectedText}, we have cx scheduled between ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} on ${SubOptions.DeliveryDay.SelectedText}. cx will need to contact us before ${SubOptions.CutoffTime.SelectedText} on ${SubOptions.CutoffDate.SelectedText} or they may be moved to the next available date.`,
 						ExpectedIn: false,
 						Working: true,
 					}
