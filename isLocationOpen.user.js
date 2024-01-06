@@ -49,7 +49,7 @@
 		return false;
 	}
 
-	function locOpen(checkDate) {
+		function locOpen(checkDate) {
 		let LocationHours = $("#mapLocationDetails > div.row > div:nth-child(1) > dl.split.small")
 
 		if (LocationHours.length < 1) {
@@ -83,7 +83,7 @@
 						const times = hoursText.split(' to ');
 						if (times.length === 2) {
 							const openingTime = moment(startDate.format("YYYY-MM-DD") + " " + times[0], "YYYY-MM-DD h:mm A");
-							const closingTime = moment(startDate.format("YYYY-MM-DD") + " " + times[1], "YYYY-MM-DD h:mm A");
+							const closingTime = moment(endDate.format("YYYY-MM-DD") + " " + times[1], "YYYY-MM-DD h:mm A");
 							if (times[1].includes('PM') && closingTime.hour() < 12) {
 								closingTime.add(12, 'hours');
 							}
