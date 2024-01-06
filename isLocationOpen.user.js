@@ -201,7 +201,7 @@
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Verify Loc Hours", "4")
+		addScriptVersion("Verify Loc Hours", "5")
 
 		setInterval(() => {
 			if (isSourceVisible()) {
