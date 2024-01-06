@@ -981,7 +981,7 @@ ${ResInfo.MCOEnd}`
 					const msgStyle = stringToBoolean(SubOptions.msgStyle.SelectedValue)
 
 					if (ResInfo.returndayText == null) {
-						return `Template unavailable at this time, for dropoff messages send them in while viewing the dropoff contract.`
+						return `Sorry, this template is unavailable in "Reservation View". Please try again in the "Drop Off Rental" tab.`
 					} else {
 						if (msgStyle) {
 							return `U-Haul Reservation; New Dropoff : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
