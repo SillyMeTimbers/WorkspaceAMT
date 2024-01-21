@@ -1179,6 +1179,70 @@ ${ResInfo.MCOEnd}`
 			},
 		},
 
+		"UBoxNoDelivery": {
+			Display: "UBoxNoDelivery",
+
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("UBox");
+
+				if (SubOptions) {
+					return `U-Box Reservation; IMMEDIATE ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, you are receiving this notice in regards to a U-Box ${SubOptions.DeliveryType.SelectedText}. Unfortunately we are unable to make it into your area on ${SubOptions.DeliveryDay.SelectedText} and would like you to contact us at (561) 638-9428 to reschedule you for a better suited date. We hope to hear from you soon!
+${ResInfo.MCOEnd}`
+				}
+
+				return `Failed to create message :(`
+			},
+
+			NoteTemplate: function () {
+				const SubOptions = getValInformation("UBox");
+
+				if (SubOptions) {
+					const ConfirmDetails = stringToBoolean(SubOptions.ConfirmDetails.SelectedValue)
+					return {
+						// Ubx Timeframe Confirmation - Delivery Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDay.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}
+						Text: `current date for ${SubOptions.DeliveryType.SelectedText} will not work for us, let cx know to contact us to reschedule for a different date.`,
+						ExpectedIn: false,
+						Working: true,
+					}
+				}
+
+				return {
+					Text: ``,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
+
+			Dropdown: ["UBoxNoDelivery", {
+				"DeliveryType": {
+					DisplayText: "Delivery Type",
+					DefaultOption: true,
+					Type: "Normal",
+					Options: [
+						{ value: true, text: "Delivery" },
+						{ value: false, text: "Pickup" },
+					]
+				},
+
+				"DeliveryDay": {
+					DisplayText: "Delivery Date",
+					Type: "DatePicker",
+				},
+			}],
+
+			Params: function () {
+				const ResInfo = getResStatus();
+
+				if (ResInfo.isUBox) {
+					return true
+				}
+
+				return false
+			},
+		},
+		
 		"EAlert": {
 			Display: "EAlert",
 
