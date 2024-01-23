@@ -1184,7 +1184,7 @@ ${ResInfo.MCOEnd}`
 
 			MsgTemplate: function () {
 				const ResInfo = getResInformation();
-				const SubOptions = getValInformation("UBox");
+				const SubOptions = getValInformation("UBoxNoDelivery");
 
 				if (SubOptions) {
 					return `U-Box Reservation; IMMEDIATE ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
@@ -1196,7 +1196,7 @@ ${ResInfo.MCOEnd}`
 			},
 
 			NoteTemplate: function () {
-				const SubOptions = getValInformation("UBox");
+				const SubOptions = getValInformation("UBoxNoDelivery");
 
 				if (SubOptions) {
 					const ConfirmDetails = stringToBoolean(SubOptions.ConfirmDetails.SelectedValue)
