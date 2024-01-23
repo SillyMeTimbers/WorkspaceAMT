@@ -1199,7 +1199,6 @@ ${ResInfo.MCOEnd}`
 				const SubOptions = getValInformation("UBoxNoDelivery");
 
 				if (SubOptions) {
-					const ConfirmDetails = stringToBoolean(SubOptions.ConfirmDetails.SelectedValue)
 					return {
 						// Ubx Timeframe Confirmation - Delivery Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDay.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}
 						Text: `current date for ${SubOptions.DeliveryType.SelectedText} will not work for us, let cx know to contact us to reschedule for a different date.`,
