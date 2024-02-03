@@ -91,8 +91,9 @@ ${ResInfo.MCOEnd}`
 					return true
 				}
 
+				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return false
+					return true
 				}
 
 				return false
@@ -268,8 +269,9 @@ ${ResInfo.MCOEnd}`
 					return true
 				}
 
+				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return false
+					return true
 				}
 
 				return false
@@ -390,9 +392,10 @@ In order to start your rental using our Truckshare 24/7 process visit http://uha
 				if (!ResStats.Cancelled && ResStats.Covered && ResStats.Truckshare || ResStats.Dispatched) {
 					return true
 				}
-
+				
+				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return false
+					return true
 				}
 
 				return false
@@ -552,8 +555,9 @@ ${ResInfo.MCOEnd}`
 					return true
 				}
 
+				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return false
+					return true
 				}
 				
 				return false
@@ -632,8 +636,9 @@ ${ResInfo.MCOEnd}`
 					return true
 				}
 
+				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return false
+					return true
 				}
 
 				return false
@@ -711,8 +716,9 @@ ${ResInfo.MCOEnd}`
 					return true
 				}
 
+				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return false
+					return true
 				}
 
 				return false
@@ -885,8 +891,9 @@ ${ResInfo.MCOEnd}`
 					return true
 				}
 
+				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return false
+					return true
 				}
 
 				return false
@@ -1198,7 +1205,6 @@ ${ResInfo.MCOEnd}`
 
 			Params: function () {
 				const ResInfo = getResStatus();
-
 				if (ResInfo.isUBox) {
 					return true
 				}
