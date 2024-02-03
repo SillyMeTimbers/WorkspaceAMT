@@ -1179,6 +1179,58 @@ ${ResInfo.MCOEnd}`
 			},
 		},
 
+		"UboxConfirmDetails": {
+			Display: "UboxConfirmDetails",
+
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("UboxConfirmDetails");
+
+				if (SubOptions) {
+					return `U-Box Reservation; IMMEDIATE ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, we have attempted to contact you in regards to a U-Box Delivery on ${SubOptions.DeliveryDay.SelectedText}. Please contact us at your soonest availability so we can confirm your details for the delivery. Confirming your details prior to delivery reduces the possibility of any complications occuring during the delivery. You can contact us at (561) 638-9428 or if you are unable to reach us you can contact us by email 781_RM@uhaul.com and we will reach back out to you. We hope to hear from you soon!
+${ResInfo.MCOEnd}`
+				}
+
+				return `Failed to create message :(`
+			},
+
+			NoteTemplate: function () {
+				const SubOptions = getValInformation("UboxConfirmDetails");
+
+				if (SubOptions) {
+					return {
+						Text: `lvm in ref to delivery for ubox on ${SubOptions.DeliveryDay.SelectedText}, needing to confirm details`,
+						ExpectedIn: false,
+						Working: true,
+					}
+				}
+
+				return {
+					Text: ``,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
+
+			Dropdown: ["UboxConfirmDetails", {
+				"DeliveryDay": {
+					DisplayText: "Delivery Date",
+					Type: "DatePicker",
+				},
+			}],
+
+			Params: function () {
+				const ResInfo = getResStatus();
+
+				if (ResInfo.isUBox) {
+					return true
+				}
+
+				return false
+			},
+		},
+
 		"UBoxNoDelivery": {
 			Display: "UBoxNoDelivery",
 
@@ -1334,16 +1386,16 @@ U-Haul Equipment Recovery Department`
 				const SubOptions = getValInformation("CustomMessage");
 
 				return `U-Haul Reservation; #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	~
-	${ResInfo.MCOEnd}`
+~
+${ResInfo.MCOEnd}`
 
 				return `Failed to create message :(`
 			},
 
 			NoteTemplate: function () {
 				return {
-					Text: `Text Sent to Customer - Message Type: ~`,
-					ExpectedIn: true,
+					Text: ``,
+					ExpectedIn: false,
 					Working: false,
 				}
 			},
@@ -2447,7 +2499,7 @@ U-Haul Equipment Recovery Department`
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Dynamic Messages V2", "46")
+		addScriptVersion("Dynamic Messages V2", "47")
 
 		setInterval(() => {
 			if (isMessageTextForumVisible()) {
