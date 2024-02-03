@@ -93,7 +93,7 @@ ${ResInfo.MCOEnd}`
 
 				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return true
+					return false
 				}
 
 				return false
@@ -271,7 +271,7 @@ ${ResInfo.MCOEnd}`
 
 				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return true
+					return false
 				}
 
 				return false
@@ -395,7 +395,7 @@ In order to start your rental using our Truckshare 24/7 process visit http://uha
 				
 				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return true
+					return false
 				}
 
 				return false
@@ -557,7 +557,7 @@ ${ResInfo.MCOEnd}`
 
 				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return true
+					return false
 				}
 				
 				return false
@@ -638,7 +638,7 @@ ${ResInfo.MCOEnd}`
 
 				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return true
+					return false
 				}
 
 				return false
@@ -718,7 +718,7 @@ ${ResInfo.MCOEnd}`
 
 				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return true
+					return false
 				}
 
 				return false
@@ -893,7 +893,7 @@ ${ResInfo.MCOEnd}`
 
 				const ResInfo = getResStatus();
 				if (ResInfo.isUBox) {
-					return true
+					return false
 				}
 
 				return false
@@ -2533,7 +2533,7 @@ ${ResInfo.MCOEnd}`
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Dynamic Messages V2", "49")
+		addScriptVersion("Dynamic Messages V2", "50")
 
 		setInterval(() => {
 			if (isMessageTextForumVisible()) {
