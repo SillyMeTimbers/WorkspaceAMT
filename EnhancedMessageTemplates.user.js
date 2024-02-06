@@ -1222,7 +1222,7 @@ ${ResInfo.MCOEnd}`
 
 				if (SubOptions) {
 					return `U-Box Reservation; IMMEDIATE ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, we have attempted to contact you in regards to a U-Box Delivery on ${SubOptions.DeliveryDay.SelectedText}. Please contact us at your soonest availability so we can confirm your details for the delivery. Confirming your details prior to delivery reduces the possibility of any complications occuring during the delivery. You can contact us at (561) 638-9428 or if you are unable to reach us you can contact us by email 781_RM@uhaul.com and we will reach back out to you. We hope to hear from you soon!
+Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, we have attempted to contact you in regards to a U-Box Delivery on ${SubOptions.DeliveryDay.SelectedText}. Please contact us at your soonest availability so we can confirm your details for the delivery. Confirming your details prior to delivery reduces the possibility of any complications occurring during the delivery. You can contact us at (561) 638-9428 or if you are unable to reach us you can contact us by email 781_RM@uhaul.com and we will reach back out to you. We hope to hear from you soon!
 ${ResInfo.MCOEnd}`
 				}
 
