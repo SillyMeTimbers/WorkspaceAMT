@@ -10,7 +10,7 @@
 (function () {
     'use strict';
 
-    const NotDispatchCleaner = "14"
+    const NotDispatchCleaner = "15"
     let NotDispatchReportLastVisible = false;
     let NotDispatchSettings = {
         "UBOX": true,
@@ -135,21 +135,6 @@
         });
     }
 
-    function getLatestWorkingNote(Data) {
-        const Notes = $(Data).find(".notes");
-        let saveNote = null
-
-        Notes.find("> li").each(function (index, element) {
-            const isWorkingNote = $(element).find(".working-note");
-            
-            if (isWorkingNote.length > 0 && saveNote == null) {
-                saveNote = $(element).find("> p").text().trim();
-            }
-        });
-
-        return saveNote
-    }
-
     function Execute() {
         if (document.querySelector("#addUBOX_Holder") == null) {
             const IncludeUBOX = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Include U-Box', NotDispatchSettings.UBOX);
@@ -157,18 +142,6 @@
 
             const IncludeUncovered = createCheckbox('addUncovered', 'NotDispatchPanel.addUncovered', 'Include 781008', NotDispatchSettings.Uncovered);
             document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUncovered);
-
-            // const tbody = document.querySelector("#NotDispatchedResults_wrapper .fixed-table > thead > tr");
-            // if (tbody) {
-            //     console.log('add')
-            //     $(tbody).find("> th:nth-child(10)").remove()
-            //     const AddWorkingNoteColumn = $(`<th class="sorting" tabindex="0" aria-controls="NotDispatchedResults" rowspan="1" colspan="1" aria-label="
-            //     Working Note
-            // : activate to sort column ascending" style="width: 139.531px;">
-            //     <span>Working Note</span>
-            // </th>`)
-            //     $(tbody).append(AddWorkingNoteColumn);
-            // }
         }
 
         const tbody = document.querySelector("#NotDispatchedResults > tbody");
@@ -255,33 +228,6 @@
                     $(this).removeClass("latePU")
                 }
 
-                // // Add Working Notes
-                // const NoteText = ""
-                // const NoteBox = $(`<td></td>`)
-                // $(this).find("> td:nth-child(10)").remove()
-                // $(this).append(NoteBox);
-
-                // var data = {
-                //     contractID: $(this).data("contractid")
-                // };
-
-                // GetModalData(UrlAction("DisplayContractNotesFromDashboard", "Reservations"), data)
-                //     .then(function(htmlData) {
-                //         const passedNote = getLatestWorkingNote(htmlData);
-                //         NoteBox.attr('title', passedNote);
-                //         NoteBox.text(passedNote);
-                //         NoteBox.addClass("note has-tip");
-                //         NoteBox.attr('data-tooltip', '');     
-                //         NoteBox.css(`white-space`, `nowrap`)
-
-                //         console.log(htmlData);
-                //     })
-                //     .catch(function(error) {
-                //         console.error(error);
-                //     });
-
-                // var table = $('#NotDispatchedResults').DataTable();
-                // table.columns.adjust().draw();
                 $(this).data("processed", "true");
             }
         });
@@ -307,6 +253,8 @@
         } else {
             ShowResults.hide()
         }
+
+        $("#notDispatchedSearchResultsDiv > h2").text(`Not Dispatched Results - ${visCount}`)
     }
 
     function isNotDispatchReport() {
