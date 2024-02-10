@@ -254,7 +254,7 @@
             ShowResults.hide()
         }
 
-        $("#notDispatchedSearchResultsDiv > h2").text(`${visCount} Not Dispatch Results Found`)
+        $("#notDispatchedSearchResultsDiv > h2").text(`Not Dispatch Results - ${visCount}`)
     }
 
     function isNotDispatchReport() {
