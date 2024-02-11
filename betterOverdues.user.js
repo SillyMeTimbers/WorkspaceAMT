@@ -165,16 +165,6 @@
             $.ajax(settings).done(function (response) {
               console.log(response);
             });
-            // fetch('https://api.trackingmore.com/v4/trackings/get?tracking_numbers=92148969002495000022782788', {
-            //   method: 'GET', // The method is GET
-            //   headers: {
-            //     'Tracking-Api-Key': 'lzmjux1e-f2b4-r6eo-5jgd-el86izwws4f7', // Replace with your actual API key
-            //     'Content-Type': 'application/json'
-            //   }
-            // })
-            //   .then(response => response.json())
-            //   .then(data => console.log(data))
-            //   .catch(error => console.error('Error:', error));
           });
 
           ulElement.prepend(TrackingDetails);
