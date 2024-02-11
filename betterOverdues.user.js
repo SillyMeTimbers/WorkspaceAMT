@@ -47,6 +47,14 @@
     return false;
   }
 
+  function getTrackingType(trackNum) {
+    if (trackNum => 26) {
+      return "usps"
+    } else {
+      return "fedex"
+    }
+  }
+
   function Execute() {
     const OverdueTable = $("#OverdueEquipmentResultsTable > tbody").find("tr");
 
@@ -63,6 +71,8 @@
 
         const EntityId = $(this).find(":nth-child(6)").text().split("\n")[3].trim();
         const ResType = $(this).find(":nth-child(1)").text().split("\n")[3].trim();
+        const ReservationNum = $(this).find(":nth-child(2)").text().split("\n")[3].trim();
+        const CxName = $(this).find(":nth-child(3)").text().split("\n")[3].trim();
         const TrackingId = $(this).find(":nth-child(13)").text().trim().replaceAll(" ", "");
         const ulElement = OpenOnlineDoc.parent().parent();
 
@@ -120,23 +130,49 @@
 
         // Create Tracking Details button
         if (TrackingId > 0) {
+          const TrackingAPI_Key = 'qccew7mo-8cyh-2zou-qehc-ekh9yyzbam2n'
           const TrackingDetails = OpenOnlineDoc.parent().clone(true);
           TrackingDetails.find("a").off("click");
           TrackingDetails.find("a")
-            .text("View Tracking Details")
+            .text("Sync Tracking")
             .attr("tracking-button-id", ContractId);
 
           TrackingDetails.find("a").click(function () {
-            fetch('https://api.trackingmore.com/v4/trackings/get?tracking_numbers=92148969002495000022782788', {
-              method: 'GET', // The method is GET
+            const settings = {
+              async: true,
+              crossDomain: true,
+              url: 'https://api.trackingmore.com/v4/trackings/batch',
+              method: 'POST',
               headers: {
-                'Tracking-Api-Key': 'lzmjux1e-f2b4-r6eo-5jgd-el86izwws4f7', // Replace with your actual API key
-                'Content-Type': 'application/json'
-              }
-            })
-              .then(response => response.json())
-              .then(data => console.log(data))
-              .catch(error => console.error('Error:', error));
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Tracking-Api-Key': TrackingAPI_Key
+              },
+              processData: false,
+              data: `[
+                {
+                  "courier_code": "${getTrackingType(TrackingId)}",
+                  "tracking_number": "${TrackingId}",
+                  "customer_name": "${CxName}",
+                  "order_number": "${ReservationNum}",
+                  "customer_email": "Joshua_Mccart@uhaul.com"
+                },
+              ]`
+            };
+
+            $.ajax(settings).done(function (response) {
+              console.log(response);
+            });
+            // fetch('https://api.trackingmore.com/v4/trackings/get?tracking_numbers=92148969002495000022782788', {
+            //   method: 'GET', // The method is GET
+            //   headers: {
+            //     'Tracking-Api-Key': 'lzmjux1e-f2b4-r6eo-5jgd-el86izwws4f7', // Replace with your actual API key
+            //     'Content-Type': 'application/json'
+            //   }
+            // })
+            //   .then(response => response.json())
+            //   .then(data => console.log(data))
+            //   .catch(error => console.error('Error:', error));
           });
 
           ulElement.prepend(TrackingDetails);
@@ -166,7 +202,7 @@
       document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Better Overdues", "4")
+    addScriptVersion("Better Overdues", "5")
 
     setInterval(() => {
       if (isSourceVisible()) {
