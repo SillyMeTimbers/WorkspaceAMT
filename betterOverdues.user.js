@@ -72,7 +72,7 @@
         const EntityId = $(this).find(":nth-child(6)").text().split("\n")[3].trim();
         const ResType = $(this).find(":nth-child(1)").text().split("\n")[3].trim();
         const ReservationNum = $(this).find(":nth-child(2)").text().split("\n")[3].trim();
-        const Equipment = $(this).find(":nth-child(8)").text().split("\n")[3].trim();
+        const Equipment = $(this).find(":nth-child(9)").text().split("\n")[3].trim();
         const CxName = $(this).find(":nth-child(3)").text().split("\n")[3].trim();
         const TrackingId = $(this).find(":nth-child(13)").text().trim().replaceAll(" ", "");
         const ulElement = OpenOnlineDoc.parent().parent();
@@ -142,7 +142,7 @@
             const settings = {
               async: true,
               crossDomain: true,
-              url: 'https://api.trackingmore.com/v4/trackings/batch',
+              url: 'https://api.trackingmore.com/v4/trackings/create',
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -150,8 +150,8 @@
                 'Tracking-Api-Key': TrackingAPI_Key
               },
               processData: false,
-              data: `[
-                {
+              data: `
+              {
                   "courier_code": "${getTrackingType(TrackingId)}",
                   "tracking_number": "${TrackingId}",
                   "customer_name": "${CxName}",
@@ -159,10 +159,15 @@
                   "title": "${Equipment}",
                   "customer_email": "Joshua_Mccart@uhaul.com"
                 }
-              ]`
+              `
             };
 
             $.ajax(settings).done(function (response) {
+              if (response.meta.code == 200) {
+                ShowToastrMessage(`Synced ${ReservationNum} to Tracking Database, updates will be sent when available.`, "Tracking Database")
+              } else if (response.meta.code == 4101) {
+                ShowToastrWarning("Oops, it appears like this tracking number has already been synced. If you believe this is an error you know who to call..", "Tracking Database")
+              }
               console.log(response);
             });
           });
