@@ -121,22 +121,23 @@
         // Create Tracking Details button
         if (TrackingId > 0) {
           const TrackingDetails = OpenOnlineDoc.parent().clone(true);
+          TrackingDetails.find("a").off("click");
           TrackingDetails.find("a")
-            .off("click") // Remove existing click event handler
-            .on("click", function () {
-              fetch('https://api.trackingmore.com/v4/trackings/get?tracking_numbers=92148969002495000022782788', {
-                method: 'GET', // The method is GET
-                headers: {
-                  'Tracking-Api-Key': 'lzmjux1e-f2b4-r6eo-5jgd-el86izwws4f7', // Replace with your actual API key
-                  'Content-Type': 'application/json'
-                }
-              })
-                .then(response => response.json())
-                .then(data => console.log(data))
-                .catch(error => console.error('Error:', error));
-            })
             .text("View Tracking Details")
             .attr("tracking-button-id", ContractId);
+
+          TrackingDetails.find("a").click(function () {
+            fetch('https://api.trackingmore.com/v4/trackings/get?tracking_numbers=92148969002495000022782788', {
+              method: 'GET', // The method is GET
+              headers: {
+                'Tracking-Api-Key': 'lzmjux1e-f2b4-r6eo-5jgd-el86izwws4f7', // Replace with your actual API key
+                'Content-Type': 'application/json'
+              }
+            })
+              .then(response => response.json())
+              .then(data => console.log(data))
+              .catch(error => console.error('Error:', error));
+          });
 
           ulElement.prepend(TrackingDetails);
         }
