@@ -72,6 +72,7 @@
         const EntityId = $(this).find(":nth-child(6)").text().split("\n")[3].trim();
         const ResType = $(this).find(":nth-child(1)").text().split("\n")[3].trim();
         const ReservationNum = $(this).find(":nth-child(2)").text().split("\n")[3].trim();
+        const Equipment = $(this).find(":nth-child(8)").text().split("\n")[3].trim();
         const CxName = $(this).find(":nth-child(3)").text().split("\n")[3].trim();
         const TrackingId = $(this).find(":nth-child(13)").text().trim().replaceAll(" ", "");
         const ulElement = OpenOnlineDoc.parent().parent();
@@ -132,10 +133,10 @@
         if (TrackingId > 0) {
           const TrackingAPI_Key = 'qccew7mo-8cyh-2zou-qehc-ekh9yyzbam2n'
           const TrackingDetails = OpenOnlineDoc.parent().clone(true);
-          TrackingDetails.find("a").off("click");
           TrackingDetails.find("a")
             .text("Sync Tracking")
-            .attr("tracking-button-id", ContractId);
+            .attr("tracking-button-id", ContractId)
+            .attr("onclick", `javascript:void(0)`)
 
           TrackingDetails.find("a").click(function () {
             const settings = {
@@ -155,8 +156,9 @@
                   "tracking_number": "${TrackingId}",
                   "customer_name": "${CxName}",
                   "order_number": "${ReservationNum}",
+                  "title": "${Equipment}",
                   "customer_email": "Joshua_Mccart@uhaul.com"
-                },
+                }
               ]`
             };
 
@@ -177,7 +179,6 @@
 
           ulElement.prepend(TrackingDetails);
         }
-
 
         // Create Button | View In POS
         const button_ViewInPOS = OpenOnlineDoc.parent().clone(true);
@@ -202,7 +203,7 @@
       document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Better Overdues", "5")
+    addScriptVersion("Better Overdues", "6")
 
     setInterval(() => {
       if (isSourceVisible()) {
