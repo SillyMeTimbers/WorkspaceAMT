@@ -106,15 +106,15 @@
             .attr("onclick", `javascript:void(0)`)
             .text("Request Demand Letter")
             .attr("request-demand-letter-id", ContractId);
-  
-          $(RequestDemandLetterButton).click(function() {
-              ConfirmDialog(`Are you sure you want to sent another Demand Letter? Only use this if the original was denied else use the "In-Town Not Returned" in the "Contract Closed" panel.`, "Confirm Request", function(r) {
-                  if (r === !0) {
-                      RequestDemandLetter(ContractId)
-                  }
-              })
+
+          $(RequestDemandLetterButton).click(function () {
+            ConfirmDialog(`Are you sure you want to sent another Demand Letter? Only use this if the original was denied else use the "In-Town Not Returned" in the "Contract Closed" panel.`, "Confirm Request", function (r) {
+              if (r === !0) {
+                RequestDemandLetter(ContractId)
+              }
+            })
           })
-  
+
           ulElement.prepend(RequestDemandLetterButton);
         }
 
@@ -122,12 +122,25 @@
         if (TrackingId > 0) {
           const TrackingDetails = OpenOnlineDoc.parent().clone(true);
           TrackingDetails.find("a")
-            .attr("onclick", `window.open("https://www.trackingmore.com/track/en/${TrackingId}");`)
+            .off("click") // Remove existing click event handler
+            .on("click", function () {
+              fetch('https://api.trackingmore.com/v4/trackings/get?tracking_numbers=92148969002495000022782788', {
+                method: 'GET', // The method is GET
+                headers: {
+                  'Tracking-Api-Key': 'lzmjux1e-f2b4-r6eo-5jgd-el86izwws4f7', // Replace with your actual API key
+                  'Content-Type': 'application/json'
+                }
+              })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+            })
             .text("View Tracking Details")
             .attr("tracking-button-id", ContractId);
 
           ulElement.prepend(TrackingDetails);
         }
+
 
         // Create Button | View In POS
         const button_ViewInPOS = OpenOnlineDoc.parent().clone(true);
@@ -152,7 +165,7 @@
       document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Better Overdues", "3")
+    addScriptVersion("Better Overdues", "4")
 
     setInterval(() => {
       if (isSourceVisible()) {
