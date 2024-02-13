@@ -13,7 +13,7 @@ const Redirects = [
   "ExtensionList",
   "ExpNotes_VerifyTime",
   "TopBarAlert",
-  "SendDropoffButtons",
+  //"SendDropoffButtons",
   "EnhancedMessageTemplates",
   "HideUncoveredNotDispatch",
   "ReservationSearch",
