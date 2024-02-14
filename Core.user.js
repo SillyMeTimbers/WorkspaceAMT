@@ -120,6 +120,12 @@ const PermissionsList = {
       },
       Exclude: ["ExpNotes_VerifyTime"],
    },
+   "Lakesha Glover": {
+      Branch: {
+          Live: true,
+      },
+      Exclude: ["ExpNotes_VerifyTime"],
+   },
 };
 
 (async function() {
