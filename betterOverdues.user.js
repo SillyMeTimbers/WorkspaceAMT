@@ -30,6 +30,39 @@
       tr.latePU:hover {
           background: #e35a52 !important;
       }
+
+      .oddetails {
+          display: flex;
+          flex-direction: row;
+          margin: 10px !important;
+          width: 100%;
+          height: 100%;
+          align-items: stretch;
+      }
+
+      .oddetails > div:nth-child(1) {
+        width: calc(60% - 40px);
+        padding-left: 10px;
+      }
+
+      .oddetails > div:nth-child(2) {
+        margin-left: 15px;
+        width: 40%;
+      }
+
+      #NotesContainer > .notes {
+        max-height: 500px;
+        overflow: auto;
+        padding-top: 10px;
+      }
+
+      .TrackingDetails {
+        width: 100%;
+        height: 100%;
+        padding: 0.75em;
+        background-color: #fff;
+        border: solid 1px #ccc;
+      }
   `;
   NotDispatchinjectCSS(LatePickup);
 
@@ -55,6 +88,37 @@
     }
   }
 
+  // Function to parse the duration text and return a date object
+  function parseDurationToDate(durationText) {
+    var parts = durationText.split(' ');
+    var days = parseInt(parts[0], 10);
+    var hours = parseInt(parts[2], 10);
+    var minutes = parseInt(parts[4], 10);
+
+    var date = new Date();
+    date.setDate(date.getDate() - days);
+    date.setHours(date.getHours() - hours);
+    date.setMinutes(date.getMinutes() - minutes);
+
+    return date;
+  }
+
+  async function waitForElement(selector, timeout = 10000) {
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < timeout) {
+      const element = document.querySelector(selector);
+
+      if ((element) && !(element.display == "none")) {
+        return element;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    return null;
+  }
+
   function Execute() {
     const OverdueTable = $("#OverdueEquipmentResultsTable > tbody").find("tr");
 
@@ -69,12 +133,12 @@
           return;
         }
 
-        const EntityId = $(this).find(":nth-child(6)").text().split("\n")[3].trim();
-        const ResType = $(this).find(":nth-child(1)").text().split("\n")[3].trim();
-        const ReservationNum = $(this).find(":nth-child(2)").text().split("\n")[3].trim();
-        const Equipment = $(this).find(":nth-child(9)").text().split("\n")[3].trim();
-        const CxName = $(this).find(":nth-child(3)").text().split("\n")[3].trim();
-        const TrackingId = $(this).find(":nth-child(13)").text().trim().replaceAll(" ", "");
+        const EntityId = $(this).find("> :nth-child(6)").text().trim()
+        const ResType = $(this).find("> :nth-child(2)").text().trim()
+        const ReservationNum = $(this).find("> :nth-child(3)").text().trim()
+        const Equipment = $(this).find("> :nth-child(9)").text().trim()
+        const CxName = $(this).find("> :nth-child(4)").text().trim()
+        const TrackingId = $(this).find("> :nth-child(13)").text().trim().replaceAll(" ", "");
         const ulElement = OpenOnlineDoc.parent().parent();
 
         function extractDates(inputText) {
@@ -110,69 +174,77 @@
           }
         }
 
-        // Create Request Demand-Letter Button
-        if (ResType !== "One-way") {
-          const RequestDemandLetterButton = OpenOnlineDoc.parent().clone(true);
-          RequestDemandLetterButton.find("a")
-            .attr("onclick", `javascript:void(0)`)
-            .text("Request Demand Letter")
-            .attr("request-demand-letter-id", ContractId);
+        const ViewAddDetails = $(this).find('li > a[onclick*="BuildContractNoteView"]');
 
-          $(RequestDemandLetterButton).click(function () {
-            ConfirmDialog(`Are you sure you want to sent another Demand Letter? Only use this if the original was denied else use the "In-Town Not Returned" in the "Contract Closed" panel.`, "Confirm Request", function (r) {
-              if (r === !0) {
-                RequestDemandLetter(ContractId)
-              }
-            })
+        // Update Button Text + Listen for click calls
+        if (ViewAddDetails.length > 0) {
+          ViewAddDetails.text("View/Add Details")
+
+          ViewAddDetails.click(async function () {
+            console.log("clicky click")
+
+            let ViewDetailsMenu = await waitForElement("#note-form", 5000)
+
+            if (ViewDetailsMenu) {
+              console.log("found")
+              ViewDetailsMenu = $("#note-form")
+              ViewDetailsMenu.css("overflow")
+              
+              const KeepNotes = ViewDetailsMenu.find(".notes").clone(true) 
+              ViewDetailsMenu.find("> div:nth-child(1)").html(`
+              <div class="oddetails">
+              <div>
+                  <div class="large-6 columns" style="width: 100%; padding: 0;">
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>
+                                  Custom Note
+                                  <textarea cols="20" id="notesTextBox" name="ContractNote.Note" rows="2"></textarea>
+                              </label>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <fieldset class="checkbox">
+                                  <legend>Options</legend>
+                                  <input value="True" data-val="true" data-val-required="The WorkingNote field is required."
+                                      id="hiddenWorkingNoteValue" name="ContractNote.WorkingNote" type="hidden"> <label>
+                                      <input id="workingNoteCheck" name="ContractNote.WorkingNote"
+                                          onchange="CheckboxChecked(this)" type="checkbox" value="true" disabled=""><input
+                                          name="ContractNote.WorkingNote" type="hidden" value="false">
+                                      Save as working note
+                                      <span class="custom checkbox checked"></span></label>
+                                  <label>
+                                      <input data-val="true" data-val-required="The SpecialInstructionNote field is required."
+                                          id="specialInstructionCheck" name="ContractNote.SpecialInstructionNote"
+                                          onchange="CheckboxChecked(this)" type="checkbox" value="true"><input
+                                          name="ContractNote.SpecialInstructionNote" type="hidden" value="false">
+                                      Special Instruction Note
+                                      <span class="custom checkbox"></span></label>
+                              </fieldset>
+                          </div>
+                      </div>
+                  </div>
+          
+                  <fieldset style="width: 100%; padding: 0; margin: 0;">
+                      <legend>
+                          Contract Notes:
+                      </legend>
+                      <div id="NotesContainer"></div>
+                  </fieldset>
+              </div>
+          
+              <div>
+                  <div class="TrackingDetails">
+                      
+                  </div>
+              </div>
+          </div>
+              `)
+
+              $("#NotesContainer").append(KeepNotes);
+            }
           })
-
-          ulElement.prepend(RequestDemandLetterButton);
-        }
-
-        // Create Tracking Details button
-        if (TrackingId > 0) {
-          const TrackingAPI_Key = 'qccew7mo-8cyh-2zou-qehc-ekh9yyzbam2n'
-          const TrackingDetails = OpenOnlineDoc.parent().clone(true);
-          TrackingDetails.find("a")
-            .text("Sync Tracking")
-            .attr("tracking-button-id", ContractId)
-            .attr("onclick", `javascript:void(0)`)
-
-          TrackingDetails.find("a").click(function () {
-            const settings = {
-              async: true,
-              crossDomain: true,
-              url: 'https://api.trackingmore.com/v4/trackings/create',
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                'Tracking-Api-Key': TrackingAPI_Key
-              },
-              processData: false,
-              data: `
-              {
-                  "courier_code": "${getTrackingType(TrackingId)}",
-                  "tracking_number": "${TrackingId}",
-                  "customer_name": "${CxName}",
-                  "order_number": "${ReservationNum}",
-                  "title": "${Equipment}",
-                  "customer_email": "Joshua_Mccart@uhaul.com"
-                }
-              `
-            };
-
-            $.ajax(settings).done(function (response) {
-              if (response.meta.code == 200) {
-                ShowToastrMessage(`Synced ${ReservationNum} to Tracking Database, updates will be sent when available.`, "Tracking Database")
-              } else if (response.meta.code == 4101) {
-                ShowToastrWarning("Oops, it appears like this tracking number has already been synced. If you believe this is an error you know who to call..", "Tracking Database")
-              }
-              console.log(response);
-            });
-          });
-
-          ulElement.prepend(TrackingDetails);
         }
 
         // Create Button | View In POS
