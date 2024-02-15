@@ -63,6 +63,12 @@
         background-color: #fff;
         border: solid 1px #ccc;
       }
+
+      .newtracking {
+        width: 100%;
+        height: 30px;
+        border-radius: 5px;
+      }
   `;
   NotDispatchinjectCSS(LatePickup);
 
@@ -163,11 +169,10 @@
 
         if (OverdueStatus.length > 0) {
           const StatusToDate = new Date(extractDates(OverdueStatus)[0]);
-          const currentTime = new Date(); // dynamically obtain the current date-time
+          const currentTime = new Date();
           const overdueDuration = textToMilliseconds(OverdueTime);
 
-          // Adding a 2-hour padding to the overdueDuration
-          const paddedOverdueDuration = overdueDuration + (24 * 60 * 60 * 1000);  // 2 hours in milliseconds
+          const paddedOverdueDuration = overdueDuration + (24 * 60 * 60 * 1000);
           const timeElapsed = currentTime - StatusToDate;
           if (timeElapsed > paddedOverdueDuration) {
             $(element).addClass("latePU")
@@ -175,22 +180,19 @@
         }
 
         const ViewAddDetails = $(this).find('li > a[onclick*="BuildContractNoteView"]');
-
-        // Update Button Text + Listen for click calls
         if (ViewAddDetails.length > 0) {
           ViewAddDetails.text("View/Add Details")
 
           ViewAddDetails.click(async function () {
+            let ViewDetailsMenu = await waitForElement("body > #SecondaryPopup", 5000)
             console.log("clicky click")
-
-            let ViewDetailsMenu = await waitForElement("#note-form", 5000)
 
             if (ViewDetailsMenu) {
               console.log("found")
               ViewDetailsMenu = $("#note-form")
               ViewDetailsMenu.css("overflow")
-              
-              const KeepNotes = ViewDetailsMenu.find(".notes").clone(true) 
+
+              const KeepNotes = ViewDetailsMenu.find(".notes").clone(true)
               ViewDetailsMenu.find("> div:nth-child(1)").html(`
               <div class="oddetails">
               <div>
@@ -225,7 +227,7 @@
                           </div>
                       </div>
                   </div>
-          
+
                   <fieldset style="width: 100%; padding: 0; margin: 0;">
                       <legend>
                           Contract Notes:
@@ -233,16 +235,67 @@
                       <div id="NotesContainer"></div>
                   </fieldset>
               </div>
-          
+
               <div>
                   <div class="TrackingDetails">
-                      
+                      <b style="font-size: large;">Associated Tracking Details - ${ReservationNum}</b>
+                      <hr style="margin: 1em 0 1em;">
+
+                      <div id="TrackingList" style="width: 100%; height: auto; overflow: auto;">
+                          <button type="button" class="newtracking" style="margin: 0;">Sync Tracking</button>
+                      </div>
                   </div>
               </div>
           </div>
               `)
 
               $("#NotesContainer").append(KeepNotes);
+
+              // Handle Tracking
+              const SyncTracking = $(".newtracking")
+
+              if (SyncTracking.length > 0) {
+                SyncTracking.click(function() {
+                  if (TrackingId.length > 0) {
+                    const settings = {
+                      async: true,
+                      crossDomain: true,
+                      url: 'https://api.trackingmore.com/v4/trackings/create',
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                        'Tracking-Api-Key': 'qccew7mo-8cyh-2zou-qehc-ekh9yyzbam2n'
+                      },
+                      processData: false,
+                      data: `
+                      {
+                        "note": "n/a",
+                        "title": "${Equipment}",
+                        "language": "en",
+                        "courier_code": "${getTrackingType(TrackingId)}",
+                        "order_number": "${ReservationNum}",
+                        "customer_name": "${CxName}",
+                        "tracking_number": "${TrackingId}"
+                      }`
+                    };
+                    
+                    $.ajax(settings)
+                    .done(function (response) {
+                      if (response.meta.code == 200) {
+                        ShowToastrMessage(`Synced ${TrackingId} to Database, updates will be sent via email as they become available.`, "Tracking Database");
+                      }
+                      console.log(response);
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                      ShowToastrError(`Unable to sync ${TrackingId}, Reason: ${jqXHR.responseJSON.meta.message}`, "Tracking Database");
+                      console.warn("Tracking Sync Failed:", jqXHR.responseJSON);
+                    });
+                  } else {
+                    ShowToastrError(`No tracking information uploaded has been uploaded to this contract, if you believe this is a mistake please contact Joshua_Mccart@uhaul.com for further assistance.`, "Tracking Database");
+                  }
+                })
+              }
             }
           })
         }
@@ -270,7 +323,7 @@
       document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Better Overdues", "6")
+    addScriptVersion("Better Overdues", "7")
 
     setInterval(() => {
       if (isSourceVisible()) {
