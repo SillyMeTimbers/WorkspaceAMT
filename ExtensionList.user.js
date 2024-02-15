@@ -247,7 +247,8 @@ async function ExtensionListHandler() {
 
             "MCO 781 AFM Extensions": {
                 "AFM 001 - Errol Ebanks": [false, "781001", "214-505-2349", "781001_afm@uhaul.com"],
-                "AFM 002 - Muler Gonzalez": [false, "781002", "772-777-9750", "781002_afm@uhaul.com"],
+                //"AFM 002 - Muler Gonzalez": [false, "781002", "772-777-9750", "781002_afm@uhaul.com"],
+                "AFM 002 - Unassigned": [false, "781002", "999-999-9999", "781002_afm@uhaul.com"],
                 "AFM 003 - Marcus Black": [false, "781003", "561-348-0108", "781003_afm@uhaul.com"],
                 "AFM 004 - Patricia Evans": [false, "781004", "321-805-7648", "781004_afm@uhaul.com"],
                 "AFM 005 - Rick Ruiz": [false, "781005", "321-960-8760", "781005_afm@uhaul.com"],
