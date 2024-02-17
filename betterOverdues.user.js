@@ -572,8 +572,10 @@
 
                 function findAllTracking() {
                   let tempTrackingFound = [];
-                  tempTrackingFound.push(TrackingId)
-
+                  if (TrackingId) {
+                    tempTrackingFound.push(TrackingId)
+                  }
+                  
                   // Check Notes
                   $("#NotesContainer > .notes > li").each(function() {
                     var pText = $(this).find('p').text();
@@ -668,7 +670,7 @@
       document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Better Overdues", "12")
+    addScriptVersion("Better Overdues", "13")
 
     setInterval(() => {
       if (isSourceVisible()) {
