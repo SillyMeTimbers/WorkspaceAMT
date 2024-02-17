@@ -79,7 +79,7 @@
         border: solid 1px #ccc;
       }
 
-      .newtracking {
+      .newtracking, .requestdemandletter {
         width: 100%;
         height: 30px;
         border-radius: 5px;
