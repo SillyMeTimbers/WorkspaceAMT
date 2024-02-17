@@ -63,8 +63,7 @@ function getDays() {
 	// Parsing logic
 	let totalDays = 0;
 
-	// Check for days
-	const dayMatch = daysText.match(/(\d+)\s*days?/);
+	const dayMatch = daysText.match(/(\d+)/);
 	if (dayMatch) {
 		totalDays += parseInt(dayMatch[1]);
 	}
