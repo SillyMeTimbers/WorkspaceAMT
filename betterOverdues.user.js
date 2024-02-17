@@ -581,7 +581,7 @@
    
                     if (fedExTrackingRegex.test(pText)) {
                       var trackingNumberMatch = pText.match(fedExTrackingRegex);
-                      var trackingNumber = `${match[1]}${match[2]}${match[3]}`.replaceAll(" ", "") : null;
+                      var trackingNumber = `${match[1]}${match[2]}${match[3]}`.replaceAll(" ", "");
                       
                       if (trackingNumber) {
                         tempTrackingFound.push(trackingNumber);
