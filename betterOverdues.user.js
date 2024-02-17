@@ -579,7 +579,7 @@
                     var pText = $(this).find('p').text();
                     var fedExTrackingRegex = /(\d{4})\s*(\d{4})\s*(\d{4})/;
    
-                    const match = noteText.match(trackingNumberRegex);
+                    const match = pText.match(trackingNumberRegex);
                     if (match) {
                       var trackingNumber = `${match[1]}${match[2]}${match[3]}`.replaceAll(" ", "");
                       
