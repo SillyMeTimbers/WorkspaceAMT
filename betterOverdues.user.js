@@ -204,7 +204,7 @@
     }
   }
 
-  function getSubStatusText(subSetat) {
+  function getSubStatusText(subStat) {
     const custList = {
       "inforeceived001": "The package is waiting for courier to pick up",
       "transit001": "Package is on the way to destination",
@@ -273,7 +273,7 @@
     const year = date.getFullYear();
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
-  
+
     return `${month}/${day}/${year} ${hours}:${minutes}`;
   }
 
@@ -410,7 +410,7 @@
                           </div>
                       </div>
                   </div>
-          
+
                   <fieldset style="width: 100%; padding: 0; margin: 0;">
                       <legend>
                           Contract Notes:
@@ -418,13 +418,13 @@
                       <div id="NotesContainer"></div>
                   </fieldset>
               </div>
-          
+
               <div>
                   <div class="TrackingDetails">
                       <span style="width: 100%; display: block; height: 25px;"><b style="font-size: large;">Associated Tracking Details - ${ReservationNum}</b></span>
                       <button type="button" class="newtracking" style="margin: 0; width: 30%;" >Sync Tracking</button>
                       <hr style="margin: 1em 0 1em;">
-          
+
                       <div id="TrackingList">
                         <div id="NoTracking" style="display: none; padding: 5px 0;">No tracking information has been synced with this contract.</div>
                       </div>
@@ -499,7 +499,7 @@
                   let TrackingAdded = 0
 
                   console.log(TrackingNumbersFound)
-                  $.each(TrackingNumbersFound, async function (indexInArray, valueOfElement) { 
+                  $.each(TrackingNumbersFound, async function (indexInArray, valueOfElement) {
                     const url = 'https://api.trackingmore.com/v4/trackings/get?tracking_numbers=' + valueOfElement;
                     const options = {
                       method: 'GET',
@@ -509,45 +509,45 @@
                         'Tracking-Api-Key': 'qccew7mo-8cyh-2zou-qehc-ekh9yyzbam2n'
                       }
                     };
-  
+
                     try {
                       const response = await fetch(url, options);
                       const result = await response.json();
                       console.log(result);
-  
+
                       if (result.data && result.data.length > 0) {
                         $.each(result.data, function (indexInArray, trackingData) {
                           TrackingAdded++
                           $("#NoTracking").hide()
-  
+
                           const TrackingContainer_Holder = $(TrackingContainer_HTML)
                           $("#TrackingList").append(TrackingContainer_Holder);
-  
+
                           const TrackingHeader_Holder = $(TrackingHeader_HTML)
                           TrackingContainer_Holder.find(".trackinginfo").append(TrackingHeader_Holder)
-  
+
                           // Tracking #
                           TrackingHeader_Holder.find(".nums-p").text(trackingData.tracking_number)
                           TrackingHeader_Holder.find(".nums-p").attr("title", trackingData.tracking_number)
-  
+
                           // Status
                           TrackingHeader_Holder.find(".status-icon").html(getIcon(trackingData.delivery_status))
                           TrackingHeader_Holder.find(".status-color").text(capitalizeFirstLetter(trackingData.delivery_status) + " - " + getSubStatusText(trackingData.substatus))
-  
+
                           // Info
                           TrackingHeader_Holder.find(".time").text(convertTimestamp(trackingData.latest_checkpoint_time))
                           TrackingHeader_Holder.find(".tc-info").text(trackingData.latest_event)
-  
+
                           $.each(trackingData.origin_info.trackinfo, function(index, deliveryData) {
                             const TrackingItem_Holder = $(TrackingItem_HTML)
                             TrackingContainer_Holder.find(".trackinginfoList").append(TrackingItem_Holder)
-  
+
                             // Icon
                             TrackingItem_Holder.find(".box").html(getIcon(deliveryData.checkpoint_delivery_status, deliveryData.checkpoint_delivery_substatus))
-  
+
                             // Info-Text
                             TrackingItem_Holder.find(".info-text").text(deliveryData.tracking_detail)
-                            
+
                             // Info-Span
                             if (deliveryData.location !== null) {
                               TrackingItem_Holder.find(".info-span").text(convertTimestamp(deliveryData.checkpoint_date) + " • " + deliveryData.location)
@@ -573,16 +573,16 @@
                 function findAllTracking() {
                   let tempTrackingFound = [];
                   tempTrackingFound.push(TrackingId)
-                
+
                   // Check Notes
                   $("#NotesContainer > .notes > li").each(function() {
                     var pText = $(this).find('p').text();
                     var fedExTrackingRegex = /(\d{4})\s*(\d{4})\s*(\d{4})/;
-   
-                    const match = pText.match(trackingNumberRegex);
+
+                    const match = pText.match(fedExTrackingRegex);
                     if (match) {
                       var trackingNumber = `${match[1]}${match[2]}${match[3]}`.replaceAll(" ", "");
-                      
+
                       if (trackingNumber) {
                         tempTrackingFound.push(trackingNumber);
                       }
@@ -590,7 +590,7 @@
                   });
 
                   return tempTrackingFound
-                }                
+                }
 
                 TrackingNumbersFound = findAllTracking()
                 addTracking()
@@ -599,7 +599,7 @@
                   TrackingNumbersFound = findAllTracking()
                   if (TrackingNumbersFound.length > 0) {
 
-                    $.each(TrackingNumbersFound, function (indexInArray, TrackingNum) { 
+                    $.each(TrackingNumbersFound, function (indexInArray, TrackingNum) {
                       const settings = {
                         async: true,
                         crossDomain: true,
@@ -622,7 +622,7 @@
                           "tracking_number": "${TrackingNum}"
                         }`
                       };
-  
+
                       $.ajax(settings)
                         .done(function (response) {
                           if (response.meta.code == 200) {
@@ -668,7 +668,7 @@
       document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Better Overdues", "11")
+    addScriptVersion("Better Overdues", "12")
 
     setInterval(() => {
       if (isSourceVisible()) {
