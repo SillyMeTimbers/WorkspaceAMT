@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const ExtensionListVersion = "5"
+const ExtensionListVersion = "6"
 async function extensionButtonWaitForElement(selector, timeout = 10000) {
     const startTime = Date.now();
 
@@ -230,7 +230,7 @@ async function ExtensionListHandler() {
 
             "Traffic Extensions": {
                 "TCM - Angel Vega": [true, "781301", "732-754-1721"],
-                "RDM - Steve Kirkbride": [false, "781302", "321-837-9625"],
+                "RDM - Andrew Hutker": [false, "781302", "321-848-4414"],
                 //"RM - Emily Bertrand": [false, "781303", "586-381-3116"],
                 "RM - Michelle Asker": [false, "781304", "321-372-4360"],
                 "RM - Melissa Wise": [false, "781305", "321-431-3142"],
@@ -248,7 +248,7 @@ async function ExtensionListHandler() {
             "MCO 781 AFM Extensions": {
                 "AFM 001 - Errol Ebanks": [false, "781001", "214-505-2349", "781001_afm@uhaul.com"],
                 //"AFM 002 - Muler Gonzalez": [false, "781002", "772-777-9750", "781002_afm@uhaul.com"],
-                "AFM 002 - Unassigned": [false, "781002", "999-999-9999", "781002_afm@uhaul.com"],
+                "AFM 002 - Andrew Guzman": [false, "781002", "321-720-4669", "781002_afm@uhaul.com"],
                 "AFM 003 - Marcus Black": [false, "781003", "561-348-0108", "781003_afm@uhaul.com"],
                 "AFM 004 - Patricia Evans": [false, "781004", "321-805-7648", "781004_afm@uhaul.com"],
                 "AFM 005 - Rick Ruiz": [false, "781005", "321-960-8760", "781005_afm@uhaul.com"],
