@@ -577,9 +577,9 @@
                   // Check Notes
                   $("#NotesContainer > .notes > li").each(function() {
                     var pText = $(this).find('p').text();
-                    var fedExTrackingRegex = /FedEx Tracking# \d{4} \d{4} \d{4}/;
+                    var fedExTrackingRegex = /(\d{4})\s*(\d{4})\s*(\d{4})/;
    
-                    if (pText.includes('FedEx') && fedExTrackingRegex.test(pText)) {
+                    if (fedExTrackingRegex.test(pText)) {
                       var trackingNumberMatch = pText.match(fedExTrackingRegex);
                       var trackingNumber = trackingNumberMatch ? trackingNumberMatch[0].replace('FedEx Tracking# ', '').replaceAll(" ", "") : null;
                       
