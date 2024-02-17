@@ -607,7 +607,7 @@
                           RequestDemandLetter(ReservationNum)
                       }
                   })
-                }
+                })
                 
                 SyncTracking.click(function () {
                   TrackingNumbersFound = findAllTracking()
@@ -682,7 +682,7 @@
       document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Better Overdues", "13")
+    addScriptVersion("Better Overdues", "14")
 
     setInterval(() => {
       if (isSourceVisible()) {
