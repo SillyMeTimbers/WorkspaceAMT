@@ -422,7 +422,8 @@
               <div>
                   <div class="TrackingDetails">
                       <span style="width: 100%; display: block; height: 25px;"><b style="font-size: large;">Associated Tracking Details - ${ReservationNum}</b></span>
-                      <button type="button" class="newtracking" style="margin: 0; width: 30%;" >Sync Tracking</button>
+                      <button type="button" class="requestdemandletter" style="margin: 0; width: 40%;">Request New Demand-Letter</button>
+                      <button type="button" class="newtracking" style="margin: 0; width: 30%;">Sync Tracking</button>
                       <hr style="margin: 1em 0 1em;">
 
                       <div id="TrackingList">
@@ -494,6 +495,8 @@
 
               if (SyncTracking.length > 0) {
                 let TrackingNumbersFound = {}
+
+                
                 function addTracking() {
                   $("#TrackingList").html("") // Reset Current Tracking
                   let TrackingAdded = 0
@@ -597,6 +600,15 @@
                 TrackingNumbersFound = findAllTracking()
                 addTracking()
 
+                const SendDemandLetter = $(".requestdemandletter")
+                SendDemandLetter.click(function() {
+                  ConfirmDialog(`Are you sure? Completing this action will submit a request for a new demand letter for ${CxName}. If you have not yet requested a demand-letter do so within "Contract Close", if the demand letter has been lost in transit or has expired proceed with this request.`, "Request Demand Letter", function(r) {
+                      if (r === !0) {
+                          RequestDemandLetter(ReservationNum)
+                      }
+                  })
+                }
+                
                 SyncTracking.click(function () {
                   TrackingNumbersFound = findAllTracking()
                   if (TrackingNumbersFound.length > 0) {
