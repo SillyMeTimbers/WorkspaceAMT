@@ -668,7 +668,7 @@
       document.body.appendChild(scriptVersionElement);
     }
 
-    addScriptVersion("Better Overdues", "10")
+    addScriptVersion("Better Overdues", "11")
 
     setInterval(() => {
       if (isSourceVisible()) {
