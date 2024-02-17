@@ -580,7 +580,7 @@
                     var fedExTrackingRegex = /(\d{4})\s*(\d{4})\s*(\d{4})/;
 
                     const match = pText.match(fedExTrackingRegex);
-                    if (match) {
+                    if (match && pText.toLowerCase().includes("fedex")) {
                       var trackingNumber = `${match[1]}${match[2]}${match[3]}`.replaceAll(" ", "");
 
                       if (trackingNumber) {
