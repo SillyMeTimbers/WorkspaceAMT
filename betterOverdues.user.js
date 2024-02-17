@@ -204,7 +204,7 @@
     }
   }
 
-  function getSubStatusText(subStat) {
+  function getSubStatusText(subSetat) {
     const custList = {
       "inforeceived001": "The package is waiting for courier to pick up",
       "transit001": "Package is on the way to destination",
@@ -581,7 +581,7 @@
    
                     if (fedExTrackingRegex.test(pText)) {
                       var trackingNumberMatch = pText.match(fedExTrackingRegex);
-                      var trackingNumber = trackingNumberMatch ? trackingNumberMatch[0].replace('FedEx Tracking# ', '').replaceAll(" ", "") : null;
+                      var trackingNumber = `${match[1]}${match[2]}${match[3]}`.replaceAll(" ", "") : null;
                       
                       if (trackingNumber) {
                         tempTrackingFound.push(trackingNumber);
