@@ -322,7 +322,7 @@ async function ExtensionListHandler() {
 }
 
 function createExtensionButton() {
-    const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > li.has-tip")
+    const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > .applink-icon")
     const ExtensionListButton = SendCXAppButton.cloneNode(true)
     const ExtensionListIcon = ExtensionListButton.querySelector('.fa.fa-mobile.applink-icon');
     ExtensionListButton.classList.remove("has-tip")
@@ -364,7 +364,7 @@ function shouldAddExtensionListButton() {
     addScriptVersion("Extension List", ExtensionListVersion)
 
     setInterval(() => {
-        const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > li.has-tip")
+        const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > .applink-icon")
         const ExtensionButton = document.querySelector("#Header > nav > section > ul.left > li.extension-button")
 
         if (SendCXAppButton && !ExtensionButton) {
