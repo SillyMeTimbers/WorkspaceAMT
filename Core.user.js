@@ -120,7 +120,7 @@ const PermissionsList = {
       },
       Exclude: ["ExpNotes_VerifyTime"],
    },
-   "Lakesha Glover": {
+   "Wakeila Myles": {
       Branch: {
           Live: true,
       },
