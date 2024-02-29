@@ -332,7 +332,7 @@ function createExtensionButton() {
     // Update Button Visual
     ExtensionListButton.querySelector("a > span.applink-text").textContent = "Extensions List"
     ExtensionListIcon.classList.remove('fa-mobile'); // Remove the previous icon class
-    ExtensionListIcon.style.backgroundImage = 'url("https://cdn.discordapp.com/attachments/962895897434394674/1108155815526932531/ExtensionListIcon.png")';
+    ExtensionListIcon.style.backgroundImage = 'url("https://cdn-icons-png.flaticon.com/512/4298/4298256.png")';
     ExtensionListIcon.style.backgroundSize = 'cover'; // Add this line to adjust the background image size
     ExtensionListIcon.style.width = '30px'; // Adjust the width of the icon element
     ExtensionListIcon.style.height = '30px'; // Adjust the height of the icon element
