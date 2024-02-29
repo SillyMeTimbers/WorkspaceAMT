@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const ExtensionListVersion = "7"
+const ExtensionListVersion = "8"
 async function extensionButtonWaitForElement(selector, timeout = 10000) {
     const startTime = Date.now();
 
@@ -322,7 +322,7 @@ async function ExtensionListHandler() {
 }
 
 function createExtensionButton() {
-    const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > .applink-icon")
+    const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > li:nth-last-child(1)"))
     const ExtensionListButton = SendCXAppButton.cloneNode(true)
     const ExtensionListIcon = ExtensionListButton.querySelector('.fa.fa-mobile.applink-icon');
     ExtensionListButton.classList.remove("has-tip")
@@ -364,7 +364,7 @@ function shouldAddExtensionListButton() {
     addScriptVersion("Extension List", ExtensionListVersion)
 
     setInterval(() => {
-        const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > .applink-icon")
+        const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > li:nth-last-child(1)")
         const ExtensionButton = document.querySelector("#Header > nav > section > ul.left > li.extension-button")
 
         if (SendCXAppButton && !ExtensionButton) {
