@@ -322,7 +322,7 @@ async function ExtensionListHandler() {
 }
 
 function createExtensionButton() {
-    const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > li:nth-last-child(1)"))
+    const SendCXAppButton = document.querySelector("#Header > nav > section > ul.left > li:nth-last-child(1)")
     const ExtensionListButton = SendCXAppButton.cloneNode(true)
     const ExtensionListIcon = ExtensionListButton.querySelector('.fa.fa-mobile.applink-icon');
     ExtensionListButton.classList.remove("has-tip")
