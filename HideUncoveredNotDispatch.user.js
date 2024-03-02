@@ -10,7 +10,7 @@
 (function () {
     'use strict';
 
-    const NotDispatchCleaner = "15"
+    const NotDispatchCleaner = "16"
     let NotDispatchReportLastVisible = false;
     let NotDispatchSettings = {
         "UBOX": true,
@@ -27,12 +27,6 @@
     }
 
     const LatePickup = `
-        tr.even-row, tr.odd-row {
-            -moz-transition: background-color 300ms ease-out;
-            -o-transition: background-color 300ms ease-out;
-            -webkit-transition: background-color 300ms ease-out;
-            transition: background-color 300ms ease-out;
-        }
         tr.even-row{
             background: white !important;
         }
