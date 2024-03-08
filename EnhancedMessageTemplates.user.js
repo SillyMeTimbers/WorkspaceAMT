@@ -1221,9 +1221,16 @@ ${ResInfo.MCOEnd}`
 				const SubOptions = getValInformation("UboxConfirmDetails");
 
 				if (SubOptions) {
-					return `U-Box Reservation; IMMEDIATE ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+					const confirmNow = stringToBoolean(SubOptions.confirmNow.SelectedValue)
+
+					if (confirmNow) {
+						return `Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, you will be receiving a call shortly from a U-Box representative so we can confirm your U-Box details for a delivery on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}. Please be expecting a call from (561) 638-9428. Thank you.
+${ResInfo.MCOEnd}`	
+					} else {
+						return `U-Box Reservation; IMMEDIATE ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, we have attempted to contact you in regards to a U-Box Delivery on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}. Please contact us at your soonest availability so we can confirm your details for the delivery. Confirming your details prior to delivery reduces the possibility of any complications occurring during the delivery. You can contact us at (561) 638-9428 or if you are unable to reach us you can contact us by email 781_RM@uhaul.com and we will reach back out to you. We hope to hear from you soon!
-${ResInfo.MCOEnd}`
+${ResInfo.MCOEnd}`	
+					}
 				}
 
 				return `Failed to create message :(`
@@ -1249,6 +1256,11 @@ ${ResInfo.MCOEnd}`
 			},
 
 			Dropdown: ["UboxConfirmDetails", {
+				"confirmNow": {
+					DisplayText: "Confirming now?",
+					DefaultOption: false,
+					Type: "Checkbox",
+				},
 			}],
 
 			Params: function () {
@@ -2530,7 +2542,7 @@ ${ResInfo.MCOEnd}`
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Dynamic Messages V2", "51")
+		addScriptVersion("Dynamic Messages V2", "52")
 
 		setInterval(() => {
 			if (isMessageTextForumVisible()) {
