@@ -238,7 +238,7 @@ ${ResInfo.MCOEnd}`
 				if (!SubOptions === false) {
 					let Nearby73 = false
 					if (zipcode.includes(Number(ResInfo.zipcode))) {
-						Nearby73 = true
+						//Nearby73 = true
 					}
 
 					return `CONGRATULATIONS, ${ResInfo.customerFirstName.toUpperCase()}!
