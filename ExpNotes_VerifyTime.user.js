@@ -12,7 +12,7 @@
 (function () {
 	'use strict';
     
-    const VerifyReturnVersion = "9"
+    const VerifyReturnVersion = "10"
     
     // Styles
     function injectCSS(css) {
@@ -387,7 +387,7 @@
             updateButtonLabel(ExpectedInNote_Button, "Expected-In without note(s)", ExpectedInNote_ContractIdList, ExpectedInNote_ContractIdList.length - Sorted, EstTimeRemaining);
     
             await waitForElementToDisappear(toastSelector, 10000);
-            await wait(200);
+            await wait(2500);
         }
     
         ExpectedInNotes_ProcessedContracts.clear()
