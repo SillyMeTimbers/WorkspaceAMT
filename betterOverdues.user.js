@@ -604,7 +604,7 @@
                 SendDemandLetter.click(function() {
                   ConfirmDialog(`Are you sure? Completing this action will submit a request for a new demand letter for ${CxName}. If you have not yet requested a demand-letter do so within "Contract Close", if the demand letter has been lost in transit or has expired proceed with this request.`, "Request Demand Letter", function(r) {
                       if (r === !0) {
-                          RequestDemandLetter(ReservationNum)
+                          RequestDemandLetter(ContractId)
                       }
                   })
                 })
