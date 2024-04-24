@@ -87,7 +87,7 @@ ${ResInfo.MCOEnd}`
 
 			Params: function () {
 				const ResStats = getResStatus()
-				if (ResStats.isLatePickup && !ResStats.Dispatched && !ResStats.Cancelled && ResStats.Covered) {
+				if (!ResStats.Dispatched && !ResStats.Cancelled && ResStats.Covered) {
 					return true
 				}
 
