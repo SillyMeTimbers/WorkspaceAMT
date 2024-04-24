@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=uhaul.net
 // @grant        none
 // ==/UserScript==
-const ExtensionListVersion = "9"
+const ExtensionListVersion = "10"
 async function extensionButtonWaitForElement(selector, timeout = 10000) {
     const startTime = Date.now();
 
@@ -306,10 +306,11 @@ function createExtensionButton() {
     // Update Button Visual
     ExtensionListButton.querySelector("a > span.applink-text").textContent = "Extensions List"
     ExtensionListIcon.classList.remove('fa-mobile'); // Remove the previous icon class
-    ExtensionListIcon.style.backgroundImage = 'url("https://cdn-icons-png.flaticon.com/512/4298/4298256.png")';
-    ExtensionListIcon.style.backgroundSize = 'cover'; // Add this line to adjust the background image size
-    ExtensionListIcon.style.width = '30px'; // Adjust the width of the icon element
-    ExtensionListIcon.style.height = '30px'; // Adjust the height of the icon element
+    ExtensionListIcon.classList.add('fa-book'); // Remove the previous icon class
+    // ExtensionListIcon.style.backgroundImage = 'url("https://cdn-icons-png.flaticon.com/512/4298/4298256.png")';
+    // ExtensionListIcon.style.backgroundSize = 'cover'; // Add this line to adjust the background image size
+    // ExtensionListIcon.style.width = '30px'; // Adjust the width of the icon element
+    // ExtensionListIcon.style.height = '30px'; // Adjust the height of the icon element
 
     // Remove the inline onclick event handler
     const anchorElement = ExtensionListButton.querySelector(".applink-anchor");
