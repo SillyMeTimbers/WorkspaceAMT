@@ -13,6 +13,15 @@
 	let CSS_StyleSheetAdded = false;
 	const TestingMode = false;
 
+	function boolToText(boolVal) {
+		console.log(boolVal)
+		if (boolVal == true || boolVal == "true") {
+			return "Yes"
+		} else {
+			return "No"
+		}
+	}
+
 	const MsgTemplates = {
 		"LatePickupNotice": {
 			Display: "LatePickupNotice",
@@ -26,10 +35,10 @@
 					const isEAlert = stringToBoolean(SubOptions.isEAlert.SelectedValue)
 
 					return `U-Haul Reservation; Late Pickup Reminder : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Our records indicate your rental has not yet been started and may be at risk of cancelation. ${isAvail ? 'If you would like to reschedule your reservation located at' : `Unfortunately, the equipment is no longer available at ${ResInfo.businessName} and would need to be relocated,`} ${isAvail ? `${ResInfo.businessName}, for a different date/time please contact us using the number provided below` : 'we ask you call us at your earliest convenience using the number below to discuss alternative solutions, we appreciate your business and hope to hear from you soon'}${isEAlert ? `. Additionally, it appears your account has been flagged from a previous reservation you've had with U-Haul; to avoid any issues with U-Haul or if you've already experienced issues regarding an "E-Alert" associated with your account contact (877) 653-0490 before leaving for your pickup address` : ``}.
+Our records indicate your rental has not yet been started and may be at risk of cancellation. ${isAvail ? 'If you would like to reschedule your reservation located at' : `Unfortunately, the equipment is no longer available at ${ResInfo.businessName} and would need to be relocated,`} ${isAvail ? `${ResInfo.businessName}, for a different date/time please contact us using the number provided below` : 'we ask you call us at your earliest convenience using the number below to discuss alternative solutions, we appreciate your business and hope to hear from you soon'}${isEAlert ? `. Additionally, it appears your account has been flagged from a previous reservation you've had with U-Haul; to avoid any issues with U-Haul or if you've already experienced issues regarding an "E-Alert" associated with your account contact (877) 653-0490 before leaving for your pickup address` : ``}.
 ${ResInfo.MCOEnd}`
 
-					//return `U-Haul Reservation; ${ResInfo.contractNumber} - Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, our records indicate your rental hasn't been started yet and your reservation is at risk of cancelation, please contact us at (561) 638-9428 if you are still in need of this equipment.`
+					//return `U-Haul Reservation; ${ResInfo.contractNumber} - Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, our records indicate your rental hasn't been started yet and your reservation is at risk of cancellation, please contact us at (561) 638-9428 if you are still in need of this equipment.`
 				}
 
 				return `Failed to create message :(`
@@ -61,47 +70,67 @@ ${ResInfo.MCOEnd}`
 				},
 			}],
 
+			QuickDetails: function () {
+				const ResInfo = getResStatus();
+
+				return `
+					<dt>Truckshare Rental: </dt>
+					<dd>${boolToText(ResInfo.Truckshare)}</dd>
+
+					<dt>In-Town Rental: </dt>
+					<dd>${boolToText(ResInfo.IT_Rental)}</dd>
+
+					<dt>Active E-Alert: </dt>
+					<dd>${boolToText(ResInfo.isEAlert)}</dd>
+				`
+			},
+
 			Params: function () {
 				const ResStats = getResStatus()
 				if (!ResStats.Dispatched && !ResStats.Cancelled && ResStats.Covered) {
 					return true
 				}
 
+				const ResInfo = getResStatus();
+				if (ResInfo.isUBox) {
+					return false
+				}
+
 				return false
 			},
 		},
 
-		"CancelationNotice": {
-			Display: "CancelationNotice",
+		"cancellationNotice": {
+			Display: "cancellationNotice",
 
 			MsgTemplate: function () {
 				const ResInfo = getResInformation();
-				const SubOptions = getValInformation("CancelationNotice");
+				const SubOptions = getValInformation("cancellationNotice");
 
 				if (!SubOptions === false) {
 					const cancelReason = SubOptions.cancelReason.SelectedValue
 
 					if (cancelReason === "Confirm") {
-						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+						return `U-Haul Reservation; cancellation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Your U-Haul Reservation was recently canceled, this reservation was scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. If you change your mind in the near future, you can call us at the number below to make new arrangements.
 ${ResInfo.MCOEnd}`
 
 						//return `U-Haul Reservation; ${ResInfo.contractNumber} - Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, your U-Haul Reservation was recently canceled, if you believe this was a mistake and you are still in need you can call us at (561) 638-9428 to make new arrangements.`
 					} else if (cancelReason === "Late") {
-						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+						return `U-Haul Reservation; cancellation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 We hope we didn't miss your arrival, our records indicate your reservation scheduled for ${ResInfo.businessName} in ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode} was not picked up and has automatically been canceled. If you believe this was a mistake and you are still in need of this reservation or have already picked up your equipment, you can call us using the number below to reinstate your reservation.
 ${ResInfo.MCOEnd}`
 
 						//return `U-Haul Reservation; ${ResInfo.contractNumber} - Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, our records indicate your has not been started and has been canceled. If you still need this equipment, you can contact our office at (561) 638-9428 to reinstate your reservation.`
 					} else if (cancelReason === "Duplicate") {
-						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+						return `U-Haul Reservation; cancellation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 Your U-Haul Reservation was recently canceled, our records indicated multiple reservations may have been made. If you believe this was a mistake and are in need of multiple reservations, please call us using the number below to reinstate this reservation.
 ${ResInfo.MCOEnd}`
 
 						//return "Template is temporarily disabled."
 					} else if (cancelReason === "EAlert") {
-						return `U-Haul Reservation; Cancelation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-Your U-Haul Reservation was recently canceled, our records indicate your account has been flagged due to a previous reservation you've had with U-Haul or an encounter that occured with this rental, in result your reservation had automatically been canceled. If you believe this was a mistake contact the number below for further assistance.
+						return `U-Haul Reservation; cancellation Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Your U-Haul Reservation was recently canceled, our records indicate your account has been flagged due to a previous reservation you've had with U-Haul or an encounter that occurred with this rental, in result your reservation had automatically been canceled. If you believe this was a mistake contact the number below for further assistance.
 ${ResInfo.MCOEnd}`
 
 						//return "Template is temporarily disabled."
@@ -113,17 +142,54 @@ ${ResInfo.MCOEnd}`
 
 			NoteTemplate: function () {
 				const ResInfo = getResInformation();
-				const SubOptions = getValInformation("CancelationNotice");
+				const SubOptions = getValInformation("cancellationNotice");
 				const cancelReason = SubOptions.cancelReason.SelectedValue
 
 				return {
-					Text: `Cancelation Notice, Reason: ${cancelReason}`,
+					Text: `cancellation Notice, Reason: ${cancelReason}`,
 					ExpectedIn: false,
 					Working: true,
 				}
 			},
 
-			Dropdown: ["CancelationNotice", {
+			QuickDetails: function () {
+				const ResInfo = getResInformation();
+				const ResStats = getResStatus();
+
+				return `
+					<dt>Pickup Date:</dt>
+					<dd>${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}</dd>
+
+					<dt>Pickup City:</dt>
+					<dd>${ResInfo.amtCity}, ${ResInfo.amtState}</dd>
+
+					${ResStats.TruckList.length > 0 ? `
+						<dt>Trucks:</dt>
+						<dd>${ResStats.TruckList}</dd>` : ``
+					}
+
+					${ResStats.TrailerList.length > 0 ? `
+						<dt>Trailers:</dt>
+						<dd>${ResStats.TrailerList}</dd>` : ``
+					}
+
+					${ResStats.TowingList.length > 0 ? `
+						<dt>Towing:</dt>
+						<dd>${ResStats.TowingList}</dd>` : ``
+					}
+
+					${ResStats.SRIList.length > 0 ? `
+						<dt>SRI:</dt>
+						<dd>${ResStats.SRIList}</dd>` : ``
+					}
+
+					<hr style="margin: 8px 0;">
+					<dt>Active E-Alert:</dt>
+					<dd>${boolToText(ResInfo.isEAlert)}</dd>
+				`
+			},
+
+			Dropdown: ["cancellationNotice", {
 				"cancelReason": {
 					DisplayText: "Reason",
 					DefaultOption: "Confirm",
@@ -172,7 +238,7 @@ ${ResInfo.MCOEnd}`
 				if (!SubOptions === false) {
 					let Nearby73 = false
 					if (zipcode.includes(Number(ResInfo.zipcode))) {
-						Nearby73 = true
+						//Nearby73 = true
 					}
 
 					return `CONGRATULATIONS, ${ResInfo.customerFirstName.toUpperCase()}!
@@ -201,6 +267,11 @@ ${ResInfo.MCOEnd}`
 				const ResStats = getResStatus()
 				if (ResStats.Dispatched && !ResStats.IT_Rental) {
 					return true
+				}
+
+				const ResInfo = getResStatus();
+				if (ResInfo.isUBox) {
+					return false
 				}
 
 				return false
@@ -321,6 +392,11 @@ In order to start your rental using our Truckshare 24/7 process visit http://uha
 				if (!ResStats.Cancelled && ResStats.Covered && ResStats.Truckshare || ResStats.Dispatched) {
 					return true
 				}
+				
+				const ResInfo = getResStatus();
+				if (ResInfo.isUBox) {
+					return false
+				}
 
 				return false
 			},
@@ -362,6 +438,39 @@ ${ResInfo.MCOEnd}`
 						Working: true,
 					}
 				}
+			},
+
+			QuickDetails: function () {
+				const ResInfo = getResInformation();
+				const ResStats = getResStatus();
+
+				return `
+					<dt>Pickup Date:</dt>
+					<dd>${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}</dd>
+
+					<dt>Pickup City:</dt>
+					<dd>${ResInfo.amtCity}, ${ResInfo.amtState}</dd>
+
+					${ResStats.TruckList.length > 0 ? `
+						<dt>Trucks:</dt>
+						<dd>${ResStats.TruckList}</dd>` : ``
+					}
+
+					${ResStats.TrailerList.length > 0 ? `
+						<dt>Trailers:</dt>
+						<dd>${ReResStatssInfo.TrailerList}</dd>` : ``
+					}
+
+					${ResStats.TowingList.length > 0 ? `
+						<dt>Towing:</dt>
+						<dd>${ResStats.TowingList}</dd>` : ``
+					}
+
+					${ResStats.SRIList.length > 0 ? `
+						<dt>SRI:</dt>
+						<dd>${ResStats.SRIList}</dd>` : ``
+					}
+				`
 			},
 
 			Dropdown: ["HighDemandConfirmation", {
@@ -446,6 +555,11 @@ ${ResInfo.MCOEnd}`
 					return true
 				}
 
+				const ResInfo = getResStatus();
+				if (ResInfo.isUBox) {
+					return false
+				}
+				
 				return false
 			},
 		},
@@ -479,6 +593,40 @@ ${ResInfo.MCOEnd}`
 				}
 			},
 
+			QuickDetails: function () {
+				const ResInfo = getResInformation();
+				const ResStats = getResStatus();
+
+				return `
+					<dt>Pickup Date:</dt>
+					<dd>${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}</dd>
+
+					<dt>Pickup City:</dt>
+					<dd>${ResInfo.amtCity}, ${ResInfo.amtState}</dd>
+
+					${ResStats.TruckList.length > 0 ? `
+						<dt>Trucks:</dt>
+						<dd>${ResStats.TruckList}</dd>` : ``
+					}
+
+					${ResStats.TrailerList.length > 0 ? `
+						<dt>Trailers:</dt>
+						<dd>${ResStats.TrailerList}</dd>` : ``
+					}
+
+					${ResStats.TowingList.length > 0 ? `
+						<dt>Towing:</dt>
+						<dd>${ResStats.TowingList}</dd>` : ``
+					}
+
+					${ResStats.SRIList.length > 0 ? `
+						<dt>SRI:</dt>
+						<dd>${ResStats.SRIList}</dd>` : ``
+					}
+				`
+			},
+
+
 			Dropdown: ["HighDemand", {
 			}],
 
@@ -486,6 +634,11 @@ ${ResInfo.MCOEnd}`
 				const ResStats = getResStatus()
 				if (!ResStats.Dispatched && !ResStats.Cancelled && !ResStats.Covered) {
 					return true
+				}
+
+				const ResInfo = getResStatus();
+				if (ResInfo.isUBox) {
+					return false
 				}
 
 				return false
@@ -521,6 +674,39 @@ ${ResInfo.MCOEnd}`
 				}
 			},
 
+			QuickDetails: function () {
+				const ResInfo = getResInformation();
+				const ResStats = getResStatus();
+
+				return `
+					<dt>Pickup Date:</dt>
+					<dd>${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}</dd>
+
+					<dt>Pickup City:</dt>
+					<dd>${ResInfo.amtCity}, ${ResInfo.amtState}</dd>
+
+					${ResStats.TruckList.length > 0 ? `
+						<dt>Trucks:</dt>
+						<dd>${ResStats.TruckList}</dd>` : ``
+					}
+
+					${ResStats.TrailerList.length > 0 ? `
+						<dt>Trailers:</dt>
+						<dd>${ResStats.TrailerList}</dd>` : ``
+					}
+
+					${ResStats.TowingList.length > 0 ? `
+						<dt>Towing:</dt>
+						<dd>${ResStats.TowingList}</dd>` : ``
+					}
+
+					${ResStats.SRIList.length > 0 ? `
+						<dt>SRI:</dt>
+						<dd>${ResStats.SRIList}</dd>` : ``
+					}
+				`
+			},
+
 			Dropdown: ["LowAvailability", {
 			}],
 
@@ -528,6 +714,11 @@ ${ResInfo.MCOEnd}`
 				const ResStats = getResStatus()
 				if (!ResStats.Dispatched && !ResStats.Cancelled && !ResStats.Covered) {
 					return true
+				}
+
+				const ResInfo = getResStatus();
+				if (ResInfo.isUBox) {
+					return false
 				}
 
 				return false
@@ -580,6 +771,42 @@ ${ResInfo.MCOEnd}`
 					ExpectedIn: false,
 					Working: true,
 				}
+			},
+
+			QuickDetails: function () {
+				const ResInfo = getResInformation();
+				const ResStats = getResStatus();
+
+				return `
+					<dt>Pickup Date:</dt>
+					<dd>${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}</dd>
+
+					<dt>Pickup City:</dt>
+					<dd>${ResInfo.amtCity}, ${ResInfo.amtState}</dd>
+
+					<dt>Pickup Entity:</dt>
+					<dd>${ResInfo.Entity}</dd>
+
+					${ResStats.TruckList.length > 0 ? `
+						<dt>Trucks:</dt>
+						<dd>${ResStats.TruckList}</dd>` : ``
+					}
+
+					${ResStats.TrailerList.length > 0 ? `
+						<dt>Trailers:</dt>
+						<dd>${ResStats.TrailerList}</dd>` : ``
+					}
+
+					${ResStats.TowingList.length > 0 ? `
+						<dt>Towing:</dt>
+						<dd>${ResStats.TowingList}</dd>` : ``
+					}
+
+					${ResStats.SRIList.length > 0 ? `
+						<dt>SRI:</dt>
+						<dd>${ResStats.SRIList}</dd>` : ``
+					}
+				`
 			},
 
 			Dropdown: ["EquipmentChange", {
@@ -664,6 +891,11 @@ ${ResInfo.MCOEnd}`
 					return true
 				}
 
+				const ResInfo = getResStatus();
+				if (ResInfo.isUBox) {
+					return false
+				}
+
 				return false
 			},
 		},
@@ -680,14 +912,14 @@ ${ResInfo.MCOEnd}`
 					const lowAvail = stringToBoolean(SubOptions.LowAvail.SelectedValue)
 
 					if (!lowAvail) {
-						return `U-Haul Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+						return `U-Haul Reservation; ${reminderMessage ? 'Pickup Reminder' : 'Pickup Changed'} : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 ${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled at' : 'Your pick-up address has been updated, please go to'} ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
 
 						//return "Template is temporarily disabled."
 					} else {
-						return `U-Haul Reservation; New Pickup : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-We apologize for the inconvenience, but due to scheduling issues at this time, your pickup has been changed. Your equipment will be ready for pick-up at ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
+						return `U-Haul Reservation; Pickup Changed : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+We apologize for the inconvenience, due to low availability at this time your pickup has been changed. The nearest location that will have your equipment available is ${ResInfo.businessName} located at ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your reservation is scheduled for pickup on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this location you can reach them at ${ResInfo.businessPhoneNumber} or contact our office directly using the number below!
 ${ResInfo.MCOEnd}`
 
 						//return `U-Haul Reservation; ${ResInfo.contractNumber} - Your pickup address has been updated to ${ResInfo.street}, ${ResInfo.city}. Your reservation is scheduled for pickup on ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year} at ${ResInfo.hour}:${ResInfo.minute} ${ResInfo.AMPM}. If you have any questions regarding this change, contact us at (561) 638-9428.`
@@ -707,6 +939,45 @@ ${ResInfo.MCOEnd}`
 					ExpectedIn: false,
 					Working: true,
 				}
+			},
+
+			QuickDetails: function () {
+				const ResInfo = getResInformation();
+				const ResStats = getResStatus();
+
+				return `
+					<dt>Pickup Date:</dt>
+					<dd>${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}</dd>
+
+					<dt>Pickup City:</dt>
+					<dd>${ResInfo.amtCity}, ${ResInfo.amtState}</dd>
+
+					<dt>Pickup Entity:</dt>
+					<dd>${ResInfo.Entity}</dd>
+
+					${ResStats.TruckList.length > 0 ? `
+						<dt>Trucks:</dt>
+						<dd>${ResStats.TruckList}</dd>` : ``
+					}
+
+					${ResStats.TrailerList.length > 0 ? `
+						<dt>Trailers:</dt>
+						<dd>${ResStats.TrailerList}</dd>` : ``
+					}
+
+					${ResStats.TowingList.length > 0 ? `
+						<dt>Towing:</dt>
+						<dd>${ResStats.TowingList}</dd>` : ``
+					}
+
+					${ResStats.SRIList.length > 0 ? `
+						<dt>SRI:</dt>
+						<dd>${ResStats.SRIList}</dd>` : ``
+					}
+
+     					<dt>Miles From Pref. Loc:</dt>
+					<dd>${ResInfo.Distance}</dd>
+				`
 			},
 
 			Dropdown: ["NewPickup", {
@@ -744,14 +1015,18 @@ ${ResInfo.MCOEnd}`
 					const reminderMessage = stringToBoolean(SubOptions.DropoffConfirmation.SelectedValue)
 					const msgStyle = stringToBoolean(SubOptions.msgStyle.SelectedValue)
 
-					if (msgStyle) {
-						return `U-Haul Reservation; New Dropoff : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+					if (ResInfo.returndayText == null) {
+						return `Sorry, this template is unavailable in "Reservation View". Please try again in the "Drop Off Rental" tab.`
+					} else {
+						if (msgStyle) {
+							return `U-Haul Reservation; New Dropoff : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
 ${reminderMessage ? 'Thank you for choosing U-Haul, as a reminder your reservation is scheduled to return at' : 'Your return address has been updated, please return to'} ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. Your rental is due back in on ${ResInfo.returndayText}, ${ResInfo.returnmonthNumber} ${ResInfo.returndayNumber}, ${ResInfo.returnyear} at ${ResInfo.returnhour}:${ResInfo.returnminute} ${ResInfo.returnAMPM}. If you are returning after hours please use your mobile device to verify your equipment return by going to https://www.uhaul.com/Orders/OrderDetail.aspx?resid=${ResInfo.contractNumber}&ln=${ResInfo.customerLastName} or you can choose to have us verify it for you the next day for a $20 convenience fee.
 ${ResInfo.MCOEnd}`
-
-						//return "Template is temporarily disabled."
-					} else {
-						return `Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, your U-Haul Return address has been updated to ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. You can reach this location at ${ResInfo.businessPhoneNumber}, if you have any questions please call the number listed below.`
+	
+							//return "Template is temporarily disabled."
+						} else {
+							return `Good ${ResInfo.TimeOfDay} ${ResInfo.customerFirstName}, your U-Haul Return address has been updated to ${ResInfo.businessName} located off ${ResInfo.street}, ${ResInfo.city}, ${ResInfo.state} ${ResInfo.zipcode}. You can reach this location at ${ResInfo.businessPhoneNumber}, if you have any questions please call the number listed below.`
+						}
 					}
 				}
 
@@ -817,8 +1092,10 @@ ${ResInfo.MCOEnd}`
 				const SubOptions = getValInformation("UBox");
 
 				if (SubOptions) {
+					const ConfirmDetails = stringToBoolean(SubOptions.ConfirmDetails.SelectedValue)
 					return {
-						Text: `U-Box Timeframe Confirmation - Delivery Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDay.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}`,
+						// Ubx Timeframe Confirmation - Delivery Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDay.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}
+						Text: `${ConfirmDetails ? `***CONFIRM CUSTOMER DETAILS*** // ` : ``}Sent msg to cx in ref to a ${SubOptions.DeliveryType.SelectedText}, we have cx scheduled between ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} on ${SubOptions.DeliveryDay.SelectedText}. cx will need to contact us before ${SubOptions.CutoffTime.SelectedText} on ${SubOptions.CutoffDate.SelectedText} or they may be moved to the next available date.`,
 						ExpectedIn: false,
 						Working: true,
 					}
@@ -839,6 +1116,16 @@ ${ResInfo.MCOEnd}`
 					Options: [
 						{ value: true, text: "Delivery" },
 						{ value: false, text: "Pickup" },
+					]
+				},
+
+				"ConfirmDetails": {
+					DisplayText: "Confirm Details",
+					DefaultOption: false,
+					Type: "Normal",
+					Options: [
+						{ value: true, text: "Yes" },
+						{ value: false, text: "No" },
 					]
 				},
 
@@ -917,10 +1204,139 @@ ${ResInfo.MCOEnd}`
 			}],
 
 			Params: function () {
-				return true
+				const ResInfo = getResStatus();
+				if (ResInfo.isUBox) {
+					return true
+				}
+
+				return false
 			},
 		},
 
+		"UboxConfirmDetails": {
+			Display: "UboxConfirmDetails",
+
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("UboxConfirmDetails");
+
+				if (SubOptions) {
+					const confirmNow = stringToBoolean(SubOptions.confirmNow.SelectedValue)
+
+					if (confirmNow) {
+						return `Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, you will be receiving a call shortly from a U-Box representative so we can confirm your U-Box details for a delivery on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}. Please be expecting a call from (561) 638-9428. Thank you.
+${ResInfo.MCOEnd}`	
+					} else {
+						return `U-Box Reservation; IMMEDIATE ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, we have attempted to contact you in regards to a U-Box Delivery on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}. Please contact us at your soonest availability so we can confirm your details for the delivery. Confirming your details prior to delivery reduces the possibility of any complications occurring during the delivery. You can contact us at (561) 638-9428 or if you are unable to reach us you can contact us by email 781_RM@uhaul.com and we will reach back out to you. We hope to hear from you soon!
+${ResInfo.MCOEnd}`	
+					}
+				}
+
+				return `Failed to create message :(`
+			},
+
+			NoteTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("UboxConfirmDetails");
+
+				if (SubOptions) {
+					return {
+						Text: `lvm in ref to delivery for ubox on ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}, needing to confirm details`,
+						ExpectedIn: false,
+						Working: true,
+					}
+				}
+
+				return {
+					Text: ``,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
+
+			Dropdown: ["UboxConfirmDetails", {
+				"confirmNow": {
+					DisplayText: "Confirming now?",
+					DefaultOption: false,
+					Type: "Checkbox",
+				},
+			}],
+
+			Params: function () {
+				const ResInfo = getResStatus();
+
+				if (ResInfo.isUBox) {
+					return true
+				}
+
+				return false
+			},
+		},
+
+		"UBoxNoDelivery": {
+			Display: "UBoxNoDelivery",
+
+			MsgTemplate: function () {
+				const ResInfo = getResInformation();
+				const SubOptions = getValInformation("UBoxNoDelivery");
+
+				if (SubOptions) {
+					return `U-Box Reservation; IMMEDIATE ACTION REQUIRED : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
+Good ${(ResInfo.TimeOfDay).toLowerCase()} ${ResInfo.customerFirstName}, you are receiving this notice in regards to a U-Box ${SubOptions.DeliveryType.SelectedText}. Unfortunately we are unable to make it into your area on ${SubOptions.DeliveryDay.SelectedText} and would like you to contact us at (561) 638-9428 to reschedule you for a better suited date. We hope to hear from you soon!
+${ResInfo.MCOEnd}`
+				}
+
+				return `Failed to create message :(`
+			},
+
+			NoteTemplate: function () {
+				const SubOptions = getValInformation("UBoxNoDelivery");
+
+				if (SubOptions) {
+					return {
+						// Ubx Timeframe Confirmation - Delivery Type: ${SubOptions.DeliveryType.SelectedText}, Timeframes: ${SubOptions.DeliveryTimeStart.SelectedText} - ${SubOptions.DeliveryTimeEnd.SelectedText} ${SubOptions.DeliveryDay.SelectedText}, Cutoff Time: ${SubOptions.CutoffTime.SelectedText} ${SubOptions.CutoffDate.SelectedText}
+						Text: `current date for ${SubOptions.DeliveryType.SelectedText} will not work for us, let cx know to contact us to reschedule for a different date.`,
+						ExpectedIn: false,
+						Working: true,
+					}
+				}
+
+				return {
+					Text: ``,
+					ExpectedIn: false,
+					Working: true,
+				}
+			},
+
+			Dropdown: ["UBoxNoDelivery", {
+				"DeliveryType": {
+					DisplayText: "Delivery Type",
+					DefaultOption: true,
+					Type: "Normal",
+					Options: [
+						{ value: true, text: "Delivery" },
+						{ value: false, text: "Pickup" },
+					]
+				},
+
+				"DeliveryDay": {
+					DisplayText: "Delivery Date",
+					Type: "DatePicker",
+				},
+			}],
+
+			Params: function () {
+				const ResInfo = getResStatus();
+
+				if (ResInfo.isUBox) {
+					return true
+				}
+
+				return false
+			},
+		},
+		
 		"EAlert": {
 			Display: "EAlert",
 
@@ -948,7 +1364,13 @@ ${ResInfo.MCOEnd}`
 			}],
 
 			Params: function () {
-				return true
+				const ResInfo = getResStatus();
+
+				if (ResInfo.isEAlert) {
+					return true
+				}
+
+				return false
 			},
 		},
 
@@ -1007,16 +1429,16 @@ U-Haul Equipment Recovery Department`
 				const SubOptions = getValInformation("CustomMessage");
 
 				return `U-Haul Reservation; #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-	~
-	${ResInfo.MCOEnd}`
+~
+${ResInfo.MCOEnd}`
 
 				return `Failed to create message :(`
 			},
 
 			NoteTemplate: function () {
 				return {
-					Text: `Text Sent to Customer - Message Type: ~`,
-					ExpectedIn: true,
+					Text: ``,
+					ExpectedIn: false,
 					Working: false,
 				}
 			},
@@ -1328,6 +1750,21 @@ U-Haul Equipment Recovery Department`
 			Covered: false,
 			Truckshare: false,
 			IT_Rental: false,
+
+			isTruck: false,
+			isTrailer: false,
+			isTowing: false,
+			isUBox: false,
+			isSRI: false,
+
+			isEAlert: false,
+			isLatePickup: isReservationLatePickup(),
+
+			AllEquipment: [],
+			TruckList: [],
+			TowingList: [],
+			TrailerList: [],
+			SRIList: []
 		}
 
 		if (document.querySelector("#DispatchDate")) {
@@ -1359,6 +1796,43 @@ U-Haul Equipment Recovery Department`
 			if (RentalType && RentalType.textContent.trim().startsWith("InTown")) {
 				ReturnDetails.IT_Rental = true
 			}
+		}
+
+		const EquipmentList = $("#reservationEquipmentList")
+		if (EquipmentList.length > 0) {
+			EquipmentList.find("> tr").each(function (index, element) {
+				const equipType = $(this).find(`#ReservedEquipments_${index}__ModelCategory`).val()
+				const equipPrefix = $(this).find(`#ReservedEquipments_${index}__Model`).val()
+				let ItemQuanitiy = null
+
+				if ($(this).find(".Quantity").length >= 1) {
+					ItemQuanitiy = $(this).find(".Quantity").text()
+				} else {
+					ItemQuanitiy = 1
+				}
+
+				ReturnDetails.AllEquipment.push(` ` + equipPrefix + ' x' + ItemQuanitiy)
+				if (equipType == "TRK") {
+					ReturnDetails.TruckList.push(` ` + equipPrefix + ' x' + ItemQuanitiy)
+					ReturnDetails.isTruck = true
+				} else if (equipType == "TRL") {
+					ReturnDetails.TrailerList.push(` ` + equipPrefix + ' x' + ItemQuanitiy)
+					ReturnDetails.isTrailer = true
+				} else if (equipType == "TOW") {
+					ReturnDetails.TowingList.push(` ` + equipPrefix + ' x' + ItemQuanitiy)
+					ReturnDetails.isTowing = true
+				} else if (equipType == "UBX") {
+					ReturnDetails.isUBox = true
+				} else if (equipType == "SRI") {
+					ReturnDetails.SRIList.push(` ` + equipPrefix + ' x' + ItemQuanitiy)
+					ReturnDetails.isSRI = true
+				}
+			})
+		}
+
+		const EALertSection = $("#eAlertNotesSection")
+		if (EALertSection.length > 0 && EALertSection.find("p > a > img").length > 0) {
+			ReturnDetails.isEAlert = true
 		}
 
 		return ReturnDetails
@@ -1544,9 +2018,6 @@ U-Haul Equipment Recovery Department`
 			customerFirstName: processName(document.querySelector("#customerFirstNameOnly").value.trim(), [], []),
 			customerLastName: processName(document.querySelector("#ReservationPopup > section > header > h1").textContent.split("-")[1].trim(), [], []),
 
-			// Equipment Information
-			// Coming soon -- :)
-
 			// Date Information
 			monthNumber: month,
 			dayNumber: dayPref,
@@ -1575,6 +2046,7 @@ U-Haul Equipment Recovery Department`
 			businessName: businessName,
 			businessPhoneNumber: phoneNumber,
 			Entity: $("#pickUpEntityChosen").val() || "Unassigned",
+			Distance: $("#milesAwayFromLocation").text() || 0,
 
 			// MCO Information
 			MCOEnd: "U-Haul Co. Palm Bay, FL (800) 649-2507",
@@ -1683,53 +2155,60 @@ U-Haul Equipment Recovery Department`
 					<input id="ReCaptchaToken" name="ReCaptchaToken" type="hidden" value="">
 
 	                <h3 class="header">Text Customer</h3>
-	
+
+	                <fieldset id="msgQuickDetailsHolder" style="margin: 10px; margin-right: 20px;">
+						<legend>Quick Details</legend>
+
+						<dl class="inline" id="msgQuickDetails">
+						</dl>
+	                </fieldset>
+
 	                <div class="messagecontent custom form">
 	                    <div class="msgleft">
 	                        <label class="phonenumber-label">
 	                            Phone Number:
 	                            <input id="CustomerPhoneNumber" name="CustomerPhoneNumber" type="text" value="${ClonePhoneNumber}" disabled="true" class="phone-input">
 	                        </label>
-	
+
 	                        <li class="templatesplit"></li>
-	
+
 	                        <label class="msgList" id="mainTemplateList">
 	                            Create Template:
-	
+
 	                            <select id="customCustomerContactTemplateDropdown" name="GetCustomCustomerContactTemplate" class="hidden-field">
-	
+
 	                            </select>
-	
+
 	                            <div class="custom dropdown msgcorner">
 	                                <a href="#" class="current">Failed to load templates</a>
 	                                <a href="#" class="selector"></a>
-	
+
 	                                <ul class="msgdropdown" id="customCustomerContactList">
-	
+
 	                                </ul>
 	                            </div>
 	                        </label>
-	
+
 	                        <div class="template-indent">
 	                        </div>
-	
+
 	                        <button type="button" class="right msgcorner templateadd" onclick="AddMessageTemplate($('#mainTemplateList #customCustomerContactTemplateDropdown'), $('#textMessageArea'))">Add Template</button>
 	                    </div>
 
 	                    <div class="msgright">
 	                        <div>
 	                            Note Content:
-	
+
 	                            <div class="msgBox Top">
 	                                <textarea placeholder="Add any additional notes or instructions here..." id="noteMessageArea" name="NoteMessage" class="message-textarea"></textarea>
 	                            </div>
 	                        </div>
-	
+
 	                        <li class="templatesplit" style="opacity: 0;"></li>
-	
+
 	                        <div style="height: 100%">
 	                            Message Content:
-	
+
 	                            <div class="msgBox Bottom">
 	                                <textarea placeholder="Compose your message here..." id="textMessageArea" name="TextMessage" class="message-textarea" data-val="${TxtMsgDataVal}" data-val-length="${TxtMsgDataValLength}" data-val-length-max="${TxtMsgDataValLengthMax}"></textarea>
 									<span class="errorClass field-validation-valid" data-valmsg-for="TextMessage" data-valmsg-replace="true"></span>
@@ -1737,7 +2216,7 @@ U-Haul Equipment Recovery Department`
 	                        </div>
 	                    </div>
 	                </div>
-	
+
 	                <div class="actionButtons">
 	                    <div class="large-12 columns">
 	                        <button type="submit" class="right save msgcorner" onclick="GetCaptcha(event, '#TextCustomerForm', 'TextCustomerForm', true, SubmitTextCustomerForm, null)">Send</button>
@@ -1754,7 +2233,7 @@ U-Haul Equipment Recovery Department`
 	                    border-top-left-radius: 5px;
 			    */
 	                }
-	
+
 	                .messagecontent {
 	                    display: flex;
 	                    flex-direction: row;
@@ -1763,14 +2242,14 @@ U-Haul Equipment Recovery Department`
 	                    height: 100%;
 	                    align-items: stretch; /* new */
 	                }
-	
+
 	                .msgleft {
 	                    flex-grow: 0;
 	                    flex-shrink: 0;
 	                    padding-right: 20px;
 	                    width: 30%;
 	                }
-	
+
 	                .msgright {
 	                    flex-grow: 0;
 	                    flex-shrink: 0;
@@ -1779,24 +2258,24 @@ U-Haul Equipment Recovery Department`
 	                    flex-direction: column;
 	                    width: 70%;
 	                }
-	
+
 	                .msgright .msgBox {
 	                    padding-top: 5px;
 	                }
-	
+
 	                .msgright .Top {
 	                    flex-grow: 0;
 	                    flex-shrink: 0;
 	                    height: 30%;
 	                }
-	
+
 	                .msgright .Bottom {
 	                    flex-grow: 0;
 	                    flex-shrink: 0;
 	                    height: calc(100% - 10px);
 	                    min-height: 10em;
 	                }
-	
+
 	                .msgright .msgBox textarea {
 	                    flex-grow: 0;
 	                    flex-shrink: 0;
@@ -1806,11 +2285,11 @@ U-Haul Equipment Recovery Department`
 	                    margin-bottom: 0px !important;
 	                    margin-top: 0px !important;
 	                }
-	
+
 	                .msgList {
 	                    margin-bottom: 20px;
 	                }
-	
+
 	                .phone-input {
 	                    /* border-radius: 5px; */
 	                }
@@ -1818,32 +2297,32 @@ U-Haul Equipment Recovery Department`
 					.textMessageArea-error {
 	                    margin-top: "0px"
 	                }
-	
+
 	                .msgcorner {
 	                    /* border-radius: 5px; */
 	                }
-	
+
 	                .dropdownpad {
 	                    margin-bottom: 1.6666666667em !important;
 	                    border: 1px solid #ccc;
 	                }
-	
+
 	                .customcheckbox {
 	                    margin-top: 12px !important;
 	                    height: 1em !important;
 	                }
-	
-		  	.msgleft .checkbox.custom {
+
+		  			.msgleft .checkbox.custom {
 	                    top: 0px !important;
 	                    height: 100%;
-			    width: 100%;
+			    		width: 100%;
 	                }
-	
+
 	                .msgdropdown {
 	                    /* border-radius: 5px; */
 	                    margin-top: 5px !important;
 	                }
-	
+
 	                .msgdropdowntemplate {
 	                    border: 1px solid #ccc;
 	                    position: relative;
@@ -1853,7 +2332,7 @@ U-Haul Equipment Recovery Department`
 	                    padding: 0;
 	                    width: 100%;
 	                }
-	
+
 	                .msgcurrent {
 	                    cursor: default;
 	                    white-space: nowrap;
@@ -1864,21 +2343,21 @@ U-Haul Equipment Recovery Department`
 	                    margin-left: 0.5833333333em;
 	                    margin-right: 2em;
 	                }
-	
+
 	                .actionButtons {
 	                    margin: -10px;
 	                    width: 100%;
 	                }
-	
+
 	                .actionButtons button {
 	                    margin-top: 20px !important;
 	                    margin-bottom: 20px !important;
 	                }
-	
+
 	                .templateadd {
 	                    margin-bottom: 0px !important;
 	                }
-	
+
 	                .messagecontent .templatesplit {
 	                  border-bottom: none;
 	                  border-top: solid 1px #d6d6d6;
@@ -1886,15 +2365,15 @@ U-Haul Equipment Recovery Department`
 	                  width: 100%;
 	                  padding-bottom: 10px;
 	                }
-	
+
 	                .messagecontent .templatesplit::marker {
 	                    content: "";
 	                }
-	
+
 	                .template-indent {
 	                    position: relative;
 	                    padding-left: 30px; /* Add more left padding to make space for the line */
-	
+
 	                    /* Create the line */
 	                    &::before {
 	                        content: "";
@@ -1923,7 +2402,6 @@ U-Haul Equipment Recovery Department`
 				}
 
 				const SaveButton = document.querySelector(".actionButtons .save")
-
 				if (SaveButton) {
 					SaveButton.addEventListener("click", async function () {
 						const MsgData = MsgTemplates[document.querySelector("#customCustomerContactList .selected").textContent]
@@ -1992,11 +2470,23 @@ U-Haul Equipment Recovery Department`
 					const DropdownMenu = document.querySelector("#mainTemplateList .msgdropdown")
 					const Selected = DropdownMenu.querySelector(".selected").textContent.trim()
 					const SubMenu = document.querySelector(".template-indent")
+					const QuickDetails = document.querySelector("#msgQuickDetails")
+					QuickDetails.innerHTML = ``
 					SubMenu.innerHTML = ``
 
 					if (MsgTemplates[Selected]) {
 						const NewDropdown = createSubDropdown(MsgTemplates[Selected].Dropdown[0], MsgTemplates[Selected].Dropdown[1])
+						console.log("cooolio make new quick drops??")
+						console.log(MsgTemplates[Selected].Dropdown[0])
 						SubMenu.appendChild(NewDropdown);
+
+						if (MsgTemplates[Selected].QuickDetails) {
+							QuickDetails.innerHTML = MsgTemplates[Selected].QuickDetails()
+							$("#msgQuickDetailsHolder").show()
+						} else {
+							$("#msgQuickDetailsHolder").hide()
+							QuickDetails.innerHTML = ``
+						}
 					}
 				}
 
@@ -2052,7 +2542,7 @@ U-Haul Equipment Recovery Department`
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Dynamic Messages V2", "37")
+		addScriptVersion("Dynamic Messages V2", "53")
 
 		setInterval(() => {
 			if (isMessageTextForumVisible()) {
