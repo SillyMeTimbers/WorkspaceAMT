@@ -126,6 +126,12 @@ const PermissionsList = {
       },
       Exclude: ["ExpNotes_VerifyTime"],
    },
+   "Nicholas Belinchak": {
+      Branch: {
+          Live: true,
+      },
+      Exclude: ["ExpNotes_VerifyTime"],
+   },
 };
 
 (async function() {
