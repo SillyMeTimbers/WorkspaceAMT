@@ -2150,7 +2150,7 @@ ${ResInfo.MCOEnd}`
 				nMessagePopup.innerHTML = `` // Reset Content
 
 				const Html_Content = `
-	                <input id="ContractID" name="ContractID" type="hidden" value="${document.querySelector("#ContractId").value}">
+	                <input id="HiddenContractID" name="HiddenContractID" type="hidden" value="${document.querySelector("#ContractId").value}">
 	                <input id="textFromView" name="ViewMode" type="hidden" value="Cover">
 					<input id="ReCaptchaToken" name="ReCaptchaToken" type="hidden" value="">
 
@@ -2542,7 +2542,7 @@ ${ResInfo.MCOEnd}`
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Dynamic Messages V2", "53")
+		addScriptVersion("Dynamic Messages V2", "54")
 
 		setInterval(() => {
 			if (isMessageTextForumVisible()) {
