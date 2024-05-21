@@ -2542,7 +2542,7 @@ ${ResInfo.MCOEnd}`
 			document.body.appendChild(scriptVersionElement);
 		}
 
-		addScriptVersion("Dynamic Messages V2", "53")
+		addScriptVersion("Dynamic Messages V2", "54")
 
 		setInterval(() => {
 			if (isMessageTextForumVisible()) {
