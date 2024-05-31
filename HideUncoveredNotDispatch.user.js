@@ -10,7 +10,7 @@
 (function () {
     'use strict';
 
-    const NotDispatchCleaner = "16"
+    const NotDispatchCleaner = "17"
     let NotDispatchReportLastVisible = false;
     let NotDispatchSettings = {
         "UBOX": true,
@@ -134,7 +134,7 @@
             const IncludeUBOX = createCheckbox('addUBOX', 'NotDispatchPanel.addUBox', 'Include U-Box', NotDispatchSettings.UBOX);
             document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUBOX);
 
-            const IncludeUncovered = createCheckbox('addUncovered', 'NotDispatchPanel.addUncovered', 'Include 781008', NotDispatchSettings.Uncovered);
+            const IncludeUncovered = createCheckbox('addUncovered', 'NotDispatchPanel.addUncovered', 'Include Uncovered', NotDispatchSettings.Uncovered);
             document.querySelector("#NotDispatchedResults_wrapper > div.DTTT_container").appendChild(IncludeUncovered);
         }
 
@@ -156,7 +156,7 @@
             const locID = $(this).find("> td:nth-child(8)").text().trim()
             const equipID = $(this).find("> td:nth-child(7)").text().trim()
 
-            const ignoreLocations = ['781008'];
+            const ignoreLocations = ['781008', '768008'];
             const ignoreEquipment = ['AA', 'AB'];
 
             let shouldHide = false;
