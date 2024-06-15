@@ -37,12 +37,6 @@ const PermissionsList = {
         },
         Exclude: [],
     },
-
-    "Emily Bertrand": {
-        Branch: {
-            Live: false,
-        },
-        Exclude: [],
     },
 
     "Melissa Wise": {
@@ -50,13 +44,6 @@ const PermissionsList = {
             Live: false,
         },
         Exclude: [],
-    },
-
-    "Julianna Mayes": {
-        Branch: {
-            Live: true,
-        },
-        Exclude: ["ExpNotes_VerifyTime"],
     },
 
     "Michelle Asker": {
@@ -71,28 +58,7 @@ const PermissionsList = {
             Live: true,
         },
         Exclude: ["ExpNotes_VerifyTime"],
-    },
-    
-    "Nyla Whitty": {
-        Branch: {
-            Live: true,
-        },
-        Exclude: ["ExpNotes_VerifyTime"],
-    },
-    
-    "Wilson Burgos": {
-        Branch: {
-            Live: true,
-        },
-        Exclude: ["ExpNotes_VerifyTime"],
-    },
-
-    "Amber Ruiz": {
-        Branch: {
-            Live: true,
-        },
-        Exclude: ["ExpNotes_VerifyTime"],
-    },
+    }
   
     "Matthew Glenn": {
         Branch: {
@@ -107,26 +73,20 @@ const PermissionsList = {
         },
         Exclude: ["ExpNotes_VerifyTime"],
    },
-
-   "Danielle Clifford": {
-      Branch: {
-          Live: false,
-      },
-      Exclude: ["ExpNotes_VerifyTime"],
-   },
    "Rebekah Brown": {
       Branch: {
           Live: true,
       },
       Exclude: ["ExpNotes_VerifyTime"],
-   },
-   "Wakeila Myles": {
+  }
+   "Nicholas Belinchak": {
       Branch: {
           Live: true,
       },
       Exclude: ["ExpNotes_VerifyTime"],
    },
-   "Nicholas Belinchak": {
+   },
+   "Francheska Chacon": {
       Branch: {
           Live: true,
       },
