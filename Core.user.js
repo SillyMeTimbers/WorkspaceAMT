@@ -37,7 +37,6 @@ const PermissionsList = {
         },
         Exclude: [],
     },
-    },
 
     "Melissa Wise": {
         Branch: {
@@ -58,7 +57,7 @@ const PermissionsList = {
             Live: true,
         },
         Exclude: ["ExpNotes_VerifyTime"],
-    }
+    },
   
     "Matthew Glenn": {
         Branch: {
@@ -73,18 +72,21 @@ const PermissionsList = {
         },
         Exclude: ["ExpNotes_VerifyTime"],
    },
+          
    "Rebekah Brown": {
       Branch: {
           Live: true,
       },
       Exclude: ["ExpNotes_VerifyTime"],
   },
+        
    "Nicholas Belinchak": {
       Branch: {
           Live: true,
       },
       Exclude: ["ExpNotes_VerifyTime"],
    },
+        
    "Francheska Chacon": {
       Branch: {
           Live: true,
