@@ -654,7 +654,7 @@ ${ResInfo.MCOEnd}`
 
 				if (!SubOptions === false) {
 					return `U-Haul Reservation; Low Availability Notice : #${ResInfo.contractNumber} : ${ResInfo.customerFirstName} ${ResInfo.customerLastName}
-You are receiving this notice to advise you we are experiencing delays with incoming equipment into your preferred city scheduled for ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}. We are informing you that you will need to reschedule your reservation for a different date/time or select a larger/smaller size of equipment. We will be in contact with you soon to discuss alternative availability. you can contact our office directly using the number below!
+You are receiving this notice to advise you we are experiencing delays with incoming equipment into your preferred city scheduled for ${ResInfo.dayText}, ${ResInfo.monthNumber} ${ResInfo.dayNumber}, ${ResInfo.year}. We are informing you that you will need to reschedule your reservation for a different date/time or select a larger/smaller size of equipment. We appreciate your patience and hope to hear from you soon to discuss alternate availabililty at the number below.
 ${ResInfo.MCOEnd}`
 
 					//return "Template is temporarily disabled."
